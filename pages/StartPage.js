@@ -1,15 +1,25 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {withTheme} from 'react-native-paper';
+import {withTheme, Button} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
+import * as authActions from './../store/actions/auth';
 
 const StartPage = (props) => {
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const name = auth.name == null ? 'Please Log In' : auth.name;
+
+  const onGoogleSingInButtonPressed = () => {
+    dispatch(authActions.googleSignIn()).catch((error) => {
+      console.log(error);
+    });
+  };
+
   return (
-    <View
-      style={{
-        ...styles.rootView,
-        backgroundColor: props.theme.colors.background,
-      }}>
-      <Text style={{color: props.theme.colors.text}}>Hello, World</Text>
+    <View style={styles.rootView}>
+      <Text>{name}</Text>
+      <Button onPress={onGoogleSingInButtonPressed}>Google Sign In Try</Button>
     </View>
   );
 };

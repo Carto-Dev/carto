@@ -60,3 +60,6 @@ buck-out/
 
 # Firebase
 /android/app/google-services.json
+
+# Secrets
+/secrets/webClientId.js
