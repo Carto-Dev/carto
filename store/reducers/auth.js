@@ -4,6 +4,7 @@ const initialState = {
   uid: null,
   name: null,
   email: null,
+  photoURL: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -11,13 +12,12 @@ const authReducer = (state = initialState, action) => {
     case SIGN_IN: {
       const payload = action.payload;
 
-      console.log(payload);
-
       return {
         ...state,
         uid: payload.uid,
         name: payload.name,
         email: payload.email,
+        photoURL: payload.photoURL,
       };
     }
 
