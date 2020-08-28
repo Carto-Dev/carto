@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet} from 'react-native';
-import {Button} from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import {Button, Text} from 'react-native-paper';
 import {useDispatch} from 'react-redux';
 import * as authActions from './../store/actions/auth';
 

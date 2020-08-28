@@ -12,12 +12,13 @@ import {
   TextInput,
   HelperText,
   ActivityIndicator,
+  Title,
+  Text,
 } from 'react-native-paper';
 import * as authActions from '../store/actions/auth';
 import * as yup from 'yup';
 import {useDispatch} from 'react-redux';
 import {useFormik} from 'formik';
-import {GoogleSigninButton} from '@react-native-community/google-signin';
 
 const AuthPage = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,9 @@ const AuthPage = () => {
     setPasswordError(null);
     try {
       if (!isLogin) {
-        if (passwordAgain === values.password) {
+        if (passwordAgain === '') {
+          setPasswordError('this field cannot be empty');
+        } else if (passwordAgain === values.password) {
           await dispatch(
             authActions.emailAndPasswordRegister(values.email, values.password),
           );
@@ -93,6 +96,10 @@ const AuthPage = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" style={styles.rootView}>
+      <View>
+        <Title style={styles.titleText}>Carto.</Title>
+        <Text>For the most premium shoppers</Text>
+      </View>
       <Surface style={styles.surfaceView}>
         <ScrollView>
           <TextInput
@@ -140,19 +147,28 @@ const AuthPage = () => {
           )}
           <View style={styles.buttonView}>
             {isLoading === false ? (
-              <Button disabled={!formik.isValid} onPress={formik.handleSubmit}>
+              <Button
+                mode="contained"
+                icon="login"
+                disabled={!formik.isValid}
+                onPress={formik.handleSubmit}>
                 {isLogin ? 'Log In' : 'Sign In'}
               </Button>
             ) : (
               <ActivityIndicator animating={true} size="small" />
             )}
-            <Button onPress={onSwitchMode}>
+            <Button
+              mode="contained"
+              icon="toggle-switch"
+              onPress={onSwitchMode}>
               Switch to {isLogin ? 'Sign In' : 'Log In'}
             </Button>
-            <GoogleSigninButton
-              size={GoogleSigninButton.Size.Wide}
-              onPress={onGoogleSignInButtonPressed}
-            />
+            <Button
+              mode="contained"
+              icon="google"
+              onPress={onGoogleSignInButtonPressed}>
+              Sign In With Google
+            </Button>
           </View>
         </ScrollView>
       </Surface>
@@ -162,9 +178,13 @@ const AuthPage = () => {
 const styles = StyleSheet.create({
   rootView: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     margin: 20,
+  },
+  titleText: {
+    fontSize: 20,
   },
   surfaceView: {
     flexDirection: 'row',

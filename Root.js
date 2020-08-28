@@ -1,5 +1,9 @@
 import React from 'react';
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {
+  DefaultTheme,
+  Provider as PaperProvider,
+  configureFonts,
+} from 'react-native-paper';
 import {Provider as ReduxProvider} from 'react-redux';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import authReducer from './store/reducers/auth';
@@ -8,13 +12,31 @@ import {GoogleSignin} from '@react-native-community/google-signin/index';
 import {webClientKey} from './secrets/webClientId';
 import MainNavigator from './navigation/Main';
 
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: 'Raleway-Regular',
+      fontWeight: '400',
+    },
+    medium: {
+      fontFamily: 'Raleway-SemiBold',
+      fontWeight: '600',
+    },
+    light: {
+      fontFamily: 'Raleway-Light',
+      fontWeight: '300',
+    },
+    thin: {
+      fontFamily: 'Raleway-Thin',
+      fontWeight: '100',
+    },
+  },
+};
+
 const themeOptions = {
   ...DefaultTheme,
-  // dark: false,
-  // colors: {
-  //   background: 'black',
-  //   text: 'white',
-  // },
+  roundness: 20,
+  fonts: configureFonts(fontConfig),
 };
 
 const Root = () => {

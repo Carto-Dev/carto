@@ -1,11 +1,14 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import {ActivityIndicator, Title, Text} from 'react-native-paper';
 
 const SplashPage = () => {
   return (
     <View style={styles.rootView}>
-      <Text>Carto</Text>
+      <View>
+        <Title>Carto.</Title>
+        <Text>For the most premium shoppers</Text>
+      </View>
       <ActivityIndicator animating={true} size={'large'} />
     </View>
   );
