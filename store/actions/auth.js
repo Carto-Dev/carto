@@ -71,7 +71,13 @@ export const emailAndPasswordLogin = (email, password) => {
         },
       });
     } catch (error) {
-      console.log(error);
+      if (error.code === 'auth/user-not-found') {
+        throw new Error('This email is not registered to any account.');
+      }
+
+      if (error.code === 'auth/wrong-password') {
+        throw new Error('You have typed a wrong password, please try again.');
+      }
     }
   };
 };

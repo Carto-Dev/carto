@@ -4,6 +4,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   ScrollView,
+  View,
 } from 'react-native';
 import {
   Button,
@@ -39,10 +40,10 @@ const AuthPage = () => {
       ]);
     }
 
-    // return () => {
-    //   setErrorMessage(null);
-    //   setLoading(false);
-    // };
+    return () => {
+      setErrorMessage(null);
+      setLoading(false);
+    };
   }, [errorMessage]);
 
   const onGoogleSignInButtonPressed = () => {
@@ -58,14 +59,14 @@ const AuthPage = () => {
       if (!isLogin) {
         if (passwordAgain === values.password) {
           await dispatch(
-            authActions.emailAndPasswordLogin(values.email, values.password),
+            authActions.emailAndPasswordRegister(values.email, values.password),
           );
         } else {
           setPasswordError("Passwords don't match");
         }
       } else {
         await dispatch(
-          authActions.emailAndPasswordRegister(values.email, values.password),
+          authActions.emailAndPasswordLogin(values.email, values.password),
         );
       }
     } catch (error) {
@@ -94,9 +95,6 @@ const AuthPage = () => {
     <KeyboardAvoidingView behavior="height" style={styles.rootView}>
       <Surface style={styles.surfaceView}>
         <ScrollView>
-          <Button mode="contained" onPress={onSwitchMode}>
-            Switch to login
-          </Button>
           <TextInput
             mode="outlined"
             label="Email Address"
@@ -140,16 +138,22 @@ const AuthPage = () => {
               </HelperText>
             </>
           )}
-          {isLoading === false ? (
-            <Button
-              mode="outlined"
-              disabled={!formik.isValid}
-              onPress={formik.handleSubmit}>
-              {isLogin ? 'Log In' : 'Sign In'}
+          <View style={styles.buttonView}>
+            {isLoading === false ? (
+              <Button disabled={!formik.isValid} onPress={formik.handleSubmit}>
+                {isLogin ? 'Log In' : 'Sign In'}
+              </Button>
+            ) : (
+              <ActivityIndicator animating={true} size="small" />
+            )}
+            <Button onPress={onSwitchMode}>
+              Switch to {isLogin ? 'Sign In' : 'Log In'}
             </Button>
-          ) : (
-            <ActivityIndicator animating={true} size="small" />
-          )}
+            <GoogleSigninButton
+              size={GoogleSigninButton.Size.Wide}
+              onPress={onGoogleSignInButtonPressed}
+            />
+          </View>
         </ScrollView>
       </Surface>
     </KeyboardAvoidingView>
@@ -163,14 +167,28 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   surfaceView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
-    // height: 350,
     width: 350,
     elevation: 4,
   },
   scrollView: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  horizontalLine: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+  },
+  buttonView: {
+    margin: 10,
+    padding: 10,
+    height: 150,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });

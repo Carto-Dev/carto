@@ -15,8 +15,7 @@ const HomePage = (props) => {
 
   return (
     <View style={styles.rootView}>
-      <Text>{auth.email}</Text>
-      <Text>Home!</Text>
+      <Text>Hello {auth.email}!</Text>
       <Button onPress={onSignOutButtonPressed}>Sign Out</Button>
     </View>
   );
