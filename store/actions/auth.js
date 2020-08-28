@@ -2,6 +2,7 @@ import {GoogleSignin} from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
 
 export const SIGN_IN = 'SIGN IN';
+export const SIGN_OUT = 'SIGN OUT';
 
 export const googleSignIn = () => {
   return async (dispatch) => {
@@ -21,22 +22,79 @@ export const googleSignIn = () => {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
-        photoURL: user.photoURL,
       },
     });
   };
 };
 
-export const autoLogin = (uid, name, email, photo) => {
+export const emailAndPasswordRegister = (email, password) => {
+  return async (dispatch) => {
+    try {
+      const result = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      const user = result.user;
+
+      dispatch({
+        type: SIGN_IN,
+        payload: {
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        throw new Error('The email address you provided is already in use.');
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        throw new Error('The email address you provided is invalid.');
+      }
+    }
+  };
+};
+
+export const emailAndPasswordLogin = (email, password) => {
+  return async (dispatch) => {
+    try {
+      const result = await auth().signInWithEmailAndPassword(email, password);
+      const user = result.user;
+
+      dispatch({
+        type: SIGN_IN,
+        payload: {
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const autoLogin = (uid, name, email) => {
   const payload = {
     uid: uid,
     name: name,
     email: email,
-    photoURL: photo,
   };
 
   return {
     type: SIGN_IN,
     payload: payload,
+  };
+};
+
+export const logout = () => {
+  return async (dispatch) => {
+    await auth().signOut();
+
+    dispatch({
+      type: SIGN_OUT,
+    });
   };
 };

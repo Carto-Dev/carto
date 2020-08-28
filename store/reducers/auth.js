@@ -1,10 +1,9 @@
-import {SIGN_IN} from '../actions/auth';
+import {SIGN_IN, SIGN_OUT} from '../actions/auth';
 
 const initialState = {
   uid: null,
   name: null,
   email: null,
-  photoURL: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -17,8 +16,11 @@ const authReducer = (state = initialState, action) => {
         uid: payload.uid,
         name: payload.name,
         email: payload.email,
-        photoURL: payload.photoURL,
       };
+    }
+
+    case SIGN_OUT: {
+      return initialState;
     }
 
     default: {

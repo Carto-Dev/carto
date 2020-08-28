@@ -63,3 +63,6 @@ buck-out/
 
 # Secrets
 /secrets/webClientId.js
+
+# VS Code
+.vscode
