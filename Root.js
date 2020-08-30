@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  DefaultTheme,
+  DarkTheme as PaperDarkTheme,
   Provider as PaperProvider,
   configureFonts,
 } from 'react-native-paper';
@@ -34,7 +34,7 @@ const fontConfig = {
 };
 
 const themeOptions = {
-  ...DefaultTheme,
+  ...PaperDarkTheme,
   roundness: 20,
   fonts: configureFonts(fontConfig),
 };

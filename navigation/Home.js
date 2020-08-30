@@ -1,16 +1,35 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import HomePage from './../pages/Home';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import MyProductsNavigator from './MyProducts';
+import ProductsNavigator from './Products';
+import OrdersNavigator from './Orders';
+import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
+import routes from '../constants/routes';
 
-const HomeStack = createStackNavigator();
+const HomeDrawer = createDrawerNavigator();
 
 const HomeNavigator = () => {
   return (
-    <NavigationContainer>
-      <HomeStack.Navigator screenOptions={{headerShown: false}}>
-        <HomeStack.Screen name="Home" component={HomePage} />
-      </HomeStack.Navigator>
+    <NavigationContainer theme={PaperDarkTheme}>
+      <HomeDrawer.Navigator
+        initialRouteName={routes.navigators.products_navigator}>
+        <HomeDrawer.Screen
+          name={routes.navigators.products_navigator}
+          component={ProductsNavigator}
+          options={{title: 'Products Store'}}
+        />
+        <HomeDrawer.Screen
+          name={routes.navigators.my_products_navigator}
+          component={MyProductsNavigator}
+          options={{title: 'My Products'}}
+        />
+        <HomeDrawer.Screen
+          name={routes.navigators.orders_navigator}
+          component={OrdersNavigator}
+          options={{title: 'My Orders'}}
+        />
+      </HomeDrawer.Navigator>
     </NavigationContainer>
   );
 };

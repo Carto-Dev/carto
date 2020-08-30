@@ -15,7 +15,7 @@ import {
   Title,
   Text,
 } from 'react-native-paper';
-import * as authActions from '../store/actions/auth';
+import * as authActions from '../../store/actions/auth';
 import * as yup from 'yup';
 import {useDispatch} from 'react-redux';
 import {useFormik} from 'formik';
@@ -40,11 +40,6 @@ const AuthPage = () => {
         },
       ]);
     }
-
-    return () => {
-      setErrorMessage(null);
-      setLoading(false);
-    };
   }, [errorMessage]);
 
   const onGoogleSignInButtonPressed = () => {

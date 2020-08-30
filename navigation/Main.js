@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import SplashPage from '../pages/Splash';
+import SplashPage from '../pages/loading/Splash';
 import {useDispatch} from 'react-redux';
 import * as authActions from './../store/actions/auth';
 import auth from '@react-native-firebase/auth';
-import HomeNavigator from './Home';
 import AuthNavigator from './Auth';
+import HomeNavigator from './Home';
 
 const MainNavigator = () => {
   const dispatch = useDispatch();

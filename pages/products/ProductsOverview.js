@@ -3,9 +3,9 @@ import {useSelector} from 'react-redux';
 import {View, StyleSheet} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import {useDispatch} from 'react-redux';
-import * as authActions from './../store/actions/auth';
+import * as authActions from '../../store/actions/auth';
 
-const HomePage = (props) => {
+const ProductsOverviewPage = (props) => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default ProductsOverviewPage;
