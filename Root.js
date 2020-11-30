@@ -7,10 +7,12 @@ import {
 import {Provider as ReduxProvider} from 'react-redux';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import authReducer from './store/reducers/auth';
+import productsReducer from './store/reducers/products';
 import ReduxThunk from 'redux-thunk';
 import {GoogleSignin} from '@react-native-community/google-signin/index';
 import {webClientKey} from './secrets/webClientId';
 import MainNavigator from './navigation/Main';
+import {DarkTheme as NavDarkTheme} from '@react-navigation/native';
 
 const fontConfig = {
   default: {
@@ -50,6 +52,7 @@ const Root = () => {
 
   const reducer = combineReducers({
     auth: authReducer,
+    products: productsReducer,
   });
 
   const store = createStore(reducer, applyMiddleware(ReduxThunk));

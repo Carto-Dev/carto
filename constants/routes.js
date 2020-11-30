@@ -7,7 +7,8 @@ const routes = {
   pages: {
     auth_page: 'auth_page',
     my_products_page: 'my_products_page',
-    product_form_page: 'product_form_page',
+    add_product_form_page: 'add_product_form_page',
+    edit_product_form_page: 'edit_product_form_page',
     orders_page: 'orders_page',
     products_overview_page: 'products_overview_page',
     single_product_page: 'single_product_page',

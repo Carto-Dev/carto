@@ -36,6 +36,16 @@
 		09F05BD9D8A542638D3ADCC5 /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2C770871FB84053B05A26FF /* Raleway-Regular.ttf */; };
 		86E3AA8B886F4D4FB9BFE9E0 /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C830109EF07492EB3C9F393 /* Raleway-SemiBold.ttf */; };
 		F3D87B7C55024BE28A7F2D4F /* Raleway-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CB3C81B552E41E9AFEF5282 /* Raleway-Thin.ttf */; };
+		21AFA6671F2D4F8DA8370653 /* APPAREL.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 23CBE7F85ECC481D9AF00B89 /* APPAREL.jpg */; };
+		4413E17CD95142B091EDD88F /* BOOKS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 10A45CCD1CAE415F942B5CDB /* BOOKS.jpg */; };
+		918C926E8F72472FA9FFBC22 /* CARS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 42F74B6D93F84246B1954CBD /* CARS.jpg */; };
+		D05B3CA1922344AB9390995C /* ELECTRONICS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E5B305B694664EEFB772EA0D /* ELECTRONICS.jpg */; };
+		E2AA5F40CAD8408C95082A91 /* GAMES.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B70F3C8D18B948AFBCEA78D4 /* GAMES.jpg */; };
+		E69D480A2D844FBDACC22106 /* JEWELRY.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA20FF11F88C4138B4947169 /* JEWELRY.jpg */; };
+		6D317BB423AB4F0A919DA8A9 /* MUSIC.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ADF93C5253E742CE93EBFEAD /* MUSIC.jpg */; };
+		8E86BBA65C14473BB93C62EE /* PETS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1899913887634280A19ED8AD /* PETS.jpg */; };
+		5BCF1E2A78A14B4A808A5171 /* SHOES.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C54F37F97D04384B3B1B314 /* SHOES.jpg */; };
+		AAF6B57721F14E77B64E6A94 /* SPORTS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +101,16 @@
 		C2C770871FB84053B05A26FF /* Raleway-Regular.ttf */ = {isa = PBXFileReference; name = "Raleway-Regular.ttf"; path = "../assets/fonts/Raleway-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		1C830109EF07492EB3C9F393 /* Raleway-SemiBold.ttf */ = {isa = PBXFileReference; name = "Raleway-SemiBold.ttf"; path = "../assets/fonts/Raleway-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		2CB3C81B552E41E9AFEF5282 /* Raleway-Thin.ttf */ = {isa = PBXFileReference; name = "Raleway-Thin.ttf"; path = "../assets/fonts/Raleway-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		23CBE7F85ECC481D9AF00B89 /* APPAREL.jpg */ = {isa = PBXFileReference; name = "APPAREL.jpg"; path = "../assets/img/categories/APPAREL.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		10A45CCD1CAE415F942B5CDB /* BOOKS.jpg */ = {isa = PBXFileReference; name = "BOOKS.jpg"; path = "../assets/img/categories/BOOKS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		42F74B6D93F84246B1954CBD /* CARS.jpg */ = {isa = PBXFileReference; name = "CARS.jpg"; path = "../assets/img/categories/CARS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E5B305B694664EEFB772EA0D /* ELECTRONICS.jpg */ = {isa = PBXFileReference; name = "ELECTRONICS.jpg"; path = "../assets/img/categories/ELECTRONICS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B70F3C8D18B948AFBCEA78D4 /* GAMES.jpg */ = {isa = PBXFileReference; name = "GAMES.jpg"; path = "../assets/img/categories/GAMES.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BA20FF11F88C4138B4947169 /* JEWELRY.jpg */ = {isa = PBXFileReference; name = "JEWELRY.jpg"; path = "../assets/img/categories/JEWELRY.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ADF93C5253E742CE93EBFEAD /* MUSIC.jpg */ = {isa = PBXFileReference; name = "MUSIC.jpg"; path = "../assets/img/categories/MUSIC.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1899913887634280A19ED8AD /* PETS.jpg */ = {isa = PBXFileReference; name = "PETS.jpg"; path = "../assets/img/categories/PETS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3C54F37F97D04384B3B1B314 /* SHOES.jpg */ = {isa = PBXFileReference; name = "SHOES.jpg"; path = "../assets/img/categories/SHOES.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */ = {isa = PBXFileReference; name = "SPORTS.jpg"; path = "../assets/img/categories/SPORTS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +241,16 @@
 				C2C770871FB84053B05A26FF /* Raleway-Regular.ttf */,
 				1C830109EF07492EB3C9F393 /* Raleway-SemiBold.ttf */,
 				2CB3C81B552E41E9AFEF5282 /* Raleway-Thin.ttf */,
+				23CBE7F85ECC481D9AF00B89 /* APPAREL.jpg */,
+				10A45CCD1CAE415F942B5CDB /* BOOKS.jpg */,
+				42F74B6D93F84246B1954CBD /* CARS.jpg */,
+				E5B305B694664EEFB772EA0D /* ELECTRONICS.jpg */,
+				B70F3C8D18B948AFBCEA78D4 /* GAMES.jpg */,
+				BA20FF11F88C4138B4947169 /* JEWELRY.jpg */,
+				ADF93C5253E742CE93EBFEAD /* MUSIC.jpg */,
+				1899913887634280A19ED8AD /* PETS.jpg */,
+				3C54F37F97D04384B3B1B314 /* SHOES.jpg */,
+				EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -384,6 +414,16 @@
 				09F05BD9D8A542638D3ADCC5 /* Raleway-Regular.ttf in Resources */,
 				86E3AA8B886F4D4FB9BFE9E0 /* Raleway-SemiBold.ttf in Resources */,
 				F3D87B7C55024BE28A7F2D4F /* Raleway-Thin.ttf in Resources */,
+				21AFA6671F2D4F8DA8370653 /* APPAREL.jpg in Resources */,
+				4413E17CD95142B091EDD88F /* BOOKS.jpg in Resources */,
+				918C926E8F72472FA9FFBC22 /* CARS.jpg in Resources */,
+				D05B3CA1922344AB9390995C /* ELECTRONICS.jpg in Resources */,
+				E2AA5F40CAD8408C95082A91 /* GAMES.jpg in Resources */,
+				E69D480A2D844FBDACC22106 /* JEWELRY.jpg in Resources */,
+				6D317BB423AB4F0A919DA8A9 /* MUSIC.jpg in Resources */,
+				8E86BBA65C14473BB93C62EE /* PETS.jpg in Resources */,
+				5BCF1E2A78A14B4A808A5171 /* SHOES.jpg in Resources */,
+				AAF6B57721F14E77B64E6A94 /* SPORTS.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

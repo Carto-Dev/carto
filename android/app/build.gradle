@@ -2,6 +2,8 @@ apply plugin: "com.android.application"
 
 apply plugin: 'com.google.gms.google-services'
 
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
 import com.android.build.OutputFile
 
 /**
@@ -131,6 +133,7 @@ android {
     }
 
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         applicationId "com.necronizer.carto"
         minSdkVersion rootProject.ext.minSdkVersion

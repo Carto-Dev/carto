@@ -1,5 +1,8 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  DarkTheme as NavDarkTheme,
+} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MyProductsNavigator from './MyProducts';
 import ProductsNavigator from './Products';
@@ -9,15 +12,27 @@ import routes from '../constants/routes';
 
 const HomeDrawer = createDrawerNavigator();
 
+const DarkTheme = {
+  ...NavDarkTheme,
+  ...PaperDarkTheme,
+  colors: {
+    ...NavDarkTheme.colors,
+    ...PaperDarkTheme.colors,
+    primary: PaperDarkTheme.colors.primary,
+  },
+};
+
 const HomeNavigator = () => {
   return (
-    <NavigationContainer theme={PaperDarkTheme}>
+    <NavigationContainer theme={DarkTheme}>
       <HomeDrawer.Navigator
         initialRouteName={routes.navigators.products_navigator}>
         <HomeDrawer.Screen
           name={routes.navigators.products_navigator}
           component={ProductsNavigator}
-          options={{title: 'Products Store'}}
+          options={{
+            title: 'Products Store',
+          }}
         />
         <HomeDrawer.Screen
           name={routes.navigators.my_products_navigator}
