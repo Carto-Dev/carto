@@ -10,7 +10,7 @@ export const DELETE_PRODUCT = 'DELETE PRODUCT';
 
 const firestore_ = firestore();
 
-firestore_.settings({host: 'localhost:8080', ssl: false});
+// firestore_.settings({host: 'localhost:8080', ssl: true});
 
 const firestoreDB = firestore_.collection('products');
 
