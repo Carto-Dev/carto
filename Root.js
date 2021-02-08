@@ -12,7 +12,6 @@ import ReduxThunk from 'redux-thunk';
 import {GoogleSignin} from '@react-native-community/google-signin/index';
 import {webClientKey} from './secrets/webClientId';
 import MainNavigator from './navigation/Main';
-import {DarkTheme as NavDarkTheme} from '@react-navigation/native';
 
 const fontConfig = {
   default: {

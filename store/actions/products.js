@@ -14,11 +14,9 @@ const firestore_ = firestore();
 
 const firestoreDB = firestore_.collection('products');
 
-export const getAllProducts = () => {
-  return async (dispatch) => {
-    const firestoreProducts = await firestoreDB.get();
-
-    const products = firestoreProducts.docs.map((product) => ({
+export const fetchAllProducts = (firestoreProducts) => {
+  const products = firestoreProducts.docs.map((product) => {
+    return {
       id: product.id,
       userId: product.data().userId,
       title: product.data().title,
@@ -27,38 +25,36 @@ export const getAllProducts = () => {
       imgLinks: product.data().imgLinks,
       categories: product.data().categories,
       timestamp: product.data().timestamp,
-    }));
+    };
+  });
 
-    dispatch({
-      type: GET_ALL_PRODUCTS,
-      payload: {
-        products: products,
-      },
-    });
+  return {
+    type: GET_ALL_PRODUCTS,
+    payload: {
+      products: products,
+    },
   };
 };
 
-export const getUserProducts = (uid) => {
-  return async (dispatch) => {
-    const firestoreUserProducts = await firestoreDB
-      .where('uid', '==', uid)
-      .get();
-
-    const products = firestoreUserProducts.docs.map((product) => ({
+export const fetchUserProducts = (firestoreProducts) => {
+  const products = firestoreProducts.docs.map((product) => {
+    return {
       id: product.id,
+      userId: product.data().userId,
       title: product.data().title,
       description: product.data().description,
       cost: product.data().cost,
-      imgLink: product.data().imgLink,
-      userId: product.data().userId,
-    }));
+      imgLinks: product.data().imgLinks,
+      categories: product.data().categories,
+      timestamp: product.data().timestamp,
+    };
+  });
 
-    dispatch({
-      type: GET_USER_PRODUCTS,
-      payload: {
-        products: products,
-      },
-    });
+  return {
+    type: GET_USER_PRODUCTS,
+    payload: {
+      products: products,
+    },
   };
 };
 
