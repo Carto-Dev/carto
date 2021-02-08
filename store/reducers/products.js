@@ -36,8 +36,6 @@ const productsReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        products: [...state.products, payload.product],
-        userProducts: [...state.userProducts, payload.product],
       };
     }
 
