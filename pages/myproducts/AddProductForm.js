@@ -17,8 +17,9 @@ import * as ProductActions from '../../store/actions/products';
 import {useSelector} from 'react-redux';
 import {LoadingModalComponent} from '../../components/LoadingModal';
 import categories from '../../constants/categories';
+import routes from './../../constants/routes';
 
-const AddProductFormPage = () => {
+const AddProductFormPage = ({navigation}) => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -58,6 +59,8 @@ const AddProductFormPage = () => {
             product.timestamp,
           ),
         );
+
+        navigation.navigate(routes.pages.my_products_page);
       }
     } catch (error) {
       setErrorMessage(error.message);

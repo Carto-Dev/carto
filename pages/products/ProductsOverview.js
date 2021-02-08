@@ -48,17 +48,21 @@ const ProductsOverviewPage = (props) => {
   return (
     <View style={styles.rootView}>
       <ScrollView>
-        <Title>
-          <Headline>Good Morning!</Headline>
-        </Title>
-        <TextInput
-          left={<TextInput.Icon name="magnify" />}
-          mode="outlined"
-          label="Search"
-          autoCapitalize="none"
-          keyboardType="default"
-        />
-        <Title>Categories</Title>
+        <View style={styles.marginView}>
+          <Title>
+            <Headline>Good Morning!</Headline>
+          </Title>
+          <TextInput
+            left={<TextInput.Icon name="magnify" />}
+            mode="outlined"
+            label="Search"
+            autoCapitalize="none"
+            keyboardType="default"
+          />
+        </View>
+        <View style={styles.marginView}>
+          <Title>Categories</Title>
+        </View>
         <View>
           <FlatList
             style={{backgroundColor: theme.colors.surface}}
@@ -73,7 +77,7 @@ const ProductsOverviewPage = (props) => {
                     imageStyle={styles.images}
                     style={styles.image}
                     source={c.item.img}>
-                    <View style={styles.textView}>
+                    <View style={styles.imageTextView}>
                       <Title style={styles.text}>{c.item.text}</Title>
                     </View>
                   </ImageBackground>
@@ -82,7 +86,7 @@ const ProductsOverviewPage = (props) => {
             }}
           />
         </View>
-        <View>
+        <View style={styles.marginView}>
           <FlatList
             centerContent={true}
             data={items}
@@ -90,7 +94,7 @@ const ProductsOverviewPage = (props) => {
             numColumns={2}
             renderItem={(c) => {
               return (
-                <View style={{margin: 20}}>
+                <View style={styles.productView}>
                   <Image
                     style={{height: 150, width: 150}}
                     source={c.item.img}
@@ -109,7 +113,14 @@ const ProductsOverviewPage = (props) => {
 const styles = StyleSheet.create({
   rootView: {
     flex: 1,
-    marginHorizontal: 20,
+  },
+  marginView: {
+    margin: 20,
+  },
+  productView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   imageView: {
     width: 300,
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#00000000',
   },
-  textView: {
+  imageTextView: {
     backgroundColor: '#000000a0',
     height: '100%',
     width: '100%',
