@@ -17,19 +17,49 @@ import * as ProductActions from '../../store/actions/products';
 import {useSelector} from 'react-redux';
 import {LoadingModalComponent} from '../../components/LoadingModal';
 import categories from '../../constants/categories';
-import routes from './../../constants/routes';
+import routes from '../../constants/routes';
 
-const AddProductFormPage = ({navigation}) => {
+const ProductFormPage = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [imageUris, setImageUris] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+
+  let title = '';
+  let description = '';
+  let cost = '';
+  let id = '';
+
+  if (route.params != null) {
+    const receievedData = route.params.data;
+
+    id = receievedData.id;
+    title = receievedData.title;
+    description = receievedData.description;
+    cost = receievedData.cost;
+  }
+
+  useEffect(() => {
+    if (route.params != null) {
+      const receievedData = route.params.data;
+
+      const categoriesMapped = receievedData.categories.map((category) =>
+        categories.find((c) => c.key === category),
+      );
+
+      setEditMode(true);
+      setImageUris(receievedData.imageUris);
+      setSelectedCategories(categoriesMapped);
+    }
+  }, [route.params]);
 
   const Auth = useSelector((state) => state.auth);
 
   const submitForm = async (values) => {
+    console.log(editMode);
     setLoading(true);
     try {
       if (imageUris.length === 0) {
@@ -48,17 +78,30 @@ const AddProductFormPage = ({navigation}) => {
           timestamp: new Date().toUTCString(),
         };
 
-        await dispatch(
-          ProductActions.addProduct(
-            product.userId,
-            product.title,
-            product.description,
-            product.cost,
-            product.localImgLinks,
-            product.categories,
-            product.timestamp,
-          ),
-        );
+        if (!editMode) {
+          await dispatch(
+            ProductActions.addProduct(
+              product.userId,
+              product.title,
+              product.description,
+              product.cost,
+              product.localImgLinks,
+              product.categories,
+              product.timestamp,
+            ),
+          );
+        } else {
+          await dispatch(
+            ProductActions.updateProduct(
+              id,
+              product.title,
+              product.description,
+              product.cost,
+              product.categories,
+              product.localImgLinks,
+            ),
+          );
+        }
 
         navigation.navigate(routes.pages.my_products_page);
       }
@@ -70,9 +113,9 @@ const AddProductFormPage = ({navigation}) => {
 
   const formik = useFormik({
     initialValues: {
-      title: '',
-      description: '',
-      cost: '',
+      title: title,
+      description: description,
+      cost: cost,
     },
     onSubmit: submitForm,
     validationSchema: yup.object().shape({
@@ -149,7 +192,9 @@ const AddProductFormPage = ({navigation}) => {
       <View style={styles.formView}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.mainView}>
-            <Title>Add A New Product</Title>
+            <Title>
+              {editMode ? 'Edit Product Details' : 'Add A New Product'}
+            </Title>
             <TextInput
               mode="outlined"
               label="Title"
@@ -295,4 +340,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProductFormPage;
+export default ProductFormPage;

@@ -1,18 +1,16 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import MyProductsOverviewPage from './../pages/myproducts/MyProductsOverview';
-import AddProductFormPage from './../pages/myproducts/AddProductForm';
+import ProductFormPage from '../pages/myproducts/ProductForm';
 import routes from '../constants/routes';
-import EditProductFormPage from '../pages/myproducts/EditProductForm';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Button, useTheme} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 
 const MyProductsStack = createStackNavigator();
 
 const MyProductsNavigator = () => {
   const navigation = useNavigation();
-  const paperTheme = useTheme();
   return (
     <MyProductsStack.Navigator initialRouteName={routes.pages.my_products_page}>
       <MyProductsStack.Screen
@@ -31,7 +29,7 @@ const MyProductsNavigator = () => {
           headerRight: () => (
             <Button
               onPress={() => {
-                navigation.navigate(routes.pages.add_product_form_page);
+                navigation.navigate(routes.pages.product_form_page);
               }}>
               <Icon size={23} name="md-add" color="white" />
             </Button>
@@ -39,15 +37,8 @@ const MyProductsNavigator = () => {
         }}
       />
       <MyProductsStack.Screen
-        name={routes.pages.add_product_form_page}
-        component={AddProductFormPage}
-        options={{
-          headerTitle: '',
-        }}
-      />
-      <MyProductsStack.Screen
-        name={routes.pages.edit_product_form_page}
-        component={EditProductFormPage}
+        name={routes.pages.product_form_page}
+        component={ProductFormPage}
         options={{
           headerTitle: '',
         }}
