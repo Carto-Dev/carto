@@ -7,6 +7,7 @@ import CartPage from '../pages/products/Cart';
 import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
+import * as AuthActions from './../utils/auth';
 
 const ProductsStack = createStackNavigator();
 
@@ -24,6 +25,14 @@ const ProductsNavigator = () => {
             <Button
               onPress={() => {
                 navigation.dispatch(DrawerActions.openDrawer());
+              }}>
+              <Icon size={23} name="md-menu" color="white" />
+            </Button>
+          ),
+          headerRight: () => (
+            <Button
+              onPress={async () => {
+                await AuthActions.logout();
               }}>
               <Icon size={23} name="md-menu" color="white" />
             </Button>

@@ -10,17 +10,15 @@ import {
   Chip,
 } from 'react-native-paper';
 import * as yup from 'yup';
-import {useDispatch} from 'react-redux';
 import {useFormik} from 'formik';
 import {ImageModalComponent} from '../../components/ImageModal';
-import * as ProductActions from '../../store/actions/products';
-import {useSelector} from 'react-redux';
 import {LoadingModalComponent} from '../../components/LoadingModal';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
+import * as ProductUtils from './../../utils/products';
+import * as AuthUtils from './../../utils/auth';
 
 const ProductFormPage = ({navigation, route}) => {
-  const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [imageUris, setImageUris] = useState([]);
@@ -56,8 +54,6 @@ const ProductFormPage = ({navigation, route}) => {
     }
   }, [route.params]);
 
-  const Auth = useSelector((state) => state.auth);
-
   const submitForm = async (values) => {
     console.log(editMode);
     setLoading(true);
@@ -67,9 +63,9 @@ const ProductFormPage = ({navigation, route}) => {
       } else if (selectedCategories.length === 0) {
         throw new Error('No categories selected');
       } else {
-        const userId = Auth.uid;
+        const user = AuthUtils.currentUser();
         const product = {
-          userId: userId,
+          userId: user.uid,
           title: values.title,
           description: values.description,
           cost: values.cost,
@@ -79,27 +75,23 @@ const ProductFormPage = ({navigation, route}) => {
         };
 
         if (!editMode) {
-          await dispatch(
-            ProductActions.addProduct(
-              product.userId,
-              product.title,
-              product.description,
-              product.cost,
-              product.localImgLinks,
-              product.categories,
-              product.timestamp,
-            ),
+          await ProductUtils.addProduct(
+            product.userId,
+            product.title,
+            product.description,
+            product.cost,
+            product.localImgLinks,
+            product.categories,
+            product.timestamp,
           );
         } else {
-          await dispatch(
-            ProductActions.updateProduct(
-              id,
-              product.title,
-              product.description,
-              product.cost,
-              product.categories,
-              product.localImgLinks,
-            ),
+          await ProductUtils.updateProduct(
+            id,
+            product.title,
+            product.description,
+            product.cost,
+            product.categories,
+            product.localImgLinks,
           );
         }
 
@@ -281,10 +273,10 @@ const ProductFormPage = ({navigation, route}) => {
               </Button>
               <Button
                 mode="contained"
-                icon="plus"
+                icon={editMode ? 'content-save' : 'plus'}
                 disabled={!formik.isValid}
                 onPress={formik.handleSubmit}>
-                Add new product
+                {editMode ? 'Save Changes' : 'Add New Product'}
               </Button>
             </View>
           </View>

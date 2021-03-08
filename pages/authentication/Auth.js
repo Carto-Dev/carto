@@ -15,13 +15,11 @@ import {
   Title,
   Text,
 } from 'react-native-paper';
-import * as authActions from '../../store/actions/auth';
 import * as yup from 'yup';
-import {useDispatch} from 'react-redux';
 import {useFormik} from 'formik';
+import * as AuthUtils from './../../utils/auth';
 
 const AuthPage = () => {
-  const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLogin, setLogin] = useState(false);
@@ -43,7 +41,7 @@ const AuthPage = () => {
   }, [errorMessage]);
 
   const onGoogleSignInButtonPressed = () => {
-    dispatch(authActions.googleSignIn()).catch((error) => {
+    AuthUtils.googleSignIn().catch((error) => {
       console.log(error);
     });
   };
@@ -56,16 +54,15 @@ const AuthPage = () => {
         if (passwordAgain === '') {
           setPasswordError('this field cannot be empty');
         } else if (passwordAgain === values.password) {
-          await dispatch(
-            authActions.emailAndPasswordRegister(values.email, values.password),
+          await AuthUtils.emailAndPasswordRegister(
+            values.email,
+            values.password,
           );
         } else {
           setPasswordError("Passwords don't match");
         }
       } else {
-        await dispatch(
-          authActions.emailAndPasswordLogin(values.email, values.password),
-        );
+        await AuthUtils.emailAndPasswordLogin(values.email, values.password);
       }
     } catch (error) {
       setErrorMessage(error.message);
