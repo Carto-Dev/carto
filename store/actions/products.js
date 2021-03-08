@@ -10,8 +10,6 @@ export const DELETE_PRODUCT = 'DELETE PRODUCT';
 
 const firestore_ = firestore();
 
-// firestore_.settings({host: 'localhost:8080', ssl: true});
-
 const firestoreDB = firestore_.collection('products');
 
 export const fetchAllProducts = (firestoreProducts) => {
@@ -76,12 +74,8 @@ export const addProduct = (
       const uuid_ = uuid();
       const path = `products/${uuid_}`;
 
-      console.log(path);
-
       await storage().ref(path).putFile(localImgLink);
       const imgLink = await storage().ref(path).getDownloadURL();
-
-      console.log(imgLink);
 
       firebaseLinks.push(imgLink);
     }
@@ -96,8 +90,6 @@ export const addProduct = (
       timestamp: timestamp,
     };
 
-    console.log(product);
-
     const document = await firestoreDB.add(product);
     product.id = (await document.get()).id;
 
@@ -110,24 +102,37 @@ export const addProduct = (
   };
 };
 
-export const updateProduct = (id, title, description, cost) => {
+export const updateProduct = (
+  id,
+  title,
+  description,
+  cost,
+  categories,
+  imgLinks,
+) => {
   return async (dispatch) => {
+    const firebaseLinks = [];
+
+    for (let index = 0; index < imgLinks.length; index++) {
+      let imgLink = imgLinks[index];
+
+      if (!imgLink.startsWith('https://')) {
+        console.log(imgLink);
+        imgLink = await uploadImage(imgLink);
+      }
+
+      firebaseLinks.push(imgLink);
+    }
+
     const product = {
       title: title,
       description: description,
       cost: cost,
+      categories: categories,
+      imgLinks: imgLinks,
     };
 
-    const document = await firestoreDB.doc(id).update(product);
-    product.id = (await document.get()).id;
-
-    dispatch({
-      type: UPDATE_PRODUCT,
-      payload: {
-        id: id,
-        product: product,
-      },
-    });
+    await firestoreDB.doc(id).update(product);
   };
 };
 
@@ -142,4 +147,14 @@ export const deleteProduct = (id) => {
       },
     });
   };
+};
+
+const uploadImage = async (localImgLink) => {
+  const uuid_ = uuid();
+  const path = `products/${uuid_}`;
+
+  await storage().ref(path).putFile(localImgLink);
+  const imgLink = await storage().ref(path).getDownloadURL();
+
+  return imgLink;
 };

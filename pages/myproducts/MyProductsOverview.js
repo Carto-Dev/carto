@@ -1,16 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
 import React, {useEffect} from 'react';
-import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {List, Title, useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
+import routes from '../../constants/routes';
 import * as ProductActions from './../../store/actions/products';
 
-const MyProductsOverviewPage = () => {
+const MyProductsOverviewPage = ({navigation}) => {
   const productsSlice = useSelector((state) => state.products);
   const authSlice = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const theme = useTheme();
-  const width = Dimensions.get('screen').width;
 
   useEffect(() => {
     return firestore()
@@ -31,9 +31,8 @@ const MyProductsOverviewPage = () => {
       keyExtractor={(product) => product.id}
       renderItem={(c) => {
         return (
-          <View style={{width: '100%'}}>
+          <View>
             <List.Accordion
-              style={{width: '100%'}}
               title={c.item.title}
               left={(props) => <List.Icon {...props} icon="cart" />}>
               <List.Item
@@ -61,6 +60,19 @@ const MyProductsOverviewPage = () => {
                     icon="pen"
                   />
                 )}
+                onPress={() => {
+                  navigation.navigate(routes.pages.product_form_page, {
+                    action: 'edit',
+                    data: {
+                      id: c.item.id,
+                      title: c.item.title,
+                      description: c.item.description,
+                      cost: c.item.cost,
+                      categories: c.item.categories,
+                      imageUris: c.item.imgLinks,
+                    },
+                  });
+                }}
               />
               <List.Item
                 titleStyle={{color: theme.colors.primary}}
