@@ -36,7 +36,6 @@ const fontConfig = {
 
 const themeOptions = {
   ...PaperDarkTheme,
-  roundness: 20,
   fonts: configureFonts(fontConfig),
 };
 

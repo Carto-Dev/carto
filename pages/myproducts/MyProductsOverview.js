@@ -12,11 +12,8 @@ const MyProductsOverviewPage = () => {
   useEffect(() => {
     const user = AuthUtils.currentUser();
     return ProductUtils.fetchUserProducts(user.uid).onSnapshot(
-      (querySnapshot) => {
-        setUserProducts([]);
-        const products = ProductUtils.convertToProducts(querySnapshot);
-        setUserProducts(products);
-      },
+      (querySnapshot) =>
+        setUserProducts(ProductUtils.convertToProducts(querySnapshot)),
       (error) => console.log(error),
     );
   }, []);

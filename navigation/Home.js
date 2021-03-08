@@ -9,6 +9,7 @@ import ProductsNavigator from './Products';
 import OrdersNavigator from './Orders';
 import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
 import routes from '../constants/routes';
+import DrawerComponent from './Drawer';
 
 const HomeDrawer = createDrawerNavigator();
 
@@ -18,7 +19,6 @@ const DarkTheme = {
   colors: {
     ...NavDarkTheme.colors,
     ...PaperDarkTheme.colors,
-    primary: PaperDarkTheme.colors.primary,
   },
 };
 
@@ -26,6 +26,7 @@ const HomeNavigator = () => {
   return (
     <NavigationContainer theme={DarkTheme}>
       <HomeDrawer.Navigator
+        drawerContent={(props) => <DrawerComponent {...props} />}
         initialRouteName={routes.navigators.products_navigator}>
         <HomeDrawer.Screen
           name={routes.navigators.products_navigator}
