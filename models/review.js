@@ -1,6 +1,7 @@
 export class Review {
-  constructor(id, reviewerName, hasBoughtProduct, review, stars) {
+  constructor(id, reviewerId, reviewerName, hasBoughtProduct, review, stars) {
     this.id = id;
+    this.reviewerId = reviewerId;
     this.reviewerName = reviewerName;
     this.hasBoughtProduct = hasBoughtProduct;
     this.review = review;

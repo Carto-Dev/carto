@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import ReviewWrapperComponent from '../../components/ReviewWrapper';
 
-const ProductPage = () => {
+const ProductPage = ({route}) => {
   return (
-    <View style={styles.rootView}>
-      <Text>Hello From ProductPage</Text>
+    <View>
+      <ReviewWrapperComponent id={route.params.id} />
     </View>
   );
 };
