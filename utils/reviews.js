@@ -14,6 +14,8 @@ export const createEmptyReviews = async (productId) => {
   reviewsDb.doc(productId).set(reviewObject);
 };
 
+export const getReviewData = (id) => reviewsDb.doc(id);
+
 export const submitReview = async (id, stars, review) => {
   const reviewFireDoc = reviewsDb.doc(id).get();
   const reviewData = await (await reviewFireDoc).data();

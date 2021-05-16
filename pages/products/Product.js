@@ -1,14 +1,11 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
-import ReviewComponent from '../../components/Review';
+import ReviewWrapperComponent from '../../components/ReviewWrapper';
 
 const ProductPage = ({route}) => {
-  console.log(route.params);
-
   return (
     <View>
-      <ReviewComponent id={route.params.id} />
+      <ReviewWrapperComponent id={route.params.id} />
     </View>
   );
 };
