@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {View} from 'react-native';
-import {List, useTheme} from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  List,
+  Paragraph,
+  Portal,
+  useTheme,
+} from 'react-native-paper';
 import routes from './../constants/routes';
 import * as ProductUtils from './../utils/products';
 
@@ -15,6 +22,7 @@ const MyProductComponent = ({
 }) => {
   const navigation = useNavigation();
   const theme = useTheme();
+  const [visible, setVisible] = useState(false);
 
   return (
     <View>
@@ -66,11 +74,31 @@ const MyProductComponent = ({
               icon="trash-can"
             />
           )}
-          onPress={async () => {
-            await ProductUtils.deleteProduct(id);
-          }}
+          onPress={() => setVisible(true)}
         />
       </List.Accordion>
+      <Portal>
+        <Dialog
+          visible={visible}
+          dismissable
+          onDismiss={() => setVisible(false)}>
+          <Dialog.Title>Delete Confirmation</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              Are you sure you want to delete your product with name {title} ?
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={async () => {
+                await ProductUtils.deleteProduct(id);
+              }}>
+              Yes
+            </Button>
+            <Button onPress={() => setVisible(false)}>No</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
