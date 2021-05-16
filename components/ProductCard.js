@@ -17,7 +17,7 @@ const ProductCardComponent = ({product}) => {
           {product.categories
             .map((p) => categories.find((c) => c.key === p))
             .map((p) => (
-              <Chip style={styles.chipStyle} mode="outlined">
+              <Chip key={p.key} style={styles.chipStyle} mode="outlined">
                 {p.text}
               </Chip>
             ))}

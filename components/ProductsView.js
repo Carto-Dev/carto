@@ -25,10 +25,9 @@ const ProductsViewComponent = () => {
         centerContent={true}
         data={products}
         keyExtractor={(item) => item.id}
-        renderItem={(c) => {
-          console.log(c.item);
-          return <ProductCardComponent product={c.item} />;
-        }}
+        renderItem={(c) => (
+          <ProductCardComponent key={c.index} product={c.item} />
+        )}
       />
     </View>
   );
