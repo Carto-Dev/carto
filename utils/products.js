@@ -1,13 +1,13 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
+import * as ReviewUtils from './reviews';
 
 const firestoreDb = firestore();
 const productsDb = firestoreDb.collection('products');
-const reviewsDb = firestoreDb.collection('reviews');
 
 export const fetchProducts = () => {
-  return productsDb;
+  return productsDb.orderBy('timestamp', 'desc').limit(5);
 };
 
 export const fetchUserProducts = (id) => {
@@ -45,6 +45,7 @@ export const addProduct = async (
   timestamp,
 ) => {
   const firebaseLinks = [];
+  const productId = productsDb.doc().id;
 
   for (let index = 0; index < localImgLinks.length; index++) {
     const localImgLink = localImgLinks[index];
@@ -68,7 +69,8 @@ export const addProduct = async (
     timestamp: timestamp,
   };
 
-  await productsDb.add(product);
+  await productsDb.doc(productId).set(product);
+  await ReviewUtils.createEmptyReviews(productId);
 };
 
 export const updateProduct = async (
