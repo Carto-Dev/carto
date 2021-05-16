@@ -2,9 +2,9 @@ import {useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
-import * as ReviewUtils from './../utils/reviews';
+import * as ReviewUtils from '../utils/reviews';
 
-const ReviewComponent = ({id}) => {
+const StarReviewComponent = ({id}) => {
   const [noOfStars, setNoOfStars] = useState(1);
   const [reviewText, setReviewText] = useState('');
   const stars = [1, 2, 3, 4, 5];
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewComponent;
+export default StarReviewComponent;
