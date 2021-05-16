@@ -2,16 +2,29 @@ import {useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
+import {Review} from '../models/review';
 import * as ReviewUtils from '../utils/reviews';
 
-const StarReviewComponent = ({id}) => {
-  const [noOfStars, setNoOfStars] = useState(1);
-  const [reviewText, setReviewText] = useState('');
+const StarReviewComponent = ({
+  id,
+  isEdit = false,
+  review = new Review(),
+  starsGiven = 1,
+  text = '',
+  closeDialog = () => {},
+}) => {
+  const [noOfStars, setNoOfStars] = useState(starsGiven);
+  const [reviewText, setReviewText] = useState(text);
   const stars = [1, 2, 3, 4, 5];
   const {colors} = useTheme();
 
   const handleReviewSubmit = async () => {
-    await ReviewUtils.submitReview(id, noOfStars, reviewText);
+    if (!isEdit) {
+      await ReviewUtils.submitReview(id, noOfStars, reviewText);
+    } else {
+      await ReviewUtils.updateReview(reviewText, noOfStars, review, id);
+      closeDialog();
+    }
   };
 
   return (

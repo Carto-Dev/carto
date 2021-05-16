@@ -27,7 +27,7 @@ const ReviewWrapperComponent = ({id}) => {
     <ScrollView>
       <ReviewBarChartComponent reviewBreakdown={reviewData.reviewBreakdown} />
       <StarReviewComponent id={id} />
-      <ReviewDisplayComponent reviews={reviewData.reviews} />
+      <ReviewDisplayComponent reviews={reviewData.reviews} productId={id} />
     </ScrollView>
   ) : (
     <Title>Loading</Title>

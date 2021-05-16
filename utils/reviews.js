@@ -38,3 +38,34 @@ export const submitReview = async (id, stars, review) => {
 
   await reviewsDb.doc(id).set(reviewData);
 };
+
+export const deleteReview = async (review, productId) => {
+  const reviewFireDoc = reviewsDb.doc(productId).get();
+  const reviewData = await (await reviewFireDoc).data();
+
+  const filteredReviews = reviewData.reviews.filter((r) => review.id !== r.id);
+
+  reviewData.noOfReviews -= 1;
+  reviewData.totalStars -= review.stars;
+  reviewData.reviewBreakdown[`${review.stars}`] -= 1;
+  reviewData.reviews = filteredReviews;
+
+  await reviewsDb.doc(productId).set(reviewData);
+};
+
+export const updateReview = async (newText, newStars, review, productId) => {
+  const reviewFireDoc = reviewsDb.doc(productId).get();
+  const reviewData = await (await reviewFireDoc).data();
+
+  const requiredReview = reviewData.reviews.find((r) => review.id === r.id);
+
+  reviewData.totalStars -= review.stars;
+  reviewData.reviewBreakdown[`${review.stars}`] -= 1;
+  reviewData.reviewBreakdown[`${newStars}`] += 1;
+
+  requiredReview.review = newText;
+  requiredReview.stars = newStars;
+  reviewData.totalStars += newStars;
+
+  await reviewsDb.doc(productId).set(reviewData);
+};
