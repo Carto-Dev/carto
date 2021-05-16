@@ -8,6 +8,9 @@ export class Reviews {
       5: 0,
     };
 
+    this.noOfReviews = 0;
+    this.totalStars = 0;
+
     this.reviews = [];
   }
 }
