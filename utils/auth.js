@@ -1,5 +1,9 @@
 import {GoogleSignin} from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
+const firestoreDb = firestore();
+const userDb = firestoreDb.collection('users');
 
 export const googleSignIn = async () => {
   const {accessToken, idToken} = await GoogleSignin.signIn();
@@ -9,12 +13,18 @@ export const googleSignIn = async () => {
     accessToken,
   );
 
-  await auth().signInWithCredential(googleCredential);
+  const result = await auth().signInWithCredential(googleCredential);
+  const user = result.user;
+
+  await userDb.doc(user.uid).set(user.toJSON());
 };
 
 export const emailAndPasswordRegister = async (email, password) => {
   try {
-    await auth().createUserWithEmailAndPassword(email, password);
+    const result = await auth().createUserWithEmailAndPassword(email, password);
+    const user = result.user;
+
+    await userDb.doc(user.uid).set(user.toJSON());
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
       throw new Error('The email address you provided is already in use.');

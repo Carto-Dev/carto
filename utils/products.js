@@ -2,8 +2,9 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
 
-const firestore_ = firestore();
-const productsDb = firestore_.collection('products');
+const firestoreDb = firestore();
+const productsDb = firestoreDb.collection('products');
+const reviewsDb = firestoreDb.collection('reviews');
 
 export const fetchProducts = () => {
   return productsDb;
