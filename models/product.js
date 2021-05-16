@@ -16,6 +16,6 @@ export class Product {
     this.cost = cost;
     this.imgLinks = imgLinks;
     this.categories = categories;
-    this.timestamp;
+    this.timestamp = timestamp;
   }
 }

@@ -7,7 +7,7 @@ const firestoreDb = firestore();
 const productsDb = firestoreDb.collection('products');
 
 export const fetchProducts = () => {
-  return productsDb;
+  return productsDb.orderBy('timestamp', 'desc').limit(5);
 };
 
 export const fetchUserProducts = (id) => {

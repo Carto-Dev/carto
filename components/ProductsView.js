@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, FlatList, Image, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import * as ProductUtils from './../utils/products';
+import ProductCardComponent from './ProductCard';
 
 const ProductsViewComponent = () => {
   const [products, setProducts] = useState([]);
@@ -17,21 +18,16 @@ const ProductsViewComponent = () => {
 
   return (
     <View style={styles.marginView}>
+      <View style={styles.titleView}>
+        <Title>Newest Additions</Title>
+      </View>
       <FlatList
         centerContent={true}
         data={products}
         keyExtractor={(item) => item.id}
-        numColumns={2}
         renderItem={(c) => {
-          return (
-            <View style={styles.productView}>
-              <Image
-                style={styles.imageView}
-                source={{uri: c.item.imgLinks[0]}}
-              />
-              <Title>{c.item.title}</Title>
-            </View>
-          );
+          console.log(c.item);
+          return <ProductCardComponent product={c.item} />;
         }}
       />
     </View>
@@ -50,6 +46,9 @@ const styles = StyleSheet.create({
   imageView: {
     height: 150,
     width: 150,
+  },
+  titleView: {
+    marginVertical: 20,
   },
 });
 
