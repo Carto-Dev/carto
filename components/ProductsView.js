@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, Image, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import * as ProductUtils from './../utils/products';
 import ProductCardComponent from './ProductCard';
