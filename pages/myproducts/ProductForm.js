@@ -55,7 +55,6 @@ const ProductFormPage = ({navigation, route}) => {
   }, [route.params]);
 
   const submitForm = async (values) => {
-    console.log(editMode);
     setLoading(true);
     try {
       if (imageUris.length === 0) {

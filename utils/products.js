@@ -33,6 +33,7 @@ export const convertToProducts = (firestoreProducts) => {
 
 export const deleteProduct = async (id) => {
   await productsDb.doc(id).delete();
+  await ReviewUtils.deleteAllReviews(id);
 };
 
 export const addProduct = async (
@@ -85,7 +86,6 @@ export const updateProduct = async (
   for (let index = 0; index < imgLinks.length; index++) {
     let imgLink = imgLinks[index];
     if (!imgLink.startsWith('https://')) {
-      console.log(imgLink);
       imgLink = await uploadImage(imgLink);
     }
     firebaseLinks.push(imgLink);

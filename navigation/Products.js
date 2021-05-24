@@ -7,6 +7,7 @@ import CartPage from '../pages/products/Cart';
 import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
+import ReviewPage from '../pages/products/Review';
 
 const ProductsStack = createStackNavigator();
 
@@ -43,6 +44,13 @@ const ProductsNavigator = () => {
           headerTitle: '',
         }}
         component={CartPage}
+      />
+      <ProductsStack.Screen
+        name={routes.pages.review_page}
+        options={{
+          headerTitle: '',
+        }}
+        component={ReviewPage}
       />
     </ProductsStack.Navigator>
   );

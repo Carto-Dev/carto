@@ -12,6 +12,7 @@ const routes = {
     products_overview_page: 'products_overview_page',
     single_product_page: 'single_product_page',
     cart_page: 'cart_page',
+    review_page: 'review_page',
   },
   common: {
     nav_page: 'nav_page',

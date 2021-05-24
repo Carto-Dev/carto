@@ -5,7 +5,6 @@ import ReviewBarChartComponent from './ReviewBarChart';
 import * as ReviewUtils from './../utils/reviews';
 import {Title} from 'react-native-paper';
 import ReviewDisplayComponent from './ReviewDisplay';
-import {ScrollView} from 'react-native';
 
 const ReviewWrapperComponent = ({id}) => {
   const [reviewData, setReviewData] = useState({});
