@@ -26,6 +26,11 @@ const NavDrawerSectionComponent = ({navigation}) => {
         onPress={() => navigation.navigate(routes.navigators.orders_navigator)}
         right={(props) => <List.Icon {...props} icon="package" />}
       />
+      <List.Item
+        title="View Your Reviews"
+        onPress={() => navigation.navigate(routes.pages.my_review_page)}
+        right={(props) => <List.Icon {...props} icon="check-decagram" />}
+      />
     </List.Accordion>
   );
 };

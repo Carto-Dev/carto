@@ -8,6 +8,7 @@ import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import ReviewPage from '../pages/products/Review';
+import MyReviewsPage from '../pages/products/MyReview';
 
 const ProductsStack = createStackNavigator();
 
@@ -51,6 +52,13 @@ const ProductsNavigator = () => {
           headerTitle: '',
         }}
         component={ReviewPage}
+      />
+      <ProductsStack.Screen
+        name={routes.pages.my_review_page}
+        options={{
+          headerTitle: '',
+        }}
+        component={MyReviewsPage}
       />
     </ProductsStack.Navigator>
   );

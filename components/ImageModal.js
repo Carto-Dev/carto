@@ -70,7 +70,6 @@ export const ImageModalComponent = (props) => {
                 data={props.imageUris}
                 keyExtractor={(image) => image}
                 renderItem={(image) => {
-                  console.log(image);
                   return (
                     <ImageComponent
                       uri={image.item}

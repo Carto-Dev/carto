@@ -1,16 +1,16 @@
 import React from 'react';
-import {View} from 'react-native';
+import {ScrollView} from 'react-native';
 import AccountDrawerSectionComponent from '../components/AccountDrawerSection';
 import HeaderDrawerSectionComponent from '../components/HeaderDrawerSection';
 import NavDrawerSectionComponent from '../components/NavDrawerSectionComponent';
 
 const DrawerComponent = ({navigation}) => {
   return (
-    <View>
+    <ScrollView>
       <HeaderDrawerSectionComponent />
       <AccountDrawerSectionComponent />
       <NavDrawerSectionComponent navigation={navigation} />
-    </View>
+    </ScrollView>
   );
 };
 

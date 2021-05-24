@@ -8,6 +8,8 @@ import uuid from 'uuid-random';
 const firestoreDb = firestore();
 const firebaseAuth = auth();
 const reviewsDb = firestoreDb.collection('reviews');
+const reviewsByUsersDb = firestoreDb.collection('reviewsByUsers');
+const productsDb = firestoreDb.collection('products');
 
 export const createEmptyReviews = async (productId) => {
   const reviewObject = new Reviews();
@@ -47,20 +49,7 @@ export const submitReview = async (id, stars, review, images) => {
   reviewData.totalStars += stars;
 
   await reviewsDb.doc(id).set(reviewData);
-};
-
-export const deleteReview = async (review, productId) => {
-  const reviewFireDoc = reviewsDb.doc(productId).get();
-  const reviewData = await (await reviewFireDoc).data();
-
-  const filteredReviews = reviewData.reviews.filter((r) => review.id !== r.id);
-
-  reviewData.noOfReviews -= 1;
-  reviewData.totalStars -= review.stars;
-  reviewData.reviewBreakdown[`${review.stars}`] -= 1;
-  reviewData.reviews = filteredReviews;
-
-  await reviewsDb.doc(productId).set(reviewData);
+  await submitReviewByUser(reviewObject, id);
 };
 
 export const updateReview = async (
@@ -93,6 +82,22 @@ export const updateReview = async (
   reviewData.totalStars += newStars;
 
   await reviewsDb.doc(productId).set(reviewData);
+  await updateReviewByUser(newText, newStars, review, firebaseImages);
+};
+
+export const deleteReview = async (review, productId) => {
+  const reviewFireDoc = reviewsDb.doc(productId).get();
+  const reviewData = await (await reviewFireDoc).data();
+
+  const filteredReviews = reviewData.reviews.filter((r) => review.id !== r.id);
+
+  reviewData.noOfReviews -= 1;
+  reviewData.totalStars -= review.stars;
+  reviewData.reviewBreakdown[`${review.stars}`] -= 1;
+  reviewData.reviews = filteredReviews;
+
+  await reviewsDb.doc(productId).set(reviewData);
+  await deleteReviewByUser(review.id);
 };
 
 const uploadImage = async (localImgLink) => {
@@ -103,4 +108,54 @@ const uploadImage = async (localImgLink) => {
   const imgLink = await storage().ref(path).getDownloadURL();
 
   return imgLink;
+};
+
+export const getReviewsByUser = () =>
+  reviewsByUsersDb.doc(firebaseAuth.currentUser.uid);
+
+const submitReviewByUser = async (review, productId) => {
+  const userId = firebaseAuth.currentUser.uid;
+  const userReviewFireDoc = await reviewsByUsersDb.doc(userId).get();
+
+  const productFireDoc = await productsDb.doc(productId).get();
+  const productData = await productFireDoc.data();
+
+  if (userReviewFireDoc.exists) {
+    const data = await userReviewFireDoc.data();
+    const reviews = data.reviews;
+
+    reviews.push({...review, productId, productData});
+    await reviewsByUsersDb.doc(userId).set({reviews});
+  } else {
+    const reviews = [{...review, productId, productData}];
+    await reviewsByUsersDb.doc(userId).set({reviews});
+  }
+};
+
+const updateReviewByUser = async (newText, newStars, review, images) => {
+  const userId = firebaseAuth.currentUser.uid;
+  const userReviewFireDoc = await reviewsByUsersDb.doc(userId).get();
+
+  const data = await userReviewFireDoc.data();
+  const reviews = data.reviews;
+
+  const requiredReview = reviews.find((r) => review.id === r.id);
+
+  requiredReview.review = newText;
+  requiredReview.images = images;
+  requiredReview.stars = newStars;
+
+  await reviewsByUsersDb.doc(userId).set({reviews});
+};
+
+const deleteReviewByUser = async (reviewId) => {
+  const userId = firebaseAuth.currentUser.uid;
+  const userReviewFireDoc = await reviewsByUsersDb.doc(userId).get();
+
+  const data = await userReviewFireDoc.data();
+  let reviews = data.reviews;
+
+  reviews = reviews.filter((review) => review.id !== reviewId);
+
+  await reviewsByUsersDb.doc(userId).set({reviews});
 };
