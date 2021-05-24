@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {View} from 'react-native';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -9,9 +9,19 @@ import {
   Portal,
   useTheme,
 } from 'react-native-paper';
-import routes from './../constants/routes';
-import * as ProductUtils from './../utils/products';
+import routes from '../../constants/routes';
+import * as ProductUtils from '../../utils/products';
 
+/**
+ * Component responsible for displaying singular user products
+ * and let them interact with them with operations like updating and deleting.
+ * @param id ID for the product.
+ * @param title Title for the product.
+ * @param description Description for the product.
+ * @param cost Cost of the product.
+ * @param categories Categories the product belongs to.
+ * @param imgLinks Links of images of the product.
+ */
 const MyProductComponent = ({
   id,
   title,
@@ -20,8 +30,14 @@ const MyProductComponent = ({
   categories,
   imgLinks,
 }) => {
+
+  // Navigation Hook
   const navigation = useNavigation();
+
+  // Theme config hook
   const theme = useTheme();
+
+  // State hook for setting the visibility of the modal
   const [visible, setVisible] = useState(false);
 
   return (
@@ -45,12 +61,15 @@ const MyProductComponent = ({
           left={(props) => <List.Icon {...props} icon="currency-usd" />}
         />
         <List.Item
-          titleStyle={{color: theme.colors.primary}}
+          titleStyle={{ color: theme.colors.primary }}
           title="Edit"
           left={(props) => (
             <List.Icon {...props} color={theme.colors.primary} icon="pen" />
           )}
           onPress={() => {
+
+            // Navigate to the Product Form page with values filled in
+            // for this specific product.
             navigation.navigate(routes.pages.product_form_page, {
               action: 'edit',
               data: {
@@ -65,7 +84,7 @@ const MyProductComponent = ({
           }}
         />
         <List.Item
-          titleStyle={{color: theme.colors.primary}}
+          titleStyle={{ color: theme.colors.primary }}
           title="Delete"
           left={(props) => (
             <List.Icon

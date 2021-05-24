@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductsViewComponent from '../../components/ProductsView';
+import ProductsViewComponent from '../../components/Products/ProductsView';
 
 const ProductsOverviewPage = () => {
   return <ProductsViewComponent />;

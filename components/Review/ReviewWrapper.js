@@ -2,7 +2,7 @@ import React from 'react';
 import {useEffect, useState} from 'react';
 import StarReviewComponent from './StarReview';
 import ReviewBarChartComponent from './ReviewBarChart';
-import * as ReviewUtils from './../utils/reviews';
+import * as ReviewUtils from './../../utils/reviews';
 import {Title} from 'react-native-paper';
 import ReviewDisplayComponent from './ReviewDisplay';
 

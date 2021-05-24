@@ -2,10 +2,10 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
-import {Review} from '../models/review';
-import * as ReviewUtils from '../utils/reviews';
-import {ImageModalComponent} from './ImageModal';
-import {LoadingModalComponent} from './LoadingModal';
+import {Review} from '../../models/review';
+import * as ReviewUtils from '../../utils/reviews';
+import {ImageModalComponent} from './../Utility/ImageModal';
+import {LoadingModalComponent} from './../Utility/LoadingModal';
 
 const StarReviewComponent = ({
   id,

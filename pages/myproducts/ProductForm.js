@@ -11,8 +11,8 @@ import {
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
-import {ImageModalComponent} from '../../components/ImageModal';
-import {LoadingModalComponent} from '../../components/LoadingModal';
+import {ImageModalComponent} from '../../components/Utility/ImageModal';
+import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
 import * as ProductUtils from './../../utils/products';

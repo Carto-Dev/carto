@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Caption,
@@ -9,14 +9,19 @@ import {
   Portal,
   Title,
 } from 'react-native-paper';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
-import * as AuthUtils from './../utils/auth';
-import * as ReviewUtils from './../utils/reviews';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
+import * as AuthUtils from './../../utils/auth';
+import * as ReviewUtils from './../../utils/reviews';
 import StarReviewComponent from './StarReview';
-import {useNavigation} from '@react-navigation/native';
-import routes from '../constants/routes';
+import { useNavigation } from '@react-navigation/native';
+import routes from '../../constants/routes';
 
-const ReviewCardComponent = ({review, productId}) => {
+/**
+ * Card Component to display individual reviews.
+ * @param review The actual review object
+ * @param param0 ID of the product
+ */
+const ReviewCardComponent = ({ review, productId }) => {
   const deleteReview = async () => {
     await ReviewUtils.deleteReview(review, productId);
   };
@@ -60,7 +65,7 @@ const ReviewCardComponent = ({review, productId}) => {
                 keyExtractor={(image) => image}
                 renderItem={(image) => (
                   <Image
-                    source={{uri: image.item}}
+                    source={{ uri: image.item }}
                     style={styles.reviewImageStyles}
                   />
                 )}
@@ -121,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewNameText: {maxWidth: 200},
+  reviewNameText: { maxWidth: 200 },
   buttonView: {
     display: 'flex',
     flexDirection: 'row',

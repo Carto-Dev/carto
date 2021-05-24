@@ -9,7 +9,7 @@ import {
   Headline,
 } from 'react-native-paper';
 import ImagePicker from 'react-native-image-crop-picker';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native';
 
 const ImageComponent = (props) => {
   return (

@@ -1,8 +1,15 @@
 import React from 'react';
-import * as AuthUtils from './../utils/auth';
-import {List} from 'react-native-paper';
+import * as AuthUtils from './../../utils/auth';
+import { List } from 'react-native-paper';
 
+/**
+ * Account Section of the Drawer.
+ * Consists of displaying account
+ * details and deleting the account as well.
+ */
 const AccountDrawerSectionComponent = () => {
+
+  // Fetching the current logged in user details.
   const user = AuthUtils.currentUser();
 
   return (
