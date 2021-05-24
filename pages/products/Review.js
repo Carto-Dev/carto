@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
-import StarReviewComponent from '../../components/StarReview';
+import ReviewFormComponent from '../../components/Review/ReviewForm';
 
 const ReviewPage = ({route}) => {
   return (
@@ -9,7 +9,7 @@ const ReviewPage = ({route}) => {
       <View style={styles.titleView}>
         <Title>Update Your Review</Title>
       </View>
-      <StarReviewComponent
+      <ReviewFormComponent
         id={route.params.id}
         isEdit={route.params.isEdit}
         review={route.params.review}

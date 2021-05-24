@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import ReviewWrapperComponent from '../../components/ReviewWrapper';
+import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
 
 const ProductPage = ({route}) => {
   return (

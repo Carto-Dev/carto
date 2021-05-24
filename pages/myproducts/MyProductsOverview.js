@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Title, useTheme} from 'react-native-paper';
-import MyProductComponent from '../../components/MyProduct';
+import MyProductComponent from '../../components/Products/MyProduct';
 import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
 

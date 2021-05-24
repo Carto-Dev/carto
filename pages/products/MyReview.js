@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
-import UserReviewCardComponent from '../../components/UserReviewCard';
+import UserReviewCardComponent from '../../components/Review/UserReviewCard';
 import * as ReviewUtils from './../../utils/reviews';
 
 const MyReviewsPage = () => {

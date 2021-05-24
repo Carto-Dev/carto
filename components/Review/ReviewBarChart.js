@@ -1,19 +1,18 @@
-import { useTheme } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { VictoryBar, VictoryChart, VictoryAxis } from 'victory-native';
+import {useTheme} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {VictoryBar, VictoryChart, VictoryAxis} from 'victory-native';
 
 /**
  * Component responsible for displaying the bar chart
  * for the reviews for a given product starwise.
  * @param reviewBreakdown Starwise distribution of reviews
  */
-const ReviewBarChartComponent = ({ reviewBreakdown }) => {
-
+const ReviewBarChartComponent = ({reviewBreakdown}) => {
   // State hook to store formatted data distribution
   const [data, setData] = useState([]);
 
   // Destructuring Theme hook for colours
-  const { colors } = useTheme();
+  const {colors} = useTheme();
 
   // Theme configuration for the chart.
   const chartTheme = {
@@ -34,13 +33,11 @@ const ReviewBarChartComponent = ({ reviewBreakdown }) => {
   // reviewBreakdown changes
   useEffect(() => {
     if (reviewBreakdown) {
-
       // Temporary array to store formatted data.
       const tempData = [];
 
       // Looping over the distribution data
       for (let [key, value] of Object.entries(reviewBreakdown)) {
-
         // Pushing JSON object holding star value
         // and no of reviews for that star.
         tempData.push({
@@ -60,7 +57,7 @@ const ReviewBarChartComponent = ({ reviewBreakdown }) => {
         <VictoryChart theme={chartTheme}>
           <VictoryBar
             barWidth={40}
-            style={{ data: { fill: colors.primary } }}
+            style={{data: {fill: colors.primary}}}
             data={data}
             x="stars"
             y="reviews"
@@ -68,8 +65,8 @@ const ReviewBarChartComponent = ({ reviewBreakdown }) => {
           />
           <VictoryAxis
             style={{
-              axis: { stroke: 'transparent' },
-              ticks: { stroke: 'transparent', padding: 10 },
+              axis: {stroke: 'transparent'},
+              ticks: {stroke: 'transparent', padding: 10},
             }}
           />
         </VictoryChart>

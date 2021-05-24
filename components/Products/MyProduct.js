@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { View } from 'react-native';
+import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {View} from 'react-native';
 import {
   Button,
   Dialog,
@@ -30,7 +30,6 @@ const MyProductComponent = ({
   categories,
   imgLinks,
 }) => {
-
   // Navigation Hook
   const navigation = useNavigation();
 
@@ -61,13 +60,12 @@ const MyProductComponent = ({
           left={(props) => <List.Icon {...props} icon="currency-usd" />}
         />
         <List.Item
-          titleStyle={{ color: theme.colors.primary }}
+          titleStyle={{color: theme.colors.primary}}
           title="Edit"
           left={(props) => (
             <List.Icon {...props} color={theme.colors.primary} icon="pen" />
           )}
           onPress={() => {
-
             // Navigate to the Product Form page with values filled in
             // for this specific product.
             navigation.navigate(routes.pages.product_form_page, {
@@ -84,7 +82,7 @@ const MyProductComponent = ({
           }}
         />
         <List.Item
-          titleStyle={{ color: theme.colors.primary }}
+          titleStyle={{color: theme.colors.primary}}
           title="Delete"
           left={(props) => (
             <List.Icon

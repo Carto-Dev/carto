@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet } from 'react-native';
-import { Title } from 'react-native-paper';
+import {View, ImageBackground, StyleSheet} from 'react-native';
+import {Title} from 'react-native-paper';
 
 /**
  * Component for displaying the App Header in the drawer.
@@ -10,7 +10,7 @@ const HeaderDrawerSectionComponent = () => {
     <View style={styles.imageView}>
       <ImageBackground
         style={styles.image}
-        source={{ uri: 'https://picsum.photos/200/300' }}>
+        source={{uri: 'https://picsum.photos/200/300'}}>
         <View style={styles.imageTextView}>
           <Title style={styles.text}>Carto</Title>
         </View>

@@ -1,35 +1,41 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   Caption,
   Card,
-  Dialog,
   Headline,
   Paragraph,
-  Portal,
   Title,
 } from 'react-native-paper';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import {FlatList, Image, StyleSheet, View} from 'react-native';
 import * as AuthUtils from './../../utils/auth';
 import * as ReviewUtils from './../../utils/reviews';
-import StarReviewComponent from './StarReview';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import routes from '../../constants/routes';
 
 /**
  * Card Component to display individual reviews.
+ * Interaction includes deleting and updating the review.
  * @param review The actual review object
  * @param param0 ID of the product
  */
-const ReviewCardComponent = ({ review, productId }) => {
+const ReviewCardComponent = ({review, productId}) => {
+  // Navigation hook.
+  const navigation = useNavigation();
+
+  /**
+   * Function to delete the review object from database.
+   */
   const deleteReview = async () => {
+    // Deletes the review object from firestore.
     await ReviewUtils.deleteReview(review, productId);
   };
 
-  const [visible, setVisible] = useState(false);
-  const navigation = useNavigation();
-
+  /**
+   * Routes the user to the update review page
+   */
   const routeToUpdateReviewPage = () => {
+    // Params to send to the next page
     const routeParams = {
       id: productId,
       isEdit: true,
@@ -39,6 +45,7 @@ const ReviewCardComponent = ({ review, productId }) => {
       images: review.images,
     };
 
+    // Pushing the review form on stack.
     navigation.navigate(routes.pages.review_page, routeParams);
   };
 
@@ -65,7 +72,7 @@ const ReviewCardComponent = ({ review, productId }) => {
                 keyExtractor={(image) => image}
                 renderItem={(image) => (
                   <Image
-                    source={{ uri: image.item }}
+                    source={{uri: image.item}}
                     style={styles.reviewImageStyles}
                   />
                 )}
@@ -89,23 +96,6 @@ const ReviewCardComponent = ({ review, productId }) => {
           </Card.Actions>
         )}
       </Card>
-      <Portal>
-        <Dialog
-          visible={visible}
-          dismissable
-          onDismiss={() => setVisible(false)}>
-          <StarReviewComponent
-            id={productId}
-            isEdit={true}
-            review={review}
-            starsGiven={review.stars}
-            text={review.review}
-            closeDialog={() => {
-              setVisible(false);
-            }}
-          />
-        </Dialog>
-      </Portal>
     </React.Fragment>
   );
 };
@@ -126,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewNameText: { maxWidth: 200 },
+  reviewNameText: {maxWidth: 200},
   buttonView: {
     display: 'flex',
     flexDirection: 'row',

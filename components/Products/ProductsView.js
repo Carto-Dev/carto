@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-import { Title } from 'react-native-paper';
+import React, {useState, useEffect} from 'react';
+import {View, FlatList, StyleSheet} from 'react-native';
+import {Title} from 'react-native-paper';
 import * as ProductUtils from '../../utils/products';
 import CategoriesComponent from './Categories';
 import ProductCardComponent from './ProductCard';
@@ -11,7 +11,6 @@ import SearchbarComponent from './Searchbar';
  * and displays them for the user.
  */
 const ProductsViewComponent = () => {
-
   // State hook to store the products.
   const [products, setProducts] = useState([]);
 
