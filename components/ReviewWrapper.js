@@ -24,11 +24,18 @@ const ReviewWrapperComponent = ({id}) => {
   );
 
   return !loading ? (
-    <ScrollView>
-      <ReviewBarChartComponent reviewBreakdown={reviewData.reviewBreakdown} />
-      <StarReviewComponent id={id} />
-      <ReviewDisplayComponent reviews={reviewData.reviews} productId={id} />
-    </ScrollView>
+    <ReviewDisplayComponent
+      reviews={reviewData.reviews}
+      productId={id}
+      headerComponent={
+        <React.Fragment>
+          <ReviewBarChartComponent
+            reviewBreakdown={reviewData.reviewBreakdown}
+          />
+          <StarReviewComponent id={id} />
+        </React.Fragment>
+      }
+    />
   ) : (
     <Title>Loading</Title>
   );

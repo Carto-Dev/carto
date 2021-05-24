@@ -51,8 +51,7 @@ const ProductCardComponent = ({product}) => {
 
 const styles = StyleSheet.create({
   cardView: {
-    width: '100%',
-    marginVertical: 10,
+    margin: 20,
   },
 
   buttonView: {

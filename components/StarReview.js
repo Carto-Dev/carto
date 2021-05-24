@@ -60,7 +60,7 @@ const StarReviewComponent = ({
 
 const styles = StyleSheet.create({
   rootView: {
-    margin: 10,
+    margin: 20,
   },
 
   contentView: {

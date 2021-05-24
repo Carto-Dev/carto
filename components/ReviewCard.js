@@ -72,7 +72,7 @@ const ReviewCardComponent = ({review, productId}) => {
 
 const styles = StyleSheet.create({
   mainView: {
-    marginVertical: 10,
+    margin: 20,
   },
   starsText: {
     padding: 10,

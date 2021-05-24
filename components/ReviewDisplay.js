@@ -3,10 +3,14 @@ import {FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import ReviewCardComponent from './ReviewCard';
 
-const ReviewDisplayComponent = ({reviews, productId}) => (
+const ReviewDisplayComponent = ({reviews, productId, headerComponent}) => (
   <FlatList
-    style={styles.mainView}
-    ListHeaderComponent={<Title>Reviews:</Title>}
+    ListHeaderComponent={
+      <React.Fragment>
+        {headerComponent}
+        <Title style={styles.titleView}>Reviews:</Title>
+      </React.Fragment>
+    }
     centerContent={true}
     data={reviews}
     keyExtractor={(review) => review.id}
@@ -17,8 +21,8 @@ const ReviewDisplayComponent = ({reviews, productId}) => (
 );
 
 const styles = StyleSheet.create({
-  mainView: {
-    margin: 10,
+  titleView: {
+    margin: 20,
   },
 });
 
