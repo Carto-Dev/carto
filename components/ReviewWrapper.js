@@ -5,7 +5,6 @@ import ReviewBarChartComponent from './ReviewBarChart';
 import * as ReviewUtils from './../utils/reviews';
 import {Title} from 'react-native-paper';
 import ReviewDisplayComponent from './ReviewDisplay';
-import {ScrollView} from 'react-native';
 
 const ReviewWrapperComponent = ({id}) => {
   const [reviewData, setReviewData] = useState({});
@@ -24,11 +23,18 @@ const ReviewWrapperComponent = ({id}) => {
   );
 
   return !loading ? (
-    <ScrollView>
-      <ReviewBarChartComponent reviewBreakdown={reviewData.reviewBreakdown} />
-      <StarReviewComponent id={id} />
-      <ReviewDisplayComponent reviews={reviewData.reviews} productId={id} />
-    </ScrollView>
+    <ReviewDisplayComponent
+      reviews={reviewData.reviews}
+      productId={id}
+      headerComponent={
+        <React.Fragment>
+          <ReviewBarChartComponent
+            reviewBreakdown={reviewData.reviewBreakdown}
+          />
+          <StarReviewComponent id={id} />
+        </React.Fragment>
+      }
+    />
   ) : (
     <Title>Loading</Title>
   );

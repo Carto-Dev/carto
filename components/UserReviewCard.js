@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   Button,
-  Caption,
   Card,
   Dialog,
   Headline,
@@ -16,7 +15,7 @@ import StarReviewComponent from './StarReview';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../constants/routes';
 
-const ReviewCardComponent = ({review, productId}) => {
+const UserReviewCardComponent = ({review, productId}) => {
   const deleteReview = async () => {
     await ReviewUtils.deleteReview(review, productId);
   };
@@ -43,7 +42,7 @@ const ReviewCardComponent = ({review, productId}) => {
         <Card.Content>
           <View style={styles.reviewView}>
             <Headline style={styles.reviewNameText}>
-              {review.reviewerName}'s Review
+              Your Review of {review.productData.title}
             </Headline>
             <Button mode="outlined" icon="star">
               {review.stars}
@@ -70,10 +69,6 @@ const ReviewCardComponent = ({review, productId}) => {
           <Paragraph>
             {review.review.length > 0 ? review.review : 'No Review'}
           </Paragraph>
-          <Caption>
-            Have they bought the product?{' '}
-            {review.hasBoughtProduct ? 'Yes' : 'No'}
-          </Caption>
         </Card.Content>
         {AuthUtils.currentUser().uid === review.reviewerId && (
           <Card.Actions>
@@ -135,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewCardComponent;
+export default UserReviewCardComponent;
