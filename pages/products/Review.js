@@ -1,15 +1,19 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
-import StarReviewComponent from '../../components/StarReview';
+import ReviewFormComponent from '../../components/Review/ReviewForm';
 
+/**
+ * Display Review Update Form for specific reviews.
+ * @param route Route details
+ */
 const ReviewPage = ({route}) => {
   return (
     <React.Fragment>
       <View style={styles.titleView}>
         <Title>Update Your Review</Title>
       </View>
-      <StarReviewComponent
+      <ReviewFormComponent
         id={route.params.id}
         isEdit={route.params.isEdit}
         review={route.params.review}

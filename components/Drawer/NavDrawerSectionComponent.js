@@ -1,7 +1,12 @@
 import React from 'react';
 import {List} from 'react-native-paper';
-import routes from './../constants/routes';
+import routes from './../../constants/routes';
 
+/**
+ * Navigation section of the drawer to display respective
+ * pages on top of the navigation stack.
+ * @param {navigation} Navigation navigation prop from the Custom Drawer
+ */
 const NavDrawerSectionComponent = ({navigation}) => {
   return (
     <List.Accordion

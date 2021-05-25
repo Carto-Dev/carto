@@ -1,21 +1,30 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
-import StarReviewComponent from './StarReview';
+import ReviewFormComponent from './ReviewForm';
 import ReviewBarChartComponent from './ReviewBarChart';
-import * as ReviewUtils from './../utils/reviews';
+import * as ReviewUtils from './../../utils/reviews';
 import {Title} from 'react-native-paper';
 import ReviewDisplayComponent from './ReviewDisplay';
 
+/**
+ * Wrapper component for displaying reviews.
+ * @param id ID of the product.
+ */
 const ReviewWrapperComponent = ({id}) => {
+  // State hook for saving review data.
   const [reviewData, setReviewData] = useState({});
-  const [loading, setloading] = useState(true);
 
+  // State hook for setting loading status
+  const [loading, setLoading] = useState(true);
+
+  // Subscribing to Firestore changes and fetching
+  // reviews.
   useEffect(
     () =>
       ReviewUtils.getReviewData(id).onSnapshot(
         (data) => {
           setReviewData(data.data());
-          setloading(false);
+          setLoading(false);
         },
         (error) => console.log(error),
       ),
@@ -31,7 +40,7 @@ const ReviewWrapperComponent = ({id}) => {
           <ReviewBarChartComponent
             reviewBreakdown={reviewData.reviewBreakdown}
           />
-          <StarReviewComponent id={id} />
+          <ReviewFormComponent id={id} />
         </React.Fragment>
       }
     />

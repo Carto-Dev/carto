@@ -11,35 +11,44 @@ import {
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
-import {ImageModalComponent} from '../../components/ImageModal';
-import {LoadingModalComponent} from '../../components/LoadingModal';
+import {ImageModalComponent} from '../../components/Utility/ImageModal';
+import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
 import * as ProductUtils from './../../utils/products';
 import * as AuthUtils from './../../utils/auth';
 
 const ProductFormPage = ({navigation, route}) => {
+  // Loading and error message states.
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  // Image State and Modal Visibility state.
   const [imageUris, setImageUris] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+
+  // Categories state and edit mode state.
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
+  // Prefilling the form when editing products.
   let title = '';
   let description = '';
   let cost = '';
   let id = '';
 
+  // If the page recieves some route params for editing products.
   if (route.params != null) {
     const receievedData = route.params.data;
 
+    // Getting data from params.
     id = receievedData.id;
     title = receievedData.title;
     description = receievedData.description;
     cost = receievedData.cost;
   }
 
+  // Listen to route params to extract categories and images.
   useEffect(() => {
     if (route.params != null) {
       const receievedData = route.params.data;
@@ -54,14 +63,25 @@ const ProductFormPage = ({navigation, route}) => {
     }
   }, [route.params]);
 
+  /**
+   * Function to handle form submit.
+   * @param values Form values
+   */
   const submitForm = async (values) => {
+    // Set loading state as true.
     setLoading(true);
     try {
+      // Check if the images array is not empty.
       if (imageUris.length === 0) {
         throw new Error('No images inserted');
-      } else if (selectedCategories.length === 0) {
+      }
+      // Check if the categories array is not empty.
+      else if (selectedCategories.length === 0) {
         throw new Error('No categories selected');
-      } else {
+      }
+      // Submit data to firebase
+      else {
+        // Create the product object.
         const user = AuthUtils.currentUser();
         const product = {
           userId: user.uid,
@@ -73,6 +93,7 @@ const ProductFormPage = ({navigation, route}) => {
           timestamp: new Date().toUTCString(),
         };
 
+        // CASE 1: To submit a new product.
         if (!editMode) {
           await ProductUtils.addProduct(
             product.userId,
@@ -83,7 +104,9 @@ const ProductFormPage = ({navigation, route}) => {
             product.categories,
             product.timestamp,
           );
-        } else {
+        }
+        // CASE 1: To update an existing product.
+        else {
           await ProductUtils.updateProduct(
             id,
             product.title,
@@ -94,14 +117,19 @@ const ProductFormPage = ({navigation, route}) => {
           );
         }
 
+        // Route back to your products page.
         navigation.navigate(routes.pages.my_products_page);
       }
     } catch (error) {
+      // Set the error message state if there's any error.
       setErrorMessage(error.message);
     }
+
+    // Set loading state as false.
     setLoading(false);
   };
 
+  // Formik Hook
   const formik = useFormik({
     initialValues: {
       title: title,
@@ -122,6 +150,7 @@ const ProductFormPage = ({navigation, route}) => {
     }),
   });
 
+  // Listening for error message state changes.
   useEffect(() => {
     if (errorMessage) {
       Alert.alert('Something went wrong!', errorMessage, [
@@ -136,21 +165,39 @@ const ProductFormPage = ({navigation, route}) => {
     }
   }, [errorMessage]);
 
+  /**
+   * Open the image modal
+   */
   const openImageModal = () => {
     setModalVisible(true);
   };
 
+  /**
+   * Close the image modal
+   */
   const closeImageModal = () => {
     setModalVisible(false);
   };
 
+  /**
+   * Add image to the image state array
+   */
   const addNewImage = (imageUri) => setImageUris([...imageUris, imageUri]);
 
+  /**
+   * Add multiple images to the image state array
+   */
   const addImages = (newImageUris) => setImageUris([...newImageUris]);
 
+  /**
+   * Remove image from the image state array
+   */
   const deleteImage = (imageUri) =>
     setImageUris(imageUris.filter((uri) => uri !== imageUri));
 
+  /**
+   * Replace image in the image state array
+   */
   const replaceImage = (oldImageUri, newImageUri) => {
     const index = imageUris.indexOf(oldImageUri);
     setImageUris([
@@ -160,6 +207,9 @@ const ProductFormPage = ({navigation, route}) => {
     ]);
   };
 
+  /**
+   * Add categories to the category state.
+   */
   const addCategory = (category) => {
     if (selectedCategories.indexOf(category) !== -1) {
       return;
@@ -168,6 +218,9 @@ const ProductFormPage = ({navigation, route}) => {
     }
   };
 
+  /**
+   * Remove categories from the category state.
+   */
   const removeCategory = (category) => {
     if (selectedCategories.indexOf(category) === -1) {
       return;

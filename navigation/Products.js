@@ -10,10 +10,13 @@ import {Button} from 'react-native-paper';
 import ReviewPage from '../pages/products/Review';
 import MyReviewsPage from '../pages/products/MyReview';
 
+// Products Stack Navigator.
 const ProductsStack = createStackNavigator();
 
 const ProductsNavigator = () => {
+  // Navigation Hook.
   const navigation = useNavigation();
+
   return (
     <ProductsStack.Navigator
       initialRouteName={routes.pages.products_overview_page}>

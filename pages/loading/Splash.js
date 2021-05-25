@@ -2,6 +2,9 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ActivityIndicator, Title, Text} from 'react-native-paper';
 
+/**
+ * Splash page to display when fetching logged in user details.
+ */
 const SplashPage = () => {
   return (
     <View style={styles.rootView}>

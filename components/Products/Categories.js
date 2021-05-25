@@ -1,10 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, FlatList, ImageBackground} from 'react-native';
 import {Title, useTheme} from 'react-native-paper';
-import categories from './../constants/categories';
+import categories from '../../constants/categories';
 
+/**
+ * Component for displaying all the possible categories for the products.
+ * Displays them using a premade list of categories and their respective images.
+ */
 const CategoriesComponent = () => {
+  // Fetching the theme config
   const theme = useTheme();
+
   return (
     <View>
       <View style={styles.marginView}>

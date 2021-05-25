@@ -8,6 +8,10 @@ const MainNavigator = () => {
   const [isLoading, setLoading] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
 
+  /**
+   * Listening to auth state changes and
+   * loading the proper navigator to display the user
+   */
   useEffect(() => {
     const onAuthStateChanged = (user) => {
       setLoading(true);

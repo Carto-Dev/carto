@@ -19,13 +19,22 @@ import * as yup from 'yup';
 import {useFormik} from 'formik';
 import * as AuthUtils from './../../utils/auth';
 
+/**
+ * Login and Registration Pages.
+ */
 const AuthPage = () => {
+  // Loading and error message states.
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  // Login or registration state.
   const [isLogin, setLogin] = useState(false);
+
+  // Password Again and Error states.
   const [passwordAgain, setPasswordAgain] = useState('');
   const [passwordError, setPasswordError] = useState(null);
 
+  // Listen to the error message state and display errors if any.
   useEffect(() => {
     if (errorMessage) {
       Alert.alert('Something went wrong!', errorMessage, [
@@ -40,20 +49,35 @@ const AuthPage = () => {
     }
   }, [errorMessage]);
 
+  /**
+   * Google Sign Up Function.
+   */
   const onGoogleSignInButtonPressed = () => {
     AuthUtils.googleSignIn().catch((error) => {
       console.log(error);
     });
   };
 
+  /**
+   * Firebase registration/login function.
+   * @param values Form values
+   */
   const onEmailAndPasswordSignInButtonPressed = async (values) => {
+    // Set loading state to true.
     setLoading(true);
+
+    // Set an empty password error state.
     setPasswordError(null);
     try {
+      // CASE 1: If the user is registering in.
       if (!isLogin) {
+        // Check if the password again is not empty state
         if (passwordAgain === '') {
           setPasswordError('this field cannot be empty');
-        } else if (passwordAgain === values.password) {
+        }
+
+        // Check if password's match.
+        else if (passwordAgain === values.password) {
           await AuthUtils.emailAndPasswordRegister(
             values.email,
             values.password,
@@ -61,15 +85,21 @@ const AuthPage = () => {
         } else {
           setPasswordError("Passwords don't match");
         }
-      } else {
+      }
+      // CASE 2: If the user is logging in.
+      else {
         await AuthUtils.emailAndPasswordLogin(values.email, values.password);
       }
     } catch (error) {
+      // Set the error message state as the error.
       setErrorMessage(error.message);
     }
+    // Set loading state as false.
     setLoading(false);
   };
 
+  // Formik hook with initial values,
+  // submit function and validation schema.
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -82,8 +112,10 @@ const AuthPage = () => {
     }),
   });
 
+  // Switch mode to registration/login mode.
   const onSwitchMode = () => setLogin(!isLogin);
 
+  // Password Again state.
   const onReenterPassword = (text) => setPasswordAgain(text);
 
   return (

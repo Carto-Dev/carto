@@ -2,10 +2,19 @@ import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {VictoryBar, VictoryChart, VictoryAxis} from 'victory-native';
 
+/**
+ * Component responsible for displaying the bar chart
+ * for the reviews for a given product starwise.
+ * @param reviewBreakdown Starwise distribution of reviews
+ */
 const ReviewBarChartComponent = ({reviewBreakdown}) => {
+  // State hook to store formatted data distribution
   const [data, setData] = useState([]);
+
+  // Destructuring Theme hook for colours
   const {colors} = useTheme();
 
+  // Theme configuration for the chart.
   const chartTheme = {
     axis: {
       style: {
@@ -19,15 +28,25 @@ const ReviewBarChartComponent = ({reviewBreakdown}) => {
     },
   };
 
+  // UseEffect hook to convert the starwise distribution data
+  // into usable format for the chart package to use for every
+  // reviewBreakdown changes
   useEffect(() => {
     if (reviewBreakdown) {
+      // Temporary array to store formatted data.
       const tempData = [];
+
+      // Looping over the distribution data
       for (let [key, value] of Object.entries(reviewBreakdown)) {
+        // Pushing JSON object holding star value
+        // and no of reviews for that star.
         tempData.push({
           stars: key,
           reviews: value,
         });
       }
+
+      // Saving into the state hook.
       setData(tempData);
     }
   }, [reviewBreakdown]);

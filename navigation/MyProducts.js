@@ -7,10 +7,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 
+// My Products Stack Navigator.
 const MyProductsStack = createStackNavigator();
 
 const MyProductsNavigator = () => {
+  // Navigation hook
   const navigation = useNavigation();
+
   return (
     <MyProductsStack.Navigator initialRouteName={routes.pages.my_products_page}>
       <MyProductsStack.Screen

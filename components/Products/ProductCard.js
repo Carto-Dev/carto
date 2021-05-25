@@ -2,13 +2,24 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Paragraph, Title, Button, Chip} from 'react-native-paper';
-import categories from '../constants/categories';
-import routes from '../constants/routes';
+import categories from '../../constants/categories';
+import routes from '../../constants/routes';
 
+/**
+ * Component responsible for displaying singular products in general.
+ * Can be used to interact with like viewing the product or adding to cart.
+ * @param product Product object.
+ */
 const ProductCardComponent = ({product}) => {
+  // Destructuring theme hook for colours.
   const {colors} = useTheme();
+
+  // Navigation hook.
   const navigation = useNavigation();
 
+  /**
+   * On Click function to route the user to the product page.
+   */
   const navigateToProductPage = () =>
     navigation.navigate(routes.pages.single_product_page, {id: product.id});
 
