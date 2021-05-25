@@ -3,6 +3,10 @@ import {View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import ReviewFormComponent from '../../components/Review/ReviewForm';
 
+/**
+ * Display Review Update Form for specific reviews.
+ * @param route Route details
+ */
 const ReviewPage = ({route}) => {
   return (
     <React.Fragment>

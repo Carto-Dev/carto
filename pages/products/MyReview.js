@@ -4,9 +4,14 @@ import {Title} from 'react-native-paper';
 import UserReviewCardComponent from '../../components/Review/UserReviewCard';
 import * as ReviewUtils from './../../utils/reviews';
 
+/**
+ * Display User Reviews for the logged in user.
+ */
 const MyReviewsPage = () => {
+  // State for reviews
   const [userReviews, setUserReviews] = useState([]);
 
+  // Listen to firebase state changes for reviews.
   useEffect(
     () =>
       ReviewUtils.getReviewsByUser().onSnapshot(

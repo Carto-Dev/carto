@@ -6,9 +6,13 @@ import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
 
 const MyProductsOverviewPage = () => {
+  // Theme Hook.
   const theme = useTheme();
+
+  // Products Array State.
   const [userProducts, setUserProducts] = useState([]);
 
+  // Fetch the products from firebase and save those products in state.
   useEffect(() => {
     const user = AuthUtils.currentUser();
     return ProductUtils.fetchUserProducts(user.uid).onSnapshot(
