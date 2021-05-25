@@ -11,8 +11,10 @@ import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
 import routes from '../constants/routes';
 import DrawerComponent from './Drawer';
 
+// Drawer Navigation
 const HomeDrawer = createDrawerNavigator();
 
+// Theme object
 const DarkTheme = {
   ...NavDarkTheme,
   ...PaperDarkTheme,

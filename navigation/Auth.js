@@ -8,8 +8,10 @@ import AuthPage from '../pages/authentication/Auth';
 import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
 import routes from '../constants/routes';
 
+// Auth Stack Navigator.
 const AuthStack = createStackNavigator();
 
+// Theme object
 const DarkTheme = {
   ...NavDarkTheme,
   colors: {

@@ -1,3 +1,4 @@
+// Routes constants
 const routes = {
   navigators: {
     products_navigator: 'products_navigator',

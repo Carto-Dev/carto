@@ -6,10 +6,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 
+// Orders Stack Navigator.
 const OrdersStack = createStackNavigator();
 
 const OrdersNavigator = () => {
+  // Navigation hook
   const navigation = useNavigation();
+
   return (
     <OrdersStack.Navigator initialRouteName={routes.pages.orders_page}>
       <OrdersStack.Screen

@@ -1,3 +1,4 @@
+// Various categories options
 const categories = [
   {
     text: 'Apparel and Clothing',

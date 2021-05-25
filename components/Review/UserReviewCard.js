@@ -19,7 +19,7 @@ import routes from '../../constants/routes';
  * Card Component to display individual reviews by user.
  * Interaction includes deleting and updating the review.
  * @param review The actual review object
- * @param param0 ID of the product
+ * @param productId ID of the product
  */
 const UserReviewCardComponent = ({review, productId}) => {
   // Navigation hook.
