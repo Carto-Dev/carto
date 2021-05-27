@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import * as ProductUtils from '../../utils/products';
+import LoadingAnimation from '../Lottie/LoadingAnimation';
 import CategoriesComponent from './Categories';
 import ProductCardComponent from './ProductCard';
 import SearchbarComponent from './Searchbar';
@@ -14,12 +15,16 @@ const ProductsViewComponent = () => {
   // State hook to store the products.
   const [products, setProducts] = useState([]);
 
+  // Loading state.
+  const [loading, setLoading] = useState(true);
+
   // UseEffect to listen to Firestore document changes and
   // save them to state for displaying.
   useEffect(() => {
     return ProductUtils.fetchProducts().onSnapshot(
       (querySnapshot) => {
         setProducts(ProductUtils.convertToProducts(querySnapshot));
+        setLoading(false);
       },
       (error) => console.log(error),
     );
@@ -38,11 +43,15 @@ const ProductsViewComponent = () => {
           </React.Fragment>
         }
         centerContent={true}
-        data={products}
-        keyExtractor={(item) => item.id}
-        renderItem={(c) => (
-          <ProductCardComponent key={c.index} product={c.item} />
-        )}
+        data={!loading ? products : ['Loading']}
+        keyExtractor={(item) => (loading ? item : item.id)}
+        renderItem={(c) =>
+          !loading ? (
+            <ProductCardComponent product={c.item} />
+          ) : (
+            <LoadingAnimation message="Fetching Products For you!" />
+          )
+        }
       />
     </View>
   );

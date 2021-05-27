@@ -4,6 +4,7 @@ import {Title, useTheme} from 'react-native-paper';
 import MyProductComponent from '../../components/Products/MyProduct';
 import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
+import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 
 const MyProductsOverviewPage = () => {
   // Theme Hook.
@@ -12,40 +13,51 @@ const MyProductsOverviewPage = () => {
   // Products Array State.
   const [userProducts, setUserProducts] = useState([]);
 
+  // Loading state.
+  const [loading, setLoading] = useState(true);
+
   // Fetch the products from firebase and save those products in state.
   useEffect(() => {
     const user = AuthUtils.currentUser();
     return ProductUtils.fetchUserProducts(user.uid).onSnapshot(
-      (querySnapshot) =>
-        setUserProducts(ProductUtils.convertToProducts(querySnapshot)),
+      (querySnapshot) => {
+        setUserProducts(ProductUtils.convertToProducts(querySnapshot));
+        setLoading(false);
+      },
       (error) => console.log(error),
     );
   }, []);
 
-  return userProducts.length !== 0 ? (
-    <FlatList
-      style={{backgroundColor: theme.colors.surface}}
-      centerContent={true}
-      data={userProducts}
-      keyExtractor={(product) => product.id}
-      renderItem={(c) => {
-        const product = c.item;
+  return !loading ? (
+    userProducts.length !== 0 ? (
+      <FlatList
+        style={{backgroundColor: theme.colors.surface}}
+        centerContent={true}
+        data={userProducts}
+        keyExtractor={(product) => product.id}
+        renderItem={(c) => {
+          const product = c.item;
 
-        return (
-          <MyProductComponent
-            id={product.id}
-            title={product.title}
-            description={product.description}
-            cost={product.cost}
-            categories={product.categories}
-            imgLinks={product.imgLinks}
-          />
-        );
-      }}
-    />
+          return (
+            <MyProductComponent
+              id={product.id}
+              title={product.title}
+              description={product.description}
+              cost={product.cost}
+              categories={product.categories}
+              imgLinks={product.imgLinks}
+            />
+          );
+        }}
+      />
+    ) : (
+      <View style={styles.centerView}>
+        <Title>Go on and add some products!</Title>
+      </View>
+    )
   ) : (
     <View style={styles.centerView}>
-      <Title>Go on and add some products!</Title>
+      <LoadingAnimation message="Fetching Your Products!" />
     </View>
   );
 };

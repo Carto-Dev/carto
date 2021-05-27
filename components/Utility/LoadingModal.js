@@ -1,17 +1,39 @@
 import React from 'react';
-import {ActivityIndicator} from 'react-native';
-import {Portal, Modal} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {Portal, Modal, useTheme} from 'react-native-paper';
+import LoadingAnimation from '../Lottie/LoadingAnimation';
 
 /**
  * Component to indicate loading state.
  * @param visible State for the modal to be visible or not
+ * @param message Message to display while loading.
  */
-export const LoadingModalComponent = ({visible}) => {
+export const LoadingModalComponent = ({visible, message}) => {
+  // Theme Hook.
+  const theme = useTheme();
+
   return (
     <Portal>
-      <Modal visible={visible} dismissable={false}>
-        <ActivityIndicator animating={true} color={'white'} size="large" />
+      <Modal
+        visible={visible}
+        dismissable={false}
+        style={styles.modalView}
+        contentContainerStyle={{
+          ...styles.modalContainer,
+          backgroundColor: theme.colors.background,
+        }}>
+        <LoadingAnimation message={message} />
       </Modal>
     </Portal>
   );
 };
+
+const styles = StyleSheet.create({
+  modalView: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalContainer: {
+    margin: 30,
+    borderRadius: 30,
+  },
+});
