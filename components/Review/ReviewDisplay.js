@@ -1,6 +1,7 @@
 import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
+import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import ReviewCardComponent from './ReviewCard';
 
 /**
@@ -16,6 +17,11 @@ const ReviewDisplayComponent = ({reviews, productId, headerComponent}) => (
         {headerComponent}
         <Title style={styles.titleView}>Reviews:</Title>
       </React.Fragment>
+    }
+    ListEmptyComponent={
+      <EmptyDataAnimation
+        message={'No Reviews Available. Add Some Reviews To Rate The Product!'}
+      />
     }
     centerContent={true}
     data={reviews}

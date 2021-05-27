@@ -1,16 +1,17 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
+import {View, StyleSheet} from 'react-native';
 import ReviewFormComponent from './ReviewForm';
 import ReviewBarChartComponent from './ReviewBarChart';
 import * as ReviewUtils from './../../utils/reviews';
-import {Title} from 'react-native-paper';
 import ReviewDisplayComponent from './ReviewDisplay';
+import LoadingAnimation from '../Lottie/LoadingAnimation';
 
 /**
  * Wrapper component for displaying reviews.
  * @param id ID of the product.
  */
-const ReviewWrapperComponent = ({id}) => {
+const ReviewWrapperComponent = ({id, headerComponent}) => {
   // State hook for saving review data.
   const [reviewData, setReviewData] = useState({});
 
@@ -37,6 +38,7 @@ const ReviewWrapperComponent = ({id}) => {
       productId={id}
       headerComponent={
         <React.Fragment>
+          {headerComponent}
           <ReviewBarChartComponent
             reviewBreakdown={reviewData.reviewBreakdown}
           />
@@ -45,8 +47,19 @@ const ReviewWrapperComponent = ({id}) => {
       }
     />
   ) : (
-    <Title>Loading</Title>
+    <View styles={styles.loadingView}>
+      <LoadingAnimation message="Fetching Products Details For You!" />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingView: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default ReviewWrapperComponent;

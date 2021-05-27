@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {Title, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import MyProductComponent from '../../components/Products/MyProduct';
 import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
+import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 
 const MyProductsOverviewPage = () => {
   // Theme Hook.
@@ -29,32 +30,31 @@ const MyProductsOverviewPage = () => {
   }, []);
 
   return !loading ? (
-    userProducts.length !== 0 ? (
-      <FlatList
-        style={{backgroundColor: theme.colors.surface}}
-        centerContent={true}
-        data={userProducts}
-        keyExtractor={(product) => product.id}
-        renderItem={(c) => {
-          const product = c.item;
+    <FlatList
+      style={{backgroundColor: theme.colors.surface}}
+      centerContent={true}
+      data={userProducts}
+      keyExtractor={(product) => product.id}
+      ListEmptyComponent={
+        <EmptyDataAnimation
+          message={'No Products Available. Add Some Products To Sell Today!'}
+        />
+      }
+      renderItem={(c) => {
+        const product = c.item;
 
-          return (
-            <MyProductComponent
-              id={product.id}
-              title={product.title}
-              description={product.description}
-              cost={product.cost}
-              categories={product.categories}
-              imgLinks={product.imgLinks}
-            />
-          );
-        }}
-      />
-    ) : (
-      <View style={styles.centerView}>
-        <Title>Go on and add some products!</Title>
-      </View>
-    )
+        return (
+          <MyProductComponent
+            id={product.id}
+            title={product.title}
+            description={product.description}
+            cost={product.cost}
+            categories={product.categories}
+            imgLinks={product.imgLinks}
+          />
+        );
+      }}
+    />
   ) : (
     <View style={styles.centerView}>
       <LoadingAnimation message="Fetching Your Products!" />

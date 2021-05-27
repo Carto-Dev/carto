@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
-import {Title} from 'react-native-paper';
+import {Text, Title} from 'react-native-paper';
 import * as ProductUtils from '../../utils/products';
+import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import CategoriesComponent from './Categories';
 import ProductCardComponent from './ProductCard';
 import SearchbarComponent from './Searchbar';
+import LottieView from 'lottie-react-native';
 
 /**
  * Generates a list of the top 5 new added products
@@ -41,6 +43,11 @@ const ProductsViewComponent = () => {
               <Title>Newest Additions</Title>
             </View>
           </React.Fragment>
+        }
+        ListEmptyComponent={
+          <EmptyDataAnimation
+            message={'No Products Available. Add Some Products To Sell Today!'}
+          />
         }
         centerContent={true}
         data={!loading ? products : ['Loading']}
