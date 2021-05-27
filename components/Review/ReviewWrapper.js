@@ -6,6 +6,7 @@ import ReviewBarChartComponent from './ReviewBarChart';
 import * as ReviewUtils from './../../utils/reviews';
 import ReviewDisplayComponent from './ReviewDisplay';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
+import ReviewTotalComponent from './ReviewTotal';
 
 /**
  * Wrapper component for displaying reviews.
@@ -39,6 +40,10 @@ const ReviewWrapperComponent = ({id, headerComponent}) => {
       headerComponent={
         <React.Fragment>
           {headerComponent}
+          <ReviewTotalComponent
+            totalReviews={reviewData.noOfReviews}
+            totalStars={reviewData.totalStars}
+          />
           <ReviewBarChartComponent
             reviewBreakdown={reviewData.reviewBreakdown}
           />

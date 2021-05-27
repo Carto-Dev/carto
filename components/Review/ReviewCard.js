@@ -7,7 +7,7 @@ import {
   Paragraph,
   Title,
 } from 'react-native-paper';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
+import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as AuthUtils from './../../utils/auth';
 import * as ReviewUtils from './../../utils/reviews';
 import {useNavigation} from '@react-navigation/native';
@@ -49,6 +49,9 @@ const ReviewCardComponent = ({review, productId}) => {
     navigation.navigate(routes.pages.review_page, routeParams);
   };
 
+  // Width Dimensions
+  const width = Dimensions.get('screen').width * 0.82;
+
   return (
     <React.Fragment>
       <Card style={styles.mainView}>
@@ -65,6 +68,7 @@ const ReviewCardComponent = ({review, productId}) => {
             <React.Fragment>
               <Title>Product Images</Title>
               <FlatList
+                pagingEnabled={true}
                 centerContent={true}
                 data={review.images}
                 horizontal={true}
@@ -73,7 +77,7 @@ const ReviewCardComponent = ({review, productId}) => {
                 renderItem={(image) => (
                   <Image
                     source={{uri: image.item}}
-                    style={styles.reviewImageStyles}
+                    style={{...styles.reviewImageStyles, width: width}}
                   />
                 )}
               />
@@ -124,9 +128,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   reviewImageStyles: {
-    width: 400,
     height: 300,
-    margin: 5,
   },
 });
 
