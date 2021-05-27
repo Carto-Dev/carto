@@ -343,7 +343,14 @@ const ProductFormPage = ({navigation, route}) => {
         deleteImage={deleteImage}
         replaceImage={replaceImage}
       />
-      <LoadingModalComponent visible={isLoading} />
+      <LoadingModalComponent
+        message={
+          editMode
+            ? 'Updating Your Product Details!'
+            : 'Making Your Product Available To Buy!'
+        }
+        visible={isLoading}
+      />
     </View>
   );
 };

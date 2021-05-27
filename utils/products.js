@@ -21,6 +21,13 @@ export const fetchProducts = () =>
 export const fetchUserProducts = (id) => productsDb.where('userId', '==', id);
 
 /**
+ * Fetch singular product in real time.
+ * @param id Product ID
+ * @returns Snapshot object with Product Details
+ */
+export const fetchProduct = (id) => productsDb.doc(id);
+
+/**
  * Convert snapshot objects to product objects
  * @param firestoreProducts Snapshot data
  * @returns Array of products.

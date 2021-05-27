@@ -11,13 +11,13 @@ import {
   Surface,
   TextInput,
   HelperText,
-  ActivityIndicator,
   Title,
   Text,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
 import * as AuthUtils from './../../utils/auth';
+import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 
 /**
  * Login and Registration Pages.
@@ -53,6 +53,7 @@ const AuthPage = () => {
    * Google Sign Up Function.
    */
   const onGoogleSignInButtonPressed = () => {
+    setLoading(true);
     AuthUtils.googleSignIn().catch((error) => {
       console.log(error);
     });
@@ -113,64 +114,64 @@ const AuthPage = () => {
   });
 
   // Switch mode to registration/login mode.
-  const onSwitchMode = () => setLogin(!isLogin);
+  const onSwitchMode = () => setLoading(true);
 
   // Password Again state.
   const onReenterPassword = (text) => setPasswordAgain(text);
 
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.rootView}>
-      <View>
-        <Title style={styles.titleText}>Carto.</Title>
-        <Text>For the most premium shoppers</Text>
-      </View>
-      <Surface style={styles.surfaceView}>
-        <ScrollView>
-          <TextInput
-            mode="outlined"
-            label="Email Address"
-            value={formik.values.email}
-            onChangeText={formik.handleChange('email')}
-            onBlur={() => formik.setFieldTouched('email')}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-          <HelperText
-            type="error"
-            visible={formik.touched.email && formik.errors.email}>
-            {formik.errors.email}
-          </HelperText>
-          <TextInput
-            mode="outlined"
-            label="Password"
-            value={formik.values.password}
-            onChangeText={formik.handleChange('password')}
-            onBlur={() => formik.setFieldTouched('password')}
-            autoCapitalize="none"
-            secureTextEntry={true}
-          />
-          <HelperText
-            type="error"
-            visible={formik.touched.password && formik.errors.password}>
-            {formik.errors.password}
-          </HelperText>
-          {!isLogin && (
-            <>
-              <TextInput
-                mode="outlined"
-                label="Enter Password Again"
-                value={passwordAgain}
-                onChangeText={onReenterPassword}
-                autoCapitalize="none"
-                secureTextEntry={true}
-              />
-              <HelperText type="error" visible={passwordError}>
-                {passwordError}
-              </HelperText>
-            </>
-          )}
-          <View style={styles.buttonView}>
-            {isLoading === false ? (
+    <React.Fragment>
+      <KeyboardAvoidingView behavior="height" style={styles.rootView}>
+        <View>
+          <Title style={styles.titleText}>Carto.</Title>
+          <Text>For the most premium shoppers</Text>
+        </View>
+        <Surface style={styles.surfaceView}>
+          <ScrollView>
+            <TextInput
+              mode="outlined"
+              label="Email Address"
+              value={formik.values.email}
+              onChangeText={formik.handleChange('email')}
+              onBlur={() => formik.setFieldTouched('email')}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+            <HelperText
+              type="error"
+              visible={formik.touched.email && formik.errors.email}>
+              {formik.errors.email}
+            </HelperText>
+            <TextInput
+              mode="outlined"
+              label="Password"
+              value={formik.values.password}
+              onChangeText={formik.handleChange('password')}
+              onBlur={() => formik.setFieldTouched('password')}
+              autoCapitalize="none"
+              secureTextEntry={true}
+            />
+            <HelperText
+              type="error"
+              visible={formik.touched.password && formik.errors.password}>
+              {formik.errors.password}
+            </HelperText>
+            {!isLogin && (
+              <>
+                <TextInput
+                  mode="outlined"
+                  label="Enter Password Again"
+                  value={passwordAgain}
+                  onChangeText={onReenterPassword}
+                  autoCapitalize="none"
+                  secureTextEntry={true}
+                />
+                <HelperText type="error" visible={passwordError}>
+                  {passwordError}
+                </HelperText>
+              </>
+            )}
+            <View style={styles.buttonView}>
               <Button
                 mode="contained"
                 icon="login"
@@ -178,25 +179,27 @@ const AuthPage = () => {
                 onPress={formik.handleSubmit}>
                 {isLogin ? 'Log In' : 'Sign In'}
               </Button>
-            ) : (
-              <ActivityIndicator animating={true} size="small" />
-            )}
-            <Button
-              mode="contained"
-              icon="toggle-switch"
-              onPress={onSwitchMode}>
-              Switch to {isLogin ? 'Sign In' : 'Log In'}
-            </Button>
-            <Button
-              mode="contained"
-              icon="google"
-              onPress={onGoogleSignInButtonPressed}>
-              Sign In With Google
-            </Button>
-          </View>
-        </ScrollView>
-      </Surface>
-    </KeyboardAvoidingView>
+              <Button
+                mode="contained"
+                icon="toggle-switch"
+                onPress={onSwitchMode}>
+                Switch to {isLogin ? 'Sign In' : 'Log In'}
+              </Button>
+              <Button
+                mode="contained"
+                icon="google"
+                onPress={onGoogleSignInButtonPressed}>
+                Sign In With Google
+              </Button>
+            </View>
+          </ScrollView>
+        </Surface>
+      </KeyboardAvoidingView>
+      <LoadingModalComponent
+        visible={isLoading}
+        message={isLogin ? 'Logging You In!' : 'Signing You In!'}
+      />
+    </React.Fragment>
   );
 };
 const styles = StyleSheet.create({

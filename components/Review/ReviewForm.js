@@ -186,7 +186,10 @@ const ReviewFormComponent = ({
         deleteImage={deleteImage}
         replaceImage={replaceImage}
       />
-      <LoadingModalComponent visible={isLoading} />
+      <LoadingModalComponent
+        message={isEdit ? 'Editing Your Review!' : 'Submitting Your Review!'}
+        visible={isLoading}
+      />
     </React.Fragment>
   );
 };

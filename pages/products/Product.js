@@ -1,5 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
+import {Title} from 'react-native-paper';
+import ProductWrapperComponent from '../../components/Product/ProductWrapperComponent';
 import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
 
 /**
@@ -9,7 +11,10 @@ import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
 const ProductPage = ({route}) => {
   return (
     <View>
-      <ReviewWrapperComponent id={route.params.id} />
+      <ReviewWrapperComponent
+        headerComponent={<ProductWrapperComponent id={route.params.id} />}
+        id={route.params.id}
+      />
     </View>
   );
 };

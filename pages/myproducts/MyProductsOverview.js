@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {Title, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import MyProductComponent from '../../components/Products/MyProduct';
 import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
+import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
+import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 
 const MyProductsOverviewPage = () => {
   // Theme Hook.
@@ -12,22 +14,32 @@ const MyProductsOverviewPage = () => {
   // Products Array State.
   const [userProducts, setUserProducts] = useState([]);
 
+  // Loading state.
+  const [loading, setLoading] = useState(true);
+
   // Fetch the products from firebase and save those products in state.
   useEffect(() => {
     const user = AuthUtils.currentUser();
     return ProductUtils.fetchUserProducts(user.uid).onSnapshot(
-      (querySnapshot) =>
-        setUserProducts(ProductUtils.convertToProducts(querySnapshot)),
+      (querySnapshot) => {
+        setUserProducts(ProductUtils.convertToProducts(querySnapshot));
+        setLoading(false);
+      },
       (error) => console.log(error),
     );
   }, []);
 
-  return userProducts.length !== 0 ? (
+  return !loading ? (
     <FlatList
       style={{backgroundColor: theme.colors.surface}}
       centerContent={true}
       data={userProducts}
       keyExtractor={(product) => product.id}
+      ListEmptyComponent={
+        <EmptyDataAnimation
+          message={'No Products Available. Add Some Products To Sell Today!'}
+        />
+      }
       renderItem={(c) => {
         const product = c.item;
 
@@ -45,7 +57,7 @@ const MyProductsOverviewPage = () => {
     />
   ) : (
     <View style={styles.centerView}>
-      <Title>Go on and add some products!</Title>
+      <LoadingAnimation message="Fetching Your Products!" />
     </View>
   );
 };
