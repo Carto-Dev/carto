@@ -60,13 +60,14 @@ export const updateProductInCart = async (id, quantity) => {
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
   // Fetch the product from the document.
-  const products = await userCartDocument.data();
+  const products = (await userCartDocument.data()).products;
   const product = products.find((p) => p.id === id);
 
   // Update the quantity and save the array in firebase.
   product.quantity = quantity;
 
-  console.log(products);
+  // Update the document in firebase.
+  await cartDb.doc(firebaseAuth.currentUser.uid).set({products: products});
 };
 
 /**
@@ -74,13 +75,16 @@ export const updateProductInCart = async (id, quantity) => {
  * @param productId Product ID
  */
 export const deleteProductFromCart = async (id) => {
+  console.log(id);
   // Document reference
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
   // Remove the product from array
-  const products = await userCartDocument.data();
+  const products = (await userCartDocument.data()).products;
   const updatedProducts = products.filter((p) => p.id !== id);
 
   // Update the document in firebase.
-  console.log(updatedProducts);
+  await cartDb
+    .doc(firebaseAuth.currentUser.uid)
+    .set({products: updatedProducts});
 };

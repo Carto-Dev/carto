@@ -7,6 +7,7 @@ import {
   Modal,
   Portal,
   Snackbar,
+  Text,
   TextInput,
   Title,
   useTheme,
@@ -46,8 +47,11 @@ const ProductWrapperComponent = ({id}) => {
   // Quantity state.
   const [quantity, setQuantity] = useState('1');
 
+  /**
+   * Add to cart function.
+   */
   const addToCart = async () => {
-    CartUtils.addProductToCart(product.id, quantity);
+    await CartUtils.addProductToCart(product.id, quantity);
     setVisible(false);
     setSnackBarVisible(true);
   };
@@ -142,7 +146,9 @@ const ProductWrapperComponent = ({id}) => {
         </Modal>
       </Portal>
       <Snackbar
-        theme={theme}
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
         visible={snackBarVisible}
         onDismiss={() => setSnackBarVisible(false)}
         action={{
@@ -151,7 +157,7 @@ const ProductWrapperComponent = ({id}) => {
             setSnackBarVisible(false);
           },
         }}>
-        Added To Cart!
+        <Text>Added To Cart!</Text>
       </Snackbar>
     </React.Fragment>
   );

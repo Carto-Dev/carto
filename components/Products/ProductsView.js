@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {
   Button,
-  List,
   Modal,
   Portal,
   Snackbar,
@@ -45,13 +44,20 @@ const ProductsViewComponent = () => {
   // Theme Hook.
   const theme = useTheme();
 
+  /**
+   * Open up the modal to enter quantity.
+   * @param id Product ID
+   */
   const openCartModal = (id) => {
     setProductId(id);
     setVisible(true);
   };
 
+  /**
+   * Add to cart function.
+   */
   const addToCart = async () => {
-    CartUtils.addProductToCart(productId, quantity);
+    await CartUtils.addProductToCart(productId, quantity);
     setVisible(false);
     setSnackBarVisible(true);
   };
@@ -114,7 +120,7 @@ const ProductsViewComponent = () => {
             backgroundColor: theme.colors.background,
           }}>
           <View style={styles.mainModalView}>
-            <Title>Select The Quantity Of Products To Add In Cart</Title>
+            <Title>Enter The Quantity Of Products To Add In Cart</Title>
             <TextInput
               label="Quantity"
               keyboardType="numeric"
@@ -129,7 +135,9 @@ const ProductsViewComponent = () => {
         </Modal>
       </Portal>
       <Snackbar
-        theme={theme}
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
         visible={snackBarVisible}
         onDismiss={() => setSnackBarVisible(false)}
         action={{
@@ -138,7 +146,7 @@ const ProductsViewComponent = () => {
             setSnackBarVisible(false);
           },
         }}>
-        Added To Cart!
+        <Text>Added To Cart</Text>
       </Snackbar>
     </React.Fragment>
   );
