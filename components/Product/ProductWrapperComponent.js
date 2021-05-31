@@ -1,10 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList, Image, Dimensions} from 'react-native';
-import {Chip, Headline, List, Text, Title, useTheme} from 'react-native-paper';
+import {
+  Button,
+  Chip,
+  Headline,
+  Modal,
+  Portal,
+  Snackbar,
+  TextInput,
+  Title,
+  useTheme,
+} from 'react-native-paper';
 import categories from '../../constants/categories';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ExpandableTextComponent from '../Utility/ExpandableText';
 import * as ProductUtils from './../../utils/products';
+import * as CartUtils from './../../utils/cart';
 
 /**
  * Display Specific Product Details.
@@ -22,6 +33,24 @@ const ProductWrapperComponent = ({id}) => {
 
   // Width Dimension
   const width = Dimensions.get('screen').width * 0.9;
+
+  // Theme Hook.
+  const theme = useTheme();
+
+  // Snackbar Visibility
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
+
+  // Modal Visibility
+  const [visible, setVisible] = useState(false);
+
+  // Quantity state.
+  const [quantity, setQuantity] = useState('1');
+
+  const addToCart = async () => {
+    CartUtils.addProductToCart(product.id, quantity);
+    setVisible(false);
+    setSnackBarVisible(true);
+  };
 
   // Listening to product changes and reflecting the same.
   useEffect(
@@ -77,10 +106,53 @@ const ProductWrapperComponent = ({id}) => {
           <ExpandableTextComponent>
             {product.description}
           </ExpandableTextComponent>
+          <Button
+            style={styles.addToCartButtonStyle}
+            mode="contained"
+            onPress={() => setVisible(true)}>
+            Add To Cart
+          </Button>
         </View>
       ) : (
         <LoadingAnimation message="Fetching Product Details For You!" />
       )}
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          dismissable
+          style={styles.modalView}
+          contentContainerStyle={{
+            ...styles.modalContainer,
+            backgroundColor: theme.colors.background,
+          }}>
+          <View style={styles.mainModalView}>
+            <Title>Select The Quantity Of Products To Add In Cart</Title>
+            <TextInput
+              label="Quantity"
+              keyboardType="numeric"
+              value={quantity}
+              mode="outlined"
+              onChangeText={(text) => setQuantity(text)}
+            />
+            <Button style={styles.addToCartButtonStyle} onPress={addToCart}>
+              Add To Cart
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
+      <Snackbar
+        theme={theme}
+        visible={snackBarVisible}
+        onDismiss={() => setSnackBarVisible(false)}
+        action={{
+          label: 'Close',
+          onPress: () => {
+            setSnackBarVisible(false);
+          },
+        }}>
+        Added To Cart!
+      </Snackbar>
     </React.Fragment>
   );
 };
@@ -111,6 +183,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 20,
+  },
+  addToCartButtonStyle: {
+    marginVertical: 20,
+  },
+  modalView: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalContainer: {
+    margin: 20,
+    borderRadius: 20,
+  },
+  mainModalView: {
+    padding: 20,
   },
 });
 

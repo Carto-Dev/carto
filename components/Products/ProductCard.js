@@ -10,7 +10,7 @@ import routes from '../../constants/routes';
  * Can be used to interact with like viewing the product or adding to cart.
  * @param product Product object.
  */
-const ProductCardComponent = ({product}) => {
+const ProductCardComponent = ({product, openCartModal}) => {
   // Destructuring theme hook for colours.
   const {colors} = useTheme();
 
@@ -52,8 +52,8 @@ const ProductCardComponent = ({product}) => {
       </Card.Content>
       <Card.Actions>
         <View style={styles.buttonView}>
-          <Button>Add To Cart</Button>
-          <Button>View Product</Button>
+          <Button onPress={() => openCartModal(product.id)}>Add To Cart</Button>
+          <Button onPress={navigateToProductPage}>View Product</Button>
         </View>
       </Card.Actions>
     </Card>

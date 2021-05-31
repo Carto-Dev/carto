@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import uuid from 'uuid-random';
 
 const firestoreDb = firestore();
 const cartDb = firestoreDb.collection('cart');
@@ -37,14 +38,14 @@ export const addProductToCart = async (productId, quantity) => {
 
   // If the document exists, append product id and quantity to it.
   if (userCartDocument.exists) {
-    const products = await userCartDocument.data();
-    products.push({productId, quantity});
+    const products = (await userCartDocument.data()).products;
 
+    products.push({id: uuid(), productId, quantity});
     await cartDb.doc(firebaseAuth.currentUser.uid).set({products});
   }
   // Else create a new list and add the list to the document.
   else {
-    const products = [{productId, quantity}];
+    const products = [{id: uuid(), productId, quantity}];
     await cartDb.doc(firebaseAuth.currentUser.uid).set({products});
   }
 };
@@ -54,13 +55,13 @@ export const addProductToCart = async (productId, quantity) => {
  * @param productId Product ID
  * @param quantity Product Quantity.
  */
-export const updateProductInCart = async (productId, quantity) => {
+export const updateProductInCart = async (id, quantity) => {
   // Document reference
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
   // Fetch the product from the document.
   const products = await userCartDocument.data();
-  const product = products.find((p) => p.productId === productId);
+  const product = products.find((p) => p.id === id);
 
   // Update the quantity and save the array in firebase.
   product.quantity = quantity;
@@ -72,13 +73,13 @@ export const updateProductInCart = async (productId, quantity) => {
  * Delete product from the cart.
  * @param productId Product ID
  */
-export const deleteProductFromCart = async (productId) => {
+export const deleteProductFromCart = async (id) => {
   // Document reference
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
   // Remove the product from array
   const products = await userCartDocument.data();
-  const updatedProducts = products.filter((p) => p.productId !== productId);
+  const updatedProducts = products.filter((p) => p.id !== id);
 
   // Update the document in firebase.
   console.log(updatedProducts);
