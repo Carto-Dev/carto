@@ -94,7 +94,7 @@ export const addProduct = async (
   };
 
   // Save the product to firebase and generate empty reviews document.
-  await productsDb.doc(productId).set(product);
+  await productsDb.doc(productId).set({id: productId, ...product});
   await ReviewUtils.createEmptyReviews(productId);
 };
 
