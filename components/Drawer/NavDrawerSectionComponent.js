@@ -27,6 +27,11 @@ const NavDrawerSectionComponent = ({navigation}) => {
         right={(props) => <List.Icon {...props} icon="account-star" />}
       />
       <List.Item
+        title="View Your Cart"
+        onPress={() => navigation.navigate(routes.pages.cart_page)}
+        right={(props) => <List.Icon {...props} icon="cart" />}
+      />
+      <List.Item
         title="View Your Orders"
         onPress={() => navigation.navigate(routes.navigators.orders_navigator)}
         right={(props) => <List.Icon {...props} icon="package" />}

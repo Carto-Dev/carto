@@ -33,6 +33,14 @@ const ProductsNavigator = () => {
               <Icon size={23} name="md-menu" color="white" />
             </Button>
           ),
+          headerRight: () => (
+            <Button
+              onPress={() => {
+                navigation.navigate(routes.pages.cart_page);
+              }}>
+              <Icon size={23} name="cart" color="white" />
+            </Button>
+          ),
         }}
       />
       <ProductsStack.Screen
