@@ -11,6 +11,12 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import {FlatList} from 'react-native';
 
+type Props = {
+  uri: string;
+  onUpdate: () => void;
+  onDelete: () => void;
+};
+
 /**
  * Component which displays the image and also helps
  * in interaction like updating and deleting the image
@@ -18,7 +24,7 @@ import {FlatList} from 'react-native';
  * @param onUpdate
  * @param onDelete
  */
-const ImageComponent = ({uri, onUpdate, onDelete}) => {
+const ImageComponent: React.FC<Props> = ({uri, onUpdate, onDelete}) => {
   return (
     <View style={styles.imageView}>
       <Image style={styles.image} source={{uri: uri}} />
@@ -34,6 +40,16 @@ const ImageComponent = ({uri, onUpdate, onDelete}) => {
   );
 };
 
+type ImageModalProps = {
+  addImages: (images: string[]) => void;
+  addNewImage: (image: string) => void;
+  replaceImage: (oldImageUri: string, newImageUri: string) => void;
+  deleteImage: (image: any) => void;
+  visible: boolean;
+  onDismiss: () => void;
+  imageUris: string[];
+};
+
 /**
  * Component which enables the user to capture images from
  * both camera and also from the device storage.
@@ -46,7 +62,7 @@ const ImageComponent = ({uri, onUpdate, onDelete}) => {
  * @param onDismiss Function for the modal to be dismissed.
  * @param imageUris Array state which holds all the image URIs.
  */
-export const ImageModalComponent = ({
+export const ImageModalComponent: React.FC<ImageModalProps> = ({
   addImages,
   addNewImage,
   replaceImage,

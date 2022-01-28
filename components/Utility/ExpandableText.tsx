@@ -1,13 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, ReactNode} from 'react';
 import {TouchableHighlight, View, StyleSheet} from 'react-native';
 import {Card, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Entypo';
+
+type Props = {
+  children: string;
+};
 
 /**
  * Text Component which can be expanded.
  * @param children Text to be displayed
  */
-const ExpandableTextComponent = ({children}) => {
+const ExpandableTextComponent: React.FC<Props> = ({children}) => {
   // Expanded State.
   const [expanded, setExpanded] = useState(false);
 
