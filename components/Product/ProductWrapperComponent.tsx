@@ -15,19 +15,23 @@ import {
 import categories from '../../constants/categories';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ExpandableTextComponent from '../Utility/ExpandableText';
-import * as ProductUtils from './../../utils/products';
-import * as CartUtils from './../../utils/cart';
+import * as ProductUtils from '../../utils/products';
+import * as CartUtils from '../../utils/cart';
+
+type Props = {
+  id: string;
+};
 
 /**
  * Display Specific Product Details.
  * @param id Product ID
  */
-const ProductWrapperComponent = ({id}) => {
+const ProductWrapperComponent: React.FC<Props> = ({id}) => {
   // Loading State
   const [loading, setLoading] = useState(true);
 
   // Product State.
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState<any>({});
 
   // Destructuring theme hook for colours.
   const {colors} = useTheme();
@@ -178,11 +182,9 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   titleText: {
-    fontWeight: 'bold',
-  },
-  titleText: {
     padding: 10,
     borderWidth: 2,
+    fontWeight: 'bold',
   },
   titleTextView: {
     flexDirection: 'row',
