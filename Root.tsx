@@ -8,33 +8,32 @@ import {GoogleSignin} from '@react-native-community/google-signin/';
 import {webClientKey} from './secrets/webClientId';
 import MainNavigator from './navigation/Main';
 
-const fontConfig = {
-  default: {
-    regular: {
-      fontFamily: 'Raleway-Regular',
-      fontWeight: '400',
-    },
-    medium: {
-      fontFamily: 'Raleway-SemiBold',
-      fontWeight: '600',
-    },
-    light: {
-      fontFamily: 'Raleway-Light',
-      fontWeight: '300',
-    },
-    thin: {
-      fontFamily: 'Raleway-Thin',
-      fontWeight: '100',
-    },
-  },
-};
+// const fontConfig = {
+//   android: {
+//     regular: {
+//       fontFamily: 'Raleway-Regular',
+//       fontWeight: 'normal',
+//     },
+//     medium: {
+//       fontFamily: 'Raleway-SemiBold',
+//       fontWeight: 'normal',
+//     },
+//     light: {
+//       fontFamily: 'Raleway-Light',
+//       fontWeight: 'normal',
+//     },
+//     thin: {
+//       fontFamily: 'Raleway-Thin',
+//       fontWeight: 'normal',
+//     },
+//   },
+// };
 
 const themeOptions = {
   ...PaperDarkTheme,
-  fonts: configureFonts(fontConfig),
 };
 
-const Root = () => {
+const Root: React.FC = () => {
   React.useEffect(() => {
     GoogleSignin.configure({
       scopes: ['email'],
