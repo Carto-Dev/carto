@@ -3,12 +3,17 @@ import {StyleSheet} from 'react-native';
 import {Portal, Modal, useTheme} from 'react-native-paper';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 
+type Props = {
+  visible: boolean;
+  message: string;
+};
+
 /**
  * Component to indicate loading state.
  * @param visible State for the modal to be visible or not
  * @param message Message to display while loading.
  */
-export const LoadingModalComponent = ({visible, message}) => {
+export const LoadingModalComponent: React.FC<Props> = ({visible, message}) => {
   // Theme Hook.
   const theme = useTheme();
 
