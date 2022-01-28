@@ -1,4 +1,9 @@
 export class Reviews {
+  public reviewBreakdown: any;
+  public noOfReviews: number;
+  public totalStars: number;
+  public reviews: any[];
+
   constructor() {
     this.reviewBreakdown = {
       1: 0,
