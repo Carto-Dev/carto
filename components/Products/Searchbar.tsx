@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 /**
  * Search bar component.
  */
-const SearchbarComponent = () => {
+const SearchbarComponent: React.FC = () => {
   return (
     <View style={styles.marginView}>
       <Title>

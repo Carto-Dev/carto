@@ -22,7 +22,7 @@ import SearchbarComponent from './Searchbar';
  * Generates a list of the top 5 new added products
  * and displays them for the user.
  */
-const ProductsViewComponent = () => {
+const ProductsViewComponent: React.FC = () => {
   // State hook to store the products.
   const [products, setProducts] = useState([]);
 

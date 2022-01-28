@@ -5,17 +5,22 @@ import {Card, Paragraph, Title, Button, Chip} from 'react-native-paper';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
 
+type Props = {
+  product: any;
+  openCartModal: any;
+};
+
 /**
  * Component responsible for displaying singular products in general.
  * Can be used to interact with like viewing the product or adding to cart.
  * @param product Product object.
  */
-const ProductCardComponent = ({product, openCartModal}) => {
+const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
   // Destructuring theme hook for colours.
   const {colors} = useTheme();
 
   // Navigation hook.
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   /**
    * On Click function to route the user to the product page.

@@ -7,7 +7,7 @@ import categories from '../../constants/categories';
  * Component for displaying all the possible categories for the products.
  * Displays them using a premade list of categories and their respective images.
  */
-const CategoriesComponent = () => {
+const CategoriesComponent: React.FC = () => {
   // Fetching the theme config
   const theme = useTheme();
 

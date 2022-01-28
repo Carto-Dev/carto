@@ -12,6 +12,15 @@ import {
 import routes from '../../constants/routes';
 import * as ProductUtils from '../../utils/products';
 
+type Props = {
+  id: string;
+  title: string;
+  description: string;
+  cost: number;
+  categories: string[];
+  imgLinks: string[];
+};
+
 /**
  * Component responsible for displaying singular user products
  * and let them interact with them with operations like updating and deleting.
@@ -22,7 +31,7 @@ import * as ProductUtils from '../../utils/products';
  * @param categories Categories the product belongs to.
  * @param imgLinks Links of images of the product.
  */
-const MyProductComponent = ({
+const MyProductComponent: React.FC<Props> = ({
   id,
   title,
   description,
@@ -31,7 +40,7 @@ const MyProductComponent = ({
   imgLinks,
 }) => {
   // Navigation Hook
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   // Theme config hook
   const theme = useTheme();
