@@ -74,7 +74,7 @@ export const deleteProduct = async (id: string): Promise<void> => {
  * @param timestamp Timestamp when the product was created
  */
 export const addProduct = async (
-  userId: string[],
+  userId: string,
   title: string[],
   description: string[],
   cost: number,
