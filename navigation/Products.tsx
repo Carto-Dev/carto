@@ -13,9 +13,9 @@ import MyReviewsPage from '../pages/products/MyReview';
 // Products Stack Navigator.
 const ProductsStack = createStackNavigator();
 
-const ProductsNavigator = () => {
+const ProductsNavigator: React.FC = () => {
   // Navigation Hook.
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <ProductsStack.Navigator

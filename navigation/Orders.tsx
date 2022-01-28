@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import OrdersPage from './../pages/orders/Orders';
+import OrdersPage from '../pages/orders/Orders';
 import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
@@ -9,7 +9,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 // Orders Stack Navigator.
 const OrdersStack = createStackNavigator();
 
-const OrdersNavigator = () => {
+const OrdersNavigator: React.FC = () => {
   // Navigation hook
   const navigation = useNavigation();
 

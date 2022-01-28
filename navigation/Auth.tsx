@@ -20,7 +20,7 @@ const DarkTheme = {
   },
 };
 
-const AuthNavigator = () => (
+const AuthNavigator: React.FC = () => (
   <NavigationContainer theme={DarkTheme}>
     <AuthStack.Navigator
       screenOptions={{headerShown: false}}

@@ -4,7 +4,11 @@ import AccountDrawerSectionComponent from '../components/Drawer/AccountDrawerSec
 import HeaderDrawerSectionComponent from '../components/Drawer/HeaderDrawerSection';
 import NavDrawerSectionComponent from '../components/Drawer/NavDrawerSectionComponent';
 
-const DrawerComponent = ({navigation}) => {
+type Props = {
+  navigation: any;
+};
+
+const DrawerComponent: React.FC<Props> = ({navigation}) => {
   return (
     <ScrollView>
       <HeaderDrawerSectionComponent />

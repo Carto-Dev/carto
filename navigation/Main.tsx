@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth';
 import AuthNavigator from './Auth';
 import HomeNavigator from './Home';
 
-const MainNavigator = () => {
+const MainNavigator: React.FC = () => {
   const [isLoading, setLoading] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
 

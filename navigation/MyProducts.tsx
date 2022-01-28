@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import MyProductsOverviewPage from './../pages/myproducts/MyProductsOverview';
+import MyProductsOverviewPage from '../pages/myproducts/MyProductsOverview';
 import ProductFormPage from '../pages/myproducts/ProductForm';
 import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,9 +10,9 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 // My Products Stack Navigator.
 const MyProductsStack = createStackNavigator();
 
-const MyProductsNavigator = () => {
+const MyProductsNavigator: React.FC = () => {
   // Navigation hook
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <MyProductsStack.Navigator initialRouteName={routes.pages.my_products_page}>

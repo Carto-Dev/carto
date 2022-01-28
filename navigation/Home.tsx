@@ -24,7 +24,7 @@ const DarkTheme = {
   },
 };
 
-const HomeNavigator = () => {
+const HomeNavigator: React.FC = () => {
   return (
     <NavigationContainer theme={DarkTheme}>
       <HomeDrawer.Navigator
