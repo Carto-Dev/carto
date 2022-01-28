@@ -1,4 +1,6 @@
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import uuid from 'uuid-random';
 
@@ -11,15 +13,18 @@ const firebaseAuth = auth();
  * Fetch cart products in real time.
  * @returns Snapshot object of product details and quantity
  */
-export const fetchProductsFromCart = () =>
-  cartDb.doc(firebaseAuth.currentUser.uid);
+export const fetchProductsFromCart =
+  (): FirebaseFirestoreTypes.DocumentReference =>
+    cartDb.doc(firebaseAuth.currentUser.uid);
 
 /**
  * Fetch actal product from products collection.
  * @param productId Product ID
  * @returns Product details
  */
-export const fetchActualProduct = async (productId) => {
+export const fetchActualProduct = async (
+  productId,
+): Promise<FirebaseFirestoreTypes.DocumentData> => {
   // Fetch document reference from products collection.
   const productDocument = await productsDb.doc(productId).get();
 
@@ -32,7 +37,10 @@ export const fetchActualProduct = async (productId) => {
  * @param productId Product ID.
  * @param quantity Quantity of product in cart.
  */
-export const addProductToCart = async (productId, quantity) => {
+export const addProductToCart = async (
+  productId: string,
+  quantity: number,
+): Promise<void> => {
   // User Cart Document Reference.
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
@@ -55,7 +63,10 @@ export const addProductToCart = async (productId, quantity) => {
  * @param productId Product ID
  * @param quantity Product Quantity.
  */
-export const updateProductInCart = async (id, quantity) => {
+export const updateProductInCart = async (
+  id: string,
+  quantity: number,
+): Promise<void> => {
   // Document reference
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();
 
@@ -74,7 +85,7 @@ export const updateProductInCart = async (id, quantity) => {
  * Delete product from the cart.
  * @param productId Product ID
  */
-export const deleteProductFromCart = async (id) => {
+export const deleteProductFromCart = async (id: string): Promise<void> => {
   console.log(id);
   // Document reference
   const userCartDocument = await cartDb.doc(firebaseAuth.currentUser.uid).get();

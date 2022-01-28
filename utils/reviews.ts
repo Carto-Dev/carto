@@ -71,8 +71,8 @@ export const submitReview = async (id, stars, review, images) => {
     reviewId,
     user.uid,
     user.displayName,
-    false,
     review,
+    false,
     stars,
     firebaseImages,
   );

@@ -1,38 +1,18 @@
-import {GoogleSignin} from '@react-native-community/google-signin';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 const firestoreDb = firestore();
 const userDb = firestoreDb.collection('users');
 
 /**
- * Log in through google accounts.
- */
-export const googleSignIn = async () => {
-  // Generate an access token and id token
-  // from the user who logged in.
-  const {accessToken, idToken} = await GoogleSignin.signIn();
-
-  // Generate credentials for the user and firebase to save.
-  const googleCredential = auth.GoogleAuthProvider.credential(
-    idToken,
-    accessToken,
-  );
-
-  // Sign in to the Firebase Google Auth.
-  const result = await auth().signInWithCredential(googleCredential);
-  const user = result.user;
-
-  // Save the user object to firebase.
-  await userDb.doc(user.uid).set(user.toJSON());
-};
-
-/**
  * Firebase Auth Email and Password Registration.
  * @param email Email of the user.
  * @param password Password of the user.
  */
-export const emailAndPasswordRegister = async (email, password) => {
+export const emailAndPasswordRegister = async (
+  email: string,
+  password: string,
+): Promise<void> => {
   try {
     // Register the user to firebase auth
     const result = await auth().createUserWithEmailAndPassword(email, password);
@@ -58,7 +38,10 @@ export const emailAndPasswordRegister = async (email, password) => {
  * @param email Email of the user.
  * @param password Password of the user.
  */
-export const emailAndPasswordLogin = async (email, password) => {
+export const emailAndPasswordLogin = async (
+  email: string,
+  password: string,
+): Promise<void> => {
   try {
     // Log the user in with the firebase auth
     await auth().signInWithEmailAndPassword(email, password);
@@ -78,7 +61,7 @@ export const emailAndPasswordLogin = async (email, password) => {
 /**
  * Log the user out.
  */
-export const logout = async () => {
+export const logout = async (): Promise<void> => {
   await auth().signOut();
 };
 
@@ -86,6 +69,6 @@ export const logout = async () => {
  * Returns the logged in user object.
  * @returns Firebase User object
  */
-export const currentUser = () => {
+export const currentUser = (): FirebaseAuthTypes.User => {
   return auth().currentUser;
 };

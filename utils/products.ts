@@ -1,4 +1,7 @@
-import firestore from '@react-native-firebase/firestore';
+import {Product} from './../models/product';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
 import * as ReviewUtils from './reviews';
@@ -10,7 +13,7 @@ const productsDb = firestoreDb.collection('products');
  * Fetch the newest 5 products from the database.
  * @returns Snapshot object of 5 new products.
  */
-export const fetchProducts = () =>
+export const fetchProducts = (): FirebaseFirestoreTypes.Query =>
   productsDb.orderBy('timestamp', 'desc').limit(5);
 
 /**
@@ -18,21 +21,26 @@ export const fetchProducts = () =>
  * @param id Product ID
  * @returns Snapshot object with all product details
  */
-export const fetchUserProducts = (id) => productsDb.where('userId', '==', id);
+export const fetchUserProducts = (id: string): FirebaseFirestoreTypes.Query =>
+  productsDb.where('userId', '==', id);
 
 /**
  * Fetch singular product in real time.
  * @param id Product ID
  * @returns Snapshot object with Product Details
  */
-export const fetchProduct = (id) => productsDb.doc(id);
+export const fetchProduct = (
+  id: string,
+): FirebaseFirestoreTypes.DocumentReference => productsDb.doc(id);
 
 /**
  * Convert snapshot objects to product objects
  * @param firestoreProducts Snapshot data
  * @returns Array of products.
  */
-export const convertToProducts = (firestoreProducts) =>
+export const convertToProducts = (
+  firestoreProducts: FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData>,
+): Product[] =>
   firestoreProducts.docs.map((product) => {
     return {
       id: product.id,
@@ -50,7 +58,7 @@ export const convertToProducts = (firestoreProducts) =>
  * Deleting the product details as well all reviews for it.
  * @param id Product ID
  */
-export const deleteProduct = async (id) => {
+export const deleteProduct = async (id: string): Promise<void> => {
   await productsDb.doc(id).delete();
   await ReviewUtils.deleteAllReviews(id);
 };
@@ -66,14 +74,14 @@ export const deleteProduct = async (id) => {
  * @param timestamp Timestamp when the product was created
  */
 export const addProduct = async (
-  userId,
-  title,
-  description,
-  cost,
-  localImgLinks,
-  categories,
-  timestamp,
-) => {
+  userId: string[],
+  title: string[],
+  description: string[],
+  cost: number,
+  localImgLinks: string[],
+  categories: string[],
+  timestamp: any,
+): Promise<void> => {
   // Generate a product id for the product.
   const productId = productsDb.doc().id;
 
@@ -108,13 +116,13 @@ export const addProduct = async (
  * @param imgLinks Updated/Old image links
  */
 export const updateProduct = async (
-  id,
-  title,
-  description,
-  cost,
-  categories,
-  imgLinks,
-) => {
+  id: string,
+  title: string,
+  description: string,
+  cost: number,
+  categories: string[],
+  imgLinks: string[],
+): Promise<void> => {
   // Map the new local image links to firebase links.
   const firebaseLinks = await Promise.all(
     imgLinks.map(async (imgLink) =>
@@ -140,7 +148,7 @@ export const updateProduct = async (
  * @param localImgLink Local image link
  * @returns Firebase Image link
  */
-const uploadImage = async (localImgLink) => {
+const uploadImage = async (localImgLink: string): Promise<string> => {
   // Generate UUID for the image and the path
   const uuid_ = uuid();
   const path = `products/${uuid_}`;
