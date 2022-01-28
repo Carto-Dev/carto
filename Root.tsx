@@ -4,8 +4,6 @@ import {
   Provider as PaperProvider,
   configureFonts,
 } from 'react-native-paper';
-import {GoogleSignin} from '@react-native-community/google-signin/';
-import {webClientKey} from './secrets/webClientId';
 import MainNavigator from './navigation/Main';
 
 // const fontConfig = {
@@ -34,14 +32,6 @@ const themeOptions = {
 };
 
 const Root: React.FC = () => {
-  React.useEffect(() => {
-    GoogleSignin.configure({
-      scopes: ['email'],
-      webClientId: webClientKey,
-      offlineAccess: true,
-    });
-  }, []);
-
   return (
     <PaperProvider theme={themeOptions}>
       <MainNavigator />
