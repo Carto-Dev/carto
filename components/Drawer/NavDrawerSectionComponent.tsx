@@ -1,0 +1,53 @@
+import React from 'react';
+import {List} from 'react-native-paper';
+import routes from '../../constants/routes';
+
+/**
+ * Navigation section of the drawer to display respective
+ * pages on top of the navigation stack.
+ * @param {navigation} Navigation navigation prop from the Custom Drawer
+ */
+
+type Props = {
+  navigation: any;
+};
+
+const NavDrawerSectionComponent: React.FC<Props> = ({navigation}) => {
+  return (
+    <List.Accordion
+      title="Carto Navigation"
+      left={(props) => <List.Icon {...props} icon="cart" />}>
+      <List.Item
+        title="View Products"
+        onPress={() =>
+          navigation.navigate(routes.navigators.products_navigator)
+        }
+        right={(props) => <List.Icon {...props} icon="cart-outline" />}
+      />
+      <List.Item
+        title="View Your Products"
+        onPress={() =>
+          navigation.navigate(routes.navigators.my_products_navigator)
+        }
+        right={(props) => <List.Icon {...props} icon="account-star" />}
+      />
+      <List.Item
+        title="View Your Cart"
+        onPress={() => navigation.navigate(routes.pages.cart_page)}
+        right={(props) => <List.Icon {...props} icon="cart" />}
+      />
+      <List.Item
+        title="View Your Orders"
+        onPress={() => navigation.navigate(routes.navigators.orders_navigator)}
+        right={(props) => <List.Icon {...props} icon="package" />}
+      />
+      <List.Item
+        title="View Your Reviews"
+        onPress={() => navigation.navigate(routes.pages.my_review_page)}
+        right={(props) => <List.Icon {...props} icon="check-decagram" />}
+      />
+    </List.Accordion>
+  );
+};
+
+export default NavDrawerSectionComponent;
