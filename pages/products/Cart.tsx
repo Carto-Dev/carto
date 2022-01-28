@@ -12,13 +12,13 @@ import {
   Snackbar,
 } from 'react-native-paper';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
-import * as CartUtils from './../../utils/cart';
+import * as CartUtils from '../../utils/cart';
 import Icon from 'react-native-vector-icons/Foundation';
 
 /**
  * Cart Page Implementation
  */
-const CartPage = () => {
+const CartPage: React.FC = () => {
   // Cart Products State.
   const [cartProducts, setCartProducts] = useState([]);
 
@@ -75,7 +75,7 @@ const CartPage = () => {
    * Update the cart with new quantity.
    */
   const updateCart = async () => {
-    await CartUtils.updateProductInCart(productId, quantity);
+    await CartUtils.updateProductInCart(productId, Number(quantity));
     setVisible(false);
     setSnackBarVisible(true);
   };
@@ -206,9 +206,7 @@ const CartPage = () => {
               mode="outlined"
               onChangeText={(text) => setQuantity(text)}
             />
-            <Button style={styles.addToCartButtonStyle} onPress={updateCart}>
-              Update
-            </Button>
+            <Button onPress={updateCart}>Update</Button>
           </View>
         </Modal>
       </Portal>

@@ -16,13 +16,13 @@ import {
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
-import * as AuthUtils from './../../utils/auth';
+import * as AuthUtils from '../../utils/auth';
 import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 
 /**
  * Login and Registration Pages.
  */
-const AuthPage = () => {
+const AuthPage: React.FC = () => {
   // Loading and error message states.
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -48,16 +48,6 @@ const AuthPage = () => {
       ]);
     }
   }, [errorMessage]);
-
-  /**
-   * Google Sign Up Function.
-   */
-  const onGoogleSignInButtonPressed = () => {
-    setLoading(true);
-    AuthUtils.googleSignIn().catch((error) => {
-      console.log(error);
-    });
-  };
 
   /**
    * Firebase registration/login function.
@@ -139,7 +129,9 @@ const AuthPage = () => {
             />
             <HelperText
               type="error"
-              visible={formik.touched.email && formik.errors.email}>
+              visible={
+                formik.touched.email && (formik.errors.email ? true : false)
+              }>
               {formik.errors.email}
             </HelperText>
             <TextInput
@@ -153,7 +145,10 @@ const AuthPage = () => {
             />
             <HelperText
               type="error"
-              visible={formik.touched.password && formik.errors.password}>
+              visible={
+                formik.touched.password &&
+                (formik.errors.password ? true : false)
+              }>
               {formik.errors.password}
             </HelperText>
             {!isLogin && (
@@ -184,12 +179,6 @@ const AuthPage = () => {
                 icon="toggle-switch"
                 onPress={onSwitchMode}>
                 Switch to {isLogin ? 'Sign In' : 'Log In'}
-              </Button>
-              <Button
-                mode="contained"
-                icon="google"
-                onPress={onGoogleSignInButtonPressed}>
-                Sign In With Google
               </Button>
             </View>
           </ScrollView>

@@ -6,7 +6,7 @@ import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 /**
  * Splash page to display when fetching logged in user details.
  */
-const SplashPage = () => {
+const SplashPage: React.FC = () => {
   const theme = useTheme();
 
   return (

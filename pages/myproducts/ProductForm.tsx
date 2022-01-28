@@ -15,10 +15,15 @@ import {ImageModalComponent} from '../../components/Utility/ImageModal';
 import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
-import * as ProductUtils from './../../utils/products';
-import * as AuthUtils from './../../utils/auth';
+import * as ProductUtils from '../../utils/products';
+import * as AuthUtils from '../../utils/auth';
 
-const ProductFormPage = ({navigation, route}) => {
+type Props = {
+  navigation: any;
+  route: any;
+};
+
+const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   // Loading and error message states.
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -250,7 +255,9 @@ const ProductFormPage = ({navigation, route}) => {
             />
             <HelperText
               type="error"
-              visible={formik.touched.title && formik.errors.title}>
+              visible={
+                formik.touched.title && (formik.errors.title ? true : false)
+              }>
               {formik.errors.title}
             </HelperText>
             <TextInput
@@ -266,7 +273,10 @@ const ProductFormPage = ({navigation, route}) => {
             />
             <HelperText
               type="error"
-              visible={formik.touched.description && formik.errors.description}>
+              visible={
+                formik.touched.description &&
+                (formik.errors.description ? true : false)
+              }>
               {formik.errors.description}
             </HelperText>
             <TextInput
@@ -280,7 +290,9 @@ const ProductFormPage = ({navigation, route}) => {
             />
             <HelperText
               type="error"
-              visible={formik.touched.cost && formik.errors.cost}>
+              visible={
+                formik.touched.cost && (formik.errors.cost ? true : false)
+              }>
               {formik.errors.cost}
             </HelperText>
             <List.Accordion

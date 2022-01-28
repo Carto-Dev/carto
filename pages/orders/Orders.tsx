@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
 
-const OrdersPage = () => {
+const OrdersPage: React.FC = () => {
   return (
     <View style={styles.rootView}>
       <Text>Hello From OrdersPage</Text>

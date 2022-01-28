@@ -3,11 +3,15 @@ import {View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import ReviewFormComponent from '../../components/Review/ReviewForm';
 
+type Props = {
+  route: any;
+};
+
 /**
  * Display Review Update Form for specific reviews.
  * @param route Route details
  */
-const ReviewPage = ({route}) => {
+const ReviewPage: React.FC<Props> = ({route}) => {
   return (
     <React.Fragment>
       <View style={styles.titleView}>

@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import UserReviewCardComponent from '../../components/Review/UserReviewCard';
-import * as ReviewUtils from './../../utils/reviews';
+import * as ReviewUtils from '../../utils/reviews';
 
 /**
  * Display User Reviews for the logged in user.
  */
-const MyReviewsPage = () => {
+const MyReviewsPage: React.FC = () => {
   // State for reviews
   const [userReviews, setUserReviews] = useState([]);
 

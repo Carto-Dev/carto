@@ -7,7 +7,7 @@ import * as AuthUtils from '../../utils/auth';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 
-const MyProductsOverviewPage = () => {
+const MyProductsOverviewPage: React.FC = () => {
   // Theme Hook.
   const theme = useTheme();
 
