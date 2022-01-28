@@ -2,12 +2,16 @@ import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {VictoryBar, VictoryChart, VictoryAxis} from 'victory-native';
 
+type Props = {
+  reviewBreakdown: any;
+};
+
 /**
  * Component responsible for displaying the bar chart
  * for the reviews for a given product starwise.
  * @param reviewBreakdown Starwise distribution of reviews
  */
-const ReviewBarChartComponent = ({reviewBreakdown}) => {
+const ReviewBarChartComponent: React.FC<Props> = ({reviewBreakdown}) => {
   // State hook to store formatted data distribution
   const [data, setData] = useState([]);
 

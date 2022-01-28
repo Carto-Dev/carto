@@ -1,27 +1,34 @@
 import React from 'react';
 import {
   Button,
-  Caption,
   Card,
+  Dialog,
   Headline,
   Paragraph,
+  Portal,
   Title,
 } from 'react-native-paper';
-import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
-import * as AuthUtils from './../../utils/auth';
-import * as ReviewUtils from './../../utils/reviews';
+import {FlatList, Image, StyleSheet, View} from 'react-native';
+import * as AuthUtils from '../../utils/auth';
+import * as ReviewUtils from '../../utils/reviews';
+import StarReviewComponent from './ReviewForm';
 import {useNavigation} from '@react-navigation/native';
 import routes from '../../constants/routes';
 
+type Props = {
+  review: any;
+  productId: string;
+};
+
 /**
- * Card Component to display individual reviews.
+ * Card Component to display individual reviews by user.
  * Interaction includes deleting and updating the review.
  * @param review The actual review object
- * @param param0 ID of the product
+ * @param productId ID of the product
  */
-const ReviewCardComponent = ({review, productId}) => {
+const UserReviewCardComponent: React.FC<Props> = ({review, productId}) => {
   // Navigation hook.
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   /**
    * Function to delete the review object from database.
@@ -49,16 +56,13 @@ const ReviewCardComponent = ({review, productId}) => {
     navigation.navigate(routes.pages.review_page, routeParams);
   };
 
-  // Width Dimensions
-  const width = Dimensions.get('screen').width * 0.82;
-
   return (
     <React.Fragment>
       <Card style={styles.mainView}>
         <Card.Content>
           <View style={styles.reviewView}>
             <Headline style={styles.reviewNameText}>
-              {review.reviewerName}'s Review
+              Your Review of {review.productData.title}
             </Headline>
             <Button mode="outlined" icon="star">
               {review.stars}
@@ -68,7 +72,6 @@ const ReviewCardComponent = ({review, productId}) => {
             <React.Fragment>
               <Title>Product Images</Title>
               <FlatList
-                pagingEnabled={true}
                 centerContent={true}
                 data={review.images}
                 horizontal={true}
@@ -77,7 +80,7 @@ const ReviewCardComponent = ({review, productId}) => {
                 renderItem={(image) => (
                   <Image
                     source={{uri: image.item}}
-                    style={{...styles.reviewImageStyles, width: width}}
+                    style={styles.reviewImageStyles}
                   />
                 )}
               />
@@ -86,10 +89,6 @@ const ReviewCardComponent = ({review, productId}) => {
           <Paragraph>
             {review.review.length > 0 ? review.review : 'No Review'}
           </Paragraph>
-          <Caption>
-            Have they bought the product?{' '}
-            {review.hasBoughtProduct ? 'Yes' : 'No'}
-          </Caption>
         </Card.Content>
         {AuthUtils.currentUser().uid === review.reviewerId && (
           <Card.Actions>
@@ -128,8 +127,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   reviewImageStyles: {
+    width: 400,
     height: 300,
+    margin: 5,
   },
 });
 
-export default ReviewCardComponent;
+export default UserReviewCardComponent;

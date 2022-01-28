@@ -2,12 +2,17 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useTheme, Title} from 'react-native-paper';
 
+type Props = {
+  totalReviews: number;
+  totalStars: number;
+};
+
 /**
  * Display Average Stars for the product
  * @param totalReviews Total Reviews Given
  * @param totalStars Total Stars Given
  */
-const ReviewTotalComponent = ({totalReviews, totalStars}) => {
+const ReviewTotalComponent: React.FC<Props> = ({totalReviews, totalStars}) => {
   // Theme Hook
   const {colors} = useTheme();
 

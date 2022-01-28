@@ -1,20 +1,25 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import ReviewFormComponent from './ReviewForm';
 import ReviewBarChartComponent from './ReviewBarChart';
-import * as ReviewUtils from './../../utils/reviews';
+import * as ReviewUtils from '../../utils/reviews';
 import ReviewDisplayComponent from './ReviewDisplay';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ReviewTotalComponent from './ReviewTotal';
+
+type Props = {
+  id: string;
+  headerComponent: ReactNode;
+};
 
 /**
  * Wrapper component for displaying reviews.
  * @param id ID of the product.
  */
-const ReviewWrapperComponent = ({id, headerComponent}) => {
+const ReviewWrapperComponent: React.FC<Props> = ({id, headerComponent}) => {
   // State hook for saving review data.
-  const [reviewData, setReviewData] = useState({});
+  const [reviewData, setReviewData] = useState<any>({});
 
   // State hook for setting loading status
   const [loading, setLoading] = useState(true);
@@ -52,7 +57,7 @@ const ReviewWrapperComponent = ({id, headerComponent}) => {
       }
     />
   ) : (
-    <View styles={styles.loadingView}>
+    <View style={styles.loadingView}>
       <LoadingAnimation message="Fetching Products Details For You!" />
     </View>
   );

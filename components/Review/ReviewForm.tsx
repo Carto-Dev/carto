@@ -7,6 +7,15 @@ import * as ReviewUtils from '../../utils/reviews';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
 
+type Props = {
+  id: string;
+  isEdit?: boolean;
+  review?: any;
+  starsGiven?: number;
+  text?: string;
+  imageLinks?: string[];
+};
+
 /**
  * Review form component with stars.
  * @param id ID of the product.
@@ -16,7 +25,7 @@ import {LoadingModalComponent} from '../Utility/LoadingModal';
  * @param text Review Text
  * @param imageLinks Links of images of the product
  */
-const ReviewFormComponent = ({
+const ReviewFormComponent: React.FC<Props> = ({
   id,
   isEdit = false,
   review = new Review(),

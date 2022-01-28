@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import ReviewCardComponent from './ReviewCard';
+
+type Props = {
+  reviews: any[];
+  productId: string;
+  headerComponent: ReactNode;
+};
 
 /**
  * Component to display all the reviews for the product.
@@ -10,7 +16,11 @@ import ReviewCardComponent from './ReviewCard';
  * @param productId ID for the product.
  * @param headerComponent Components to display before the list of reviews.
  */
-const ReviewDisplayComponent = ({reviews, productId, headerComponent}) => (
+const ReviewDisplayComponent: React.FC<Props> = ({
+  reviews,
+  productId,
+  headerComponent,
+}) => (
   <FlatList
     ListHeaderComponent={
       <React.Fragment>
