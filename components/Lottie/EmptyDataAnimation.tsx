@@ -3,20 +3,24 @@ import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 
+type Props = {
+  message: string;
+};
+
 /**
- * Component to display loading status.
- * @param message Message to display to indicate loading state.
+ * Component to display empty data
+ * @param message Message to display to indicate empty data.
  */
-const LoadingAnimation = ({message}) => {
+const EmptyDataAnimation: React.FC<Props> = ({message}) => {
   return (
     <View style={styles.mainView}>
       <LottieView
-        source={require('./../../lottie/loading.json')}
+        source={require('./../../lottie/empty.json')}
         style={styles.lottieView}
         autoPlay
         loop
       />
-      <Text>{message}</Text>
+      <Text style={styles.textStyle}>{message}</Text>
     </View>
   );
 };
@@ -31,7 +35,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     minHeight: 300,
+    padding: 20,
+  },
+  textStyle: {
+    textAlign: 'center',
   },
 });
 
-export default LoadingAnimation;
+export default EmptyDataAnimation;
