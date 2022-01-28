@@ -5,7 +5,7 @@ import {Title} from 'react-native-paper';
 /**
  * Component for displaying the App Header in the drawer.
  */
-const HeaderDrawerSectionComponent = () => {
+const HeaderDrawerSectionComponent: React.FC = () => {
   return (
     <View style={styles.imageView}>
       <ImageBackground

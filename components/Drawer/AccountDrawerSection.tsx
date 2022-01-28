@@ -1,5 +1,5 @@
 import React from 'react';
-import * as AuthUtils from './../../utils/auth';
+import * as AuthUtils from '../../utils/auth';
 import {List} from 'react-native-paper';
 
 /**
@@ -7,7 +7,7 @@ import {List} from 'react-native-paper';
  * Consists of displaying account
  * details and deleting the account as well.
  */
-const AccountDrawerSectionComponent = () => {
+const AccountDrawerSectionComponent: React.FC = () => {
   // Fetching the current logged in user details.
   const user = AuthUtils.currentUser();
 

@@ -3,7 +3,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TouchableOpacity} from 'react-native';
 
-export const DrawerButton = () => {
+export const DrawerButton: React.FC = () => {
   const navigation = useNavigation();
 
   const openDrawer = () => {
