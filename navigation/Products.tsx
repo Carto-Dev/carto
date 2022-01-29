@@ -1,73 +1,67 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 import ProductsOverviewPage from '../pages/products/ProductsOverview';
 import ProductPage from '../pages/products/Product';
 import CartPage from '../pages/products/Cart';
-import routes from '../constants/routes';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {Button} from 'react-native-paper';
 import ReviewPage from '../pages/products/Review';
 import MyReviewsPage from '../pages/products/MyReview';
+import {ProductsStackParamList} from '../types/products-stack.type';
+import {Review} from '../models/review';
 
 // Products Stack Navigator.
-const ProductsStack = createStackNavigator();
+const ProductsStack = createNativeStackNavigator<ProductsStackParamList>();
 
 const ProductsNavigator: React.FC = () => {
   // Navigation Hook.
   const navigation = useNavigation<any>();
 
   return (
-    <ProductsStack.Navigator
-      initialRouteName={routes.pages.products_overview_page}>
+    <ProductsStack.Navigator initialRouteName={'ProductsOverview'}>
       <ProductsStack.Screen
-        name={routes.pages.products_overview_page}
+        name={'ProductsOverview'}
         component={ProductsOverviewPage}
         options={{
-          headerTitle: '',
-          headerLeft: () => (
-            <Button
-              onPress={() => {
-                navigation.dispatch(DrawerActions.openDrawer());
-              }}>
-              <Icon size={23} name="md-menu" color="white" />
-            </Button>
-          ),
-          headerRight: () => (
-            <Button
-              onPress={() => {
-                navigation.navigate(routes.pages.cart_page);
-              }}>
-              <Icon size={23} name="cart" color="white" />
-            </Button>
-          ),
+          headerShown: false,
         }}
       />
       <ProductsStack.Screen
-        name="single_product_page"
+        name="Product"
+        initialParams={{
+          id: '',
+        }}
         options={{
-          headerTitle: '',
+          headerShown: false,
         }}
         component={ProductPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.cart_page}
+        name={'Cart'}
         options={{
-          headerTitle: '',
+          headerShown: false,
         }}
         component={CartPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.review_page}
+        name={'Reviews'}
+        initialParams={{
+          id: '',
+          imageLinks: [],
+          isEdit: false,
+          review: new Review('', '', '', '', false, 1, []),
+          starsGiven: 1,
+          text: '',
+        }}
         options={{
-          headerTitle: '',
+          headerShown: false,
         }}
         component={ReviewPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.my_review_page}
+        name={'MyReviews'}
         options={{
-          headerTitle: '',
+          headerShown: false,
+          headerTitle: 'Your Reviews',
         }}
         component={MyReviewsPage}
       />

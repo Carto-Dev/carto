@@ -104,7 +104,7 @@ const AuthPage: React.FC = () => {
   });
 
   // Switch mode to registration/login mode.
-  const onSwitchMode = () => setLoading(true);
+  const onSwitchMode = () => setLogin(!isLogin);
 
   // Password Again state.
   const onReenterPassword = (text) => setPasswordAgain(text);

@@ -1,3 +1,5 @@
+import {DrawerContentComponentProps} from '@react-navigation/drawer';
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import React from 'react';
 import {List} from 'react-native-paper';
 import routes from '../../constants/routes';
@@ -9,7 +11,7 @@ import routes from '../../constants/routes';
  */
 
 type Props = {
-  navigation: any;
+  navigation: DrawerNavigationHelpers;
 };
 
 const NavDrawerSectionComponent: React.FC<Props> = ({navigation}) => {
@@ -19,31 +21,27 @@ const NavDrawerSectionComponent: React.FC<Props> = ({navigation}) => {
       left={(props) => <List.Icon {...props} icon="cart" />}>
       <List.Item
         title="View Products"
-        onPress={() =>
-          navigation.navigate(routes.navigators.products_navigator)
-        }
+        onPress={() => navigation.navigate('ProductsOverview')}
         right={(props) => <List.Icon {...props} icon="cart-outline" />}
       />
       <List.Item
         title="View Your Products"
-        onPress={() =>
-          navigation.navigate(routes.navigators.my_products_navigator)
-        }
+        onPress={() => navigation.navigate('MyProducts')}
         right={(props) => <List.Icon {...props} icon="account-star" />}
       />
       <List.Item
         title="View Your Cart"
-        onPress={() => navigation.navigate(routes.pages.cart_page)}
+        onPress={() => navigation.navigate('Cart')}
         right={(props) => <List.Icon {...props} icon="cart" />}
       />
       <List.Item
         title="View Your Orders"
-        onPress={() => navigation.navigate(routes.navigators.orders_navigator)}
+        onPress={() => navigation.navigate('Orders')}
         right={(props) => <List.Icon {...props} icon="package" />}
       />
       <List.Item
         title="View Your Reviews"
-        onPress={() => navigation.navigate(routes.pages.my_review_page)}
+        onPress={() => navigation.navigate('MyReviews')}
         right={(props) => <List.Icon {...props} icon="check-decagram" />}
       />
     </List.Accordion>

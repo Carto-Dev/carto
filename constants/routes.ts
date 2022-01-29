@@ -1,9 +1,9 @@
 // Routes constants
 const routes = {
   navigators: {
-    products_navigator: 'products_navigator',
-    my_products_navigator: 'my_products_navigator',
-    orders_navigator: 'orders_navigator',
+    products_navigator: 'Products',
+    my_products_navigator: 'MyProducts',
+    orders_navigator: 'Orders',
   },
   pages: {
     auth_page: 'auth_page',

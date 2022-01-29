@@ -14,14 +14,18 @@ import {useFormik} from 'formik';
 import {ImageModalComponent} from '../../components/Utility/ImageModal';
 import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 import categories from '../../constants/categories';
-import routes from '../../constants/routes';
 import * as ProductUtils from '../../utils/products';
 import * as AuthUtils from '../../utils/auth';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MyProductsStackParamsList} from '../../types/my-products-stack.type';
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
 
-type Props = {
-  navigation: any;
-  route: any;
-};
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<MyProductsStackParamsList, 'ProductForm'>,
+  DrawerScreenProps<HomeDrawerParamList>
+>;
 
 const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   // Loading and error message states.
@@ -34,7 +38,6 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
 
   // Categories state and edit mode state.
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [editMode, setEditMode] = useState(false);
 
   // Prefilling the form when editing products.
   let title = '';
@@ -44,25 +47,24 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
 
   // If the page recieves some route params for editing products.
   if (route.params != null) {
-    const receievedData = route.params.data;
+    const receievedData = route.params;
 
     // Getting data from params.
     id = receievedData.id;
     title = receievedData.title;
     description = receievedData.description;
-    cost = receievedData.cost;
+    cost = receievedData.cost.toString();
   }
 
   // Listen to route params to extract categories and images.
   useEffect(() => {
     if (route.params != null) {
-      const receievedData = route.params.data;
+      const receievedData = route.params;
 
       const categoriesMapped = receievedData.categories.map((category) =>
         categories.find((c) => c.key === category),
       );
 
-      setEditMode(true);
       setImageUris(receievedData.imageUris);
       setSelectedCategories(categoriesMapped);
     }
@@ -99,7 +101,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         };
 
         // CASE 1: To submit a new product.
-        if (!editMode) {
+        if (!route.params.edit) {
           await ProductUtils.addProduct(
             product.userId,
             product.title,
@@ -123,7 +125,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         }
 
         // Route back to your products page.
-        navigation.navigate(routes.pages.my_products_page);
+        navigation.navigate('MyProductsOverview');
       }
     } catch (error) {
       // Set the error message state if there's any error.
@@ -187,23 +189,24 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   /**
    * Add image to the image state array
    */
-  const addNewImage = (imageUri) => setImageUris([...imageUris, imageUri]);
+  const addNewImage = (imageUri: string) =>
+    setImageUris([...imageUris, imageUri]);
 
   /**
    * Add multiple images to the image state array
    */
-  const addImages = (newImageUris) => setImageUris([...newImageUris]);
+  const addImages = (newImageUris: string[]) => setImageUris([...newImageUris]);
 
   /**
    * Remove image from the image state array
    */
-  const deleteImage = (imageUri) =>
+  const deleteImage = (imageUri: string) =>
     setImageUris(imageUris.filter((uri) => uri !== imageUri));
 
   /**
    * Replace image in the image state array
    */
-  const replaceImage = (oldImageUri, newImageUri) => {
+  const replaceImage = (oldImageUri: string, newImageUri: string) => {
     const index = imageUris.indexOf(oldImageUri);
     setImageUris([
       ...imageUris.slice(0, index),
@@ -215,7 +218,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   /**
    * Add categories to the category state.
    */
-  const addCategory = (category) => {
+  const addCategory = (category: {text: string; key: string; img: any}) => {
     if (selectedCategories.indexOf(category) !== -1) {
       return;
     } else {
@@ -226,7 +229,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   /**
    * Remove categories from the category state.
    */
-  const removeCategory = (category) => {
+  const removeCategory = (category: {text: string; key: string; img: any}) => {
     if (selectedCategories.indexOf(category) === -1) {
       return;
     } else {
@@ -242,7 +245,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.mainView}>
             <Title>
-              {editMode ? 'Edit Product Details' : 'Add A New Product'}
+              {route.params.edit ? 'Edit Product Details' : 'Add A New Product'}
             </Title>
             <TextInput
               mode="outlined"
@@ -337,10 +340,10 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
               </Button>
               <Button
                 mode="contained"
-                icon={editMode ? 'content-save' : 'plus'}
+                icon={route.params.edit ? 'content-save' : 'plus'}
                 disabled={!formik.isValid}
                 onPress={formik.handleSubmit}>
-                {editMode ? 'Save Changes' : 'Add New Product'}
+                {route.params.edit ? 'Save Changes' : 'Add New Product'}
               </Button>
             </View>
           </View>
@@ -357,7 +360,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
       />
       <LoadingModalComponent
         message={
-          editMode
+          route.params.edit
             ? 'Updating Your Product Details!'
             : 'Making Your Product Available To Buy!'
         }

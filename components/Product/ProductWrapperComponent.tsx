@@ -55,7 +55,7 @@ const ProductWrapperComponent: React.FC<Props> = ({id}) => {
    * Add to cart function.
    */
   const addToCart = async () => {
-    await CartUtils.addProductToCart(product.id, quantity);
+    await CartUtils.addProductToCart(product.id, Number(quantity));
     setVisible(false);
     setSnackBarVisible(true);
   };

@@ -1,11 +1,17 @@
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
 import ReviewFormComponent from '../../components/Review/ReviewForm';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {ProductsStackParamList} from '../../types/products-stack.type';
 
-type Props = {
-  route: any;
-};
+type Props = CompositeScreenProps<
+  StackScreenProps<ProductsStackParamList, 'Reviews'>,
+  DrawerScreenProps<HomeDrawerParamList>
+>;
 
 /**
  * Display Review Update Form for specific reviews.
@@ -23,7 +29,7 @@ const ReviewPage: React.FC<Props> = ({route}) => {
         review={route.params.review}
         starsGiven={route.params.starsGiven}
         text={route.params.text}
-        imageLinks={route.params.images}
+        imageLinks={route.params.imageLinks}
       />
     </React.Fragment>
   );

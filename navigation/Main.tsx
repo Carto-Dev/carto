@@ -3,6 +3,21 @@ import SplashPage from '../pages/loading/Splash';
 import auth from '@react-native-firebase/auth';
 import AuthNavigator from './Auth';
 import HomeNavigator from './Home';
+import {
+  NavigationContainer,
+  DarkTheme as NavDarkTheme,
+} from '@react-navigation/native';
+import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
+
+// Theme object
+const DarkTheme = {
+  ...NavDarkTheme,
+  ...PaperDarkTheme,
+  colors: {
+    ...NavDarkTheme.colors,
+    ...PaperDarkTheme.colors,
+  },
+};
 
 const MainNavigator: React.FC = () => {
   const [isLoading, setLoading] = useState(true);
@@ -29,7 +44,11 @@ const MainNavigator: React.FC = () => {
     return <SplashPage />;
   } else {
     if (isLoggedIn) {
-      return <HomeNavigator />;
+      return (
+        <NavigationContainer theme={DarkTheme}>
+          <HomeNavigator />
+        </NavigationContainer>
+      );
     } else {
       return <AuthNavigator />;
     }
