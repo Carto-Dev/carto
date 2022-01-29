@@ -1,9 +1,23 @@
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Paragraph, Title, Button, Chip} from 'react-native-paper';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {ProductsStackParamList} from '../../types/products-stack.type';
+
+type ProductCardNavigatorType = CompositeNavigationProp<
+  StackNavigationProp<ProductsStackParamList, 'ProductsOverview'>,
+  DrawerNavigationProp<HomeDrawerParamList>
+>;
 
 type Props = {
   product: any;
@@ -20,13 +34,13 @@ const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
   const {colors} = useTheme();
 
   // Navigation hook.
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<ProductCardNavigatorType>();
 
   /**
    * On Click function to route the user to the product page.
    */
   const navigateToProductPage = () =>
-    navigation.navigate(routes.pages.single_product_page, {id: product.id});
+    navigation.navigate('Product', {id: product.id});
 
   return (
     <Card onPress={navigateToProductPage} style={styles.cardView}>

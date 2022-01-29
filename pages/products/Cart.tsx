@@ -44,7 +44,7 @@ const CartPage: React.FC = () => {
    * Delete product from cart function
    * @param id Product ID
    */
-  const deleteProductFromCart = (id) => {
+  const deleteProductFromCart = (id: string) => {
     Alert.alert(
       'Delete Confirmation',
       'Are you sure you want to delete this product from your cart?',
@@ -65,7 +65,7 @@ const CartPage: React.FC = () => {
    * @param id Product ID
    * @param quantity Product Quantity
    */
-  const openCartModal = (id, quantity) => {
+  const openCartModal = (id: string, quantity: string) => {
     setProductId(id);
     setQuantity(quantity);
     setVisible(true);

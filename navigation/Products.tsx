@@ -1,10 +1,9 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import ProductsOverviewPage from '../pages/products/ProductsOverview';
 import ProductPage from '../pages/products/Product';
 import CartPage from '../pages/products/Cart';
-import {Button} from 'react-native-paper';
 import ReviewPage from '../pages/products/Review';
 import MyReviewsPage from '../pages/products/MyReview';
 import {ProductsStackParamList} from '../types/products-stack.type';

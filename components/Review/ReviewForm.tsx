@@ -1,8 +1,17 @@
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {
+  CompositeNavigationProp,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState, useEffect} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
 import {Review} from '../../models/review';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {MyProductsStackParamsList} from '../../types/my-products-stack.type';
+import {ProductsStackParamList} from '../../types/products-stack.type';
 import * as ReviewUtils from '../../utils/reviews';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
@@ -25,6 +34,12 @@ type Props = {
  * @param text Review Text
  * @param imageLinks Links of images of the product
  */
+
+type ReviewNavigatorType = CompositeNavigationProp<
+  StackNavigationProp<ProductsStackParamList, 'Product'>,
+  DrawerNavigationProp<HomeDrawerParamList>
+>;
+
 const ReviewFormComponent: React.FC<Props> = ({
   id,
   isEdit = false,
@@ -52,7 +67,7 @@ const ReviewFormComponent: React.FC<Props> = ({
   const {colors} = useTheme();
 
   // Navigation hooks.
-  const navigation = useNavigation();
+  const navigation = useNavigation<ReviewNavigatorType>();
 
   // Listening to error message state changes
   // and displaying errors if any
@@ -124,19 +139,20 @@ const ReviewFormComponent: React.FC<Props> = ({
    * Add a new image URI to the image URI array.
    * @param imageUri Device URI of the image
    */
-  const addNewImage = (imageUri) => setImageUris([...imageUris, imageUri]);
+  const addNewImage = (imageUri: string) =>
+    setImageUris([...imageUris, imageUri]);
 
   /**
    * Save multiple new image URIs to the image URI array.
    * @param imageUri list of device URIs of the images
    */
-  const addImages = (newImageUris) => setImageUris([...newImageUris]);
+  const addImages = (newImageUris: string[]) => setImageUris([...newImageUris]);
 
   /**
    * To remove a specific image URI
    * @param imageUri Image URI to remove
    */
-  const deleteImage = (imageUri) =>
+  const deleteImage = (imageUri: string) =>
     setImageUris(imageUris.filter((uri) => uri !== imageUri));
 
   /**
@@ -144,7 +160,7 @@ const ReviewFormComponent: React.FC<Props> = ({
    * @param oldImageUri Image URI to remove
    * @param newImageUri Image URI to replace
    */
-  const replaceImage = (oldImageUri, newImageUri) => {
+  const replaceImage = (oldImageUri: string, newImageUri: string) => {
     const index = imageUris.indexOf(oldImageUri);
     setImageUris([
       ...imageUris.slice(0, index),

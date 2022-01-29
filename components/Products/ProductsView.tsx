@@ -57,7 +57,7 @@ const ProductsViewComponent: React.FC = () => {
    * Add to cart function.
    */
   const addToCart = async () => {
-    await CartUtils.addProductToCart(productId, quantity);
+    await CartUtils.addProductToCart(productId, Number(quantity));
     setVisible(false);
     setSnackBarVisible(true);
   };

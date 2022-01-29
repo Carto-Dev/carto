@@ -1,12 +1,18 @@
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {View} from 'react-native';
 import {Title} from 'react-native-paper';
 import ProductWrapperComponent from '../../components/Product/ProductWrapperComponent';
 import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {ProductsStackParamList} from '../../types/products-stack.type';
 
-type Props = {
-  route: any;
-};
+type Props = CompositeScreenProps<
+  StackScreenProps<ProductsStackParamList, 'Product'>,
+  DrawerScreenProps<HomeDrawerParamList>
+>;
 
 /**
  * Display Product details for the selected product.
