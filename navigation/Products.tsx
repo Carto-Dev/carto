@@ -9,19 +9,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import ReviewPage from '../pages/products/Review';
 import MyReviewsPage from '../pages/products/MyReview';
+import {ProductsStackParamList} from '../types/products-stack.type';
+import {Review} from '../models/review';
 
 // Products Stack Navigator.
-const ProductsStack = createStackNavigator();
+const ProductsStack = createStackNavigator<ProductsStackParamList>();
 
 const ProductsNavigator: React.FC = () => {
   // Navigation Hook.
   const navigation = useNavigation<any>();
 
   return (
-    <ProductsStack.Navigator
-      initialRouteName={routes.pages.products_overview_page}>
+    <ProductsStack.Navigator initialRouteName={'ProductsOverview'}>
       <ProductsStack.Screen
-        name={routes.pages.products_overview_page}
+        name={'ProductsOverview'}
         component={ProductsOverviewPage}
         options={{
           headerTitle: '',
@@ -44,28 +45,39 @@ const ProductsNavigator: React.FC = () => {
         }}
       />
       <ProductsStack.Screen
-        name="single_product_page"
+        name="Product"
+        initialParams={{
+          id: '',
+        }}
         options={{
           headerTitle: '',
         }}
         component={ProductPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.cart_page}
+        name={'Cart'}
         options={{
           headerTitle: '',
         }}
         component={CartPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.review_page}
+        name={'Reviews'}
+        initialParams={{
+          id: '',
+          imageLinks: [],
+          isEdit: false,
+          review: new Review('', '', '', '', false, 1, []),
+          starsGiven: 1,
+          text: '',
+        }}
         options={{
           headerTitle: '',
         }}
         component={ReviewPage}
       />
       <ProductsStack.Screen
-        name={routes.pages.my_review_page}
+        name={'MyReviews'}
         options={{
           headerTitle: '',
         }}

@@ -6,18 +6,20 @@ import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {MyProductsStackParamsList} from '../types/my-products-stack.type';
+import {MyProductsNavigator} from '../types/my-products-navigator.type';
 
 // My Products Stack Navigator.
-const MyProductsStack = createStackNavigator();
+const MyProductsStack = createStackNavigator<MyProductsStackParamsList>();
 
 const MyProductsNavigator: React.FC = () => {
   // Navigation hook
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<MyProductsNavigator>();
 
   return (
-    <MyProductsStack.Navigator initialRouteName={routes.pages.my_products_page}>
+    <MyProductsStack.Navigator initialRouteName={'MyProductsOverview'}>
       <MyProductsStack.Screen
-        name={routes.pages.my_products_page}
+        name={'MyProductsOverview'}
         component={MyProductsOverviewPage}
         options={{
           headerTitle: '',
@@ -32,7 +34,7 @@ const MyProductsNavigator: React.FC = () => {
           headerRight: () => (
             <Button
               onPress={() => {
-                navigation.navigate(routes.pages.product_form_page);
+                navigation.navigate('ProductForm');
               }}>
               <Icon size={23} name="md-add" color="white" />
             </Button>
@@ -40,7 +42,7 @@ const MyProductsNavigator: React.FC = () => {
         }}
       />
       <MyProductsStack.Screen
-        name={routes.pages.product_form_page}
+        name={'ProductForm'}
         component={ProductFormPage}
         options={{
           headerTitle: '',

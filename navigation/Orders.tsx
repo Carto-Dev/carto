@@ -5,18 +5,20 @@ import routes from '../constants/routes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-paper';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {OrdersStackParamsList} from '../types/orders-stack.type';
+import {OrdersNavigator} from '../types/orders-navigator.type';
 
 // Orders Stack Navigator.
-const OrdersStack = createStackNavigator();
+const OrdersStack = createStackNavigator<OrdersStackParamsList>();
 
 const OrdersNavigator: React.FC = () => {
   // Navigation hook
-  const navigation = useNavigation();
+  const navigation = useNavigation<OrdersNavigator>();
 
   return (
-    <OrdersStack.Navigator initialRouteName={routes.pages.orders_page}>
+    <OrdersStack.Navigator initialRouteName={'Orders'}>
       <OrdersStack.Screen
-        name={routes.pages.orders_page}
+        name={'Orders'}
         component={OrdersPage}
         options={{
           headerTitle: '',

@@ -28,7 +28,7 @@ type Props = {
 const ReviewFormComponent: React.FC<Props> = ({
   id,
   isEdit = false,
-  review = new Review(),
+  review = new Review('', '', '', '', false, 1, []),
   starsGiven = 1,
   text = '',
   imageLinks = [],
