@@ -9,8 +9,8 @@ import {
   Portal,
   useTheme,
 } from 'react-native-paper';
-import routes from '../../constants/routes';
 import * as ProductUtils from '../../utils/products';
+import {MyProductsNavigatorType} from '../../types/my-products-navigator.type';
 
 type Props = {
   id: string;
@@ -40,7 +40,7 @@ const MyProductComponent: React.FC<Props> = ({
   imgLinks,
 }) => {
   // Navigation Hook
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<MyProductsNavigatorType>();
 
   // Theme config hook
   const theme = useTheme();
@@ -77,16 +77,13 @@ const MyProductComponent: React.FC<Props> = ({
           onPress={() => {
             // Navigate to the Product Form page with values filled in
             // for this specific product.
-            navigation.navigate(routes.pages.product_form_page, {
-              action: 'edit',
-              data: {
-                id: id,
-                title: title,
-                description: description,
-                cost: cost,
-                categories: categories,
-                imageUris: imgLinks,
-              },
+            navigation.navigate('ProductForm', {
+              id: id,
+              title: title,
+              description: description,
+              cost: cost,
+              categories: categories,
+              imageUris: imgLinks,
             });
           }}
         />

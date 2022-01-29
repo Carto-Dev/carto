@@ -2,10 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MyProductsOverviewPage from '../pages/myproducts/MyProductsOverview';
 import ProductFormPage from '../pages/myproducts/ProductForm';
-import routes from '../constants/routes';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {Button} from 'react-native-paper';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {MyProductsStackParamsList} from '../types/my-products-stack.type';
 import {MyProductsNavigatorType} from '../types/my-products-navigator.type';
 
@@ -28,6 +25,14 @@ const MyProductsNavigator: React.FC = () => {
       <MyProductsStack.Screen
         name={'ProductForm'}
         component={ProductFormPage}
+        initialParams={{
+          id: '',
+          title: '',
+          description: '',
+          cost: 0,
+          categories: [],
+          imageUris: [],
+        }}
         options={{
           headerShown: false,
         }}
