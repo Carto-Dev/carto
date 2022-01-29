@@ -3,14 +3,14 @@ import {
   NavigationContainer,
   DarkTheme as NavDarkTheme,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AuthPage from '../pages/authentication/Auth';
 import {DarkTheme as PaperDarkTheme} from 'react-native-paper';
 import routes from '../constants/routes';
 import {AuthStackParamsList} from '../types/auth-stack.type';
 
 // Auth Stack Navigator.
-const AuthStack = createStackNavigator<AuthStackParamsList>();
+const AuthStack = createNativeStackNavigator<AuthStackParamsList>();
 
 // Theme object
 const DarkTheme = {
