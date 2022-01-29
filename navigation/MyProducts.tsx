@@ -32,6 +32,7 @@ const MyProductsNavigator: React.FC = () => {
           cost: 0,
           categories: [],
           imageUris: [],
+          edit: false,
         }}
         options={{
           headerShown: false,

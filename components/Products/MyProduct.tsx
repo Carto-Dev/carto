@@ -84,6 +84,7 @@ const MyProductComponent: React.FC<Props> = ({
               cost: cost,
               categories: categories,
               imageUris: imgLinks,
+              edit: true,
             });
           }}
         />

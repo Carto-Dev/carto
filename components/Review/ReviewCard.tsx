@@ -10,13 +10,22 @@ import {
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as AuthUtils from '../../utils/auth';
 import * as ReviewUtils from '../../utils/reviews';
-import {useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import routes from '../../constants/routes';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {ProductsStackParamList} from '../../types/products-stack.type';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
 
 type Props = {
   review: any;
   productId: string;
 };
+
+type ReviewCardNavigationType = CompositeNavigationProp<
+  StackNavigationProp<ProductsStackParamList, 'Product'>,
+  DrawerNavigationProp<HomeDrawerParamList>
+>;
 
 /**
  * Card Component to display individual reviews.
@@ -26,7 +35,7 @@ type Props = {
  */
 const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
   // Navigation hook.
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<ReviewCardNavigationType>();
 
   /**
    * Function to delete the review object from database.
@@ -40,18 +49,15 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
    * Routes the user to the update review page
    */
   const routeToUpdateReviewPage = () => {
-    // Params to send to the next page
-    const routeParams = {
+    // Pushing the review form on stack.
+    navigation.navigate('Reviews', {
       id: productId,
       isEdit: true,
       review: review,
       starsGiven: review.stars,
       text: review.review,
-      images: review.images,
-    };
-
-    // Pushing the review form on stack.
-    navigation.navigate(routes.pages.review_page, routeParams);
+      imageLinks: review.images,
+    });
   };
 
   // Width Dimensions

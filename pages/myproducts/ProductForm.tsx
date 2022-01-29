@@ -38,7 +38,6 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
 
   // Categories state and edit mode state.
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [editMode, setEditMode] = useState(false);
 
   // Prefilling the form when editing products.
   let title = '';
@@ -66,7 +65,6 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         categories.find((c) => c.key === category),
       );
 
-      setEditMode(true);
       setImageUris(receievedData.imageUris);
       setSelectedCategories(categoriesMapped);
     }
@@ -103,7 +101,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         };
 
         // CASE 1: To submit a new product.
-        if (!editMode) {
+        if (!route.params.edit) {
           await ProductUtils.addProduct(
             product.userId,
             product.title,
@@ -247,7 +245,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.mainView}>
             <Title>
-              {editMode ? 'Edit Product Details' : 'Add A New Product'}
+              {route.params.edit ? 'Edit Product Details' : 'Add A New Product'}
             </Title>
             <TextInput
               mode="outlined"
@@ -342,10 +340,10 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
               </Button>
               <Button
                 mode="contained"
-                icon={editMode ? 'content-save' : 'plus'}
+                icon={route.params.edit ? 'content-save' : 'plus'}
                 disabled={!formik.isValid}
                 onPress={formik.handleSubmit}>
-                {editMode ? 'Save Changes' : 'Add New Product'}
+                {route.params.edit ? 'Save Changes' : 'Add New Product'}
               </Button>
             </View>
           </View>
@@ -362,7 +360,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
       />
       <LoadingModalComponent
         message={
-          editMode
+          route.params.edit
             ? 'Updating Your Product Details!'
             : 'Making Your Product Available To Buy!'
         }

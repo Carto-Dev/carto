@@ -7,5 +7,6 @@ export type MyProductsStackParamsList = {
     cost: number;
     categories: string[];
     imageUris: string[];
+    edit: boolean;
   };
 };
