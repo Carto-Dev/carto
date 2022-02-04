@@ -5,6 +5,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   View,
+  Image,
+  Dimensions,
 } from 'react-native';
 import {
   Button,
@@ -12,23 +14,28 @@ import {
   TextInput,
   HelperText,
   Title,
-  Text,
+  Snackbar,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
-import * as AuthUtils from '../../utils/auth';
+import * as authService from './../../services/auth.service';
 import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
+import {CreateUserDto} from '../../dtos/auth/create-user.dto';
+import {LoginUserDto} from '../../dtos/auth/login-user.dto';
+import {AuthError} from '../../enum/auth-error.enum';
 
 /**
  * Login and Registration Pages.
  */
 const AuthPage: React.FC = () => {
   // Loading and error message states.
-  const [isLoading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Login or registration state.
   const [isLogin, setLogin] = useState(false);
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   // Password Again and Error states.
   const [passwordAgain, setPasswordAgain] = useState('');
@@ -53,52 +60,95 @@ const AuthPage: React.FC = () => {
    * Firebase registration/login function.
    * @param values Form values
    */
-  const onEmailAndPasswordSignInButtonPressed = async (values) => {
+  const onLoginWithEmailAddressAndPassword = async (values: {
+    emailAddress: string;
+    password: string;
+  }) => {
     // Set loading state to true.
     setLoading(true);
 
     // Set an empty password error state.
     setPasswordError(null);
     try {
-      // CASE 1: If the user is registering in.
-      if (!isLogin) {
-        // Check if the password again is not empty state
-        if (passwordAgain === '') {
-          setPasswordError('this field cannot be empty');
-        }
+      const loginUserDto = new LoginUserDto();
+      loginUserDto.fromJson(values);
 
-        // Check if password's match.
-        else if (passwordAgain === values.password) {
-          await AuthUtils.emailAndPasswordRegister(
-            values.email,
-            values.password,
-          );
-        } else {
-          setPasswordError("Passwords don't match");
-        }
-      }
-      // CASE 2: If the user is logging in.
-      else {
-        await AuthUtils.emailAndPasswordLogin(values.email, values.password);
-      }
+      await authService.loginWithEmailAddressAndPassword(loginUserDto);
     } catch (error) {
-      // Set the error message state as the error.
-      setErrorMessage(error.message);
+      if (error.message === AuthError.USER_NOT_FOUND.toString()) {
+        setErrorMessage('Account with this email address does not exist.');
+      } else if (error.message === AuthError.WRONG_PASSWORD.toString()) {
+        setErrorMessage('Account with this email address does not exist.');
+      } else if (error.message === AuthError.INTERNAL_SERVER_ERROR.toString()) {
+        setErrorMessage('Something went wrong please try again later.');
+      } else {
+        setErrorMessage('Something went wrong please try again later.');
+      }
     }
+    // Set loading state as false.
+    setLoading(false);
+  };
+
+  /**
+   * Firebase registration/login function.
+   * @param values Form values
+   */
+  const onRegisterWithEmailAddressAndPassword = async (values: {
+    displayName: string;
+    emailAddress: string;
+    password: string;
+  }) => {
+    // Set loading state to true.
+    setLoading(true);
+
+    // Set an empty password error state.
+    setPasswordError(null);
+    try {
+      const createUserDto = new CreateUserDto();
+      createUserDto.fromJson(values);
+
+      await authService.registerWithEmailAddressAndPassword(createUserDto);
+
+      loginFormik.values.emailAddress = values.emailAddress;
+      onSwitchMode();
+
+      setSnackbarVisible(true);
+    } catch (error) {
+      if (error.message === AuthError.ACCOUNT_ALREADY_EXISTS.toString()) {
+        setErrorMessage('Account with this email address already exists.');
+      } else {
+        setErrorMessage('Something went wrong please try again later.');
+      }
+    }
+
     // Set loading state as false.
     setLoading(false);
   };
 
   // Formik hook with initial values,
   // submit function and validation schema.
-  const formik = useFormik({
+  const loginFormik = useFormik({
     initialValues: {
-      email: '',
+      emailAddress: '',
       password: '',
     },
-    onSubmit: onEmailAndPasswordSignInButtonPressed,
+    onSubmit: onLoginWithEmailAddressAndPassword,
     validationSchema: yup.object().shape({
-      email: yup.string().email().required(),
+      emailAddress: yup.string().email().required(),
+      password: yup.string().min(5).required(),
+    }),
+  });
+
+  const registrationFormik = useFormik({
+    initialValues: {
+      displayName: '',
+      emailAddress: '',
+      password: '',
+    },
+    onSubmit: onRegisterWithEmailAddressAndPassword,
+    validationSchema: yup.object().shape({
+      displayName: yup.string().min(5).required(),
+      emailAddress: yup.string().email().required(),
       password: yup.string().min(5).required(),
     }),
   });
@@ -107,87 +157,164 @@ const AuthPage: React.FC = () => {
   const onSwitchMode = () => setLogin(!isLogin);
 
   // Password Again state.
-  const onReenterPassword = (text) => setPasswordAgain(text);
+  const onReenterPassword = (text: string) => setPasswordAgain(text);
 
   return (
     <React.Fragment>
-      <KeyboardAvoidingView behavior="height" style={styles.rootView}>
-        <View>
-          <Title style={styles.titleText}>Carto.</Title>
-          <Text>For the most premium shoppers</Text>
-        </View>
-        <Surface style={styles.surfaceView}>
-          <ScrollView>
-            <TextInput
-              mode="outlined"
-              label="Email Address"
-              value={formik.values.email}
-              onChangeText={formik.handleChange('email')}
-              onBlur={() => formik.setFieldTouched('email')}
-              autoCapitalize="none"
-              keyboardType="email-address"
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView behavior="height" style={styles.rootView}>
+          <View style={styles.imageView}>
+            <Image
+              style={styles.image}
+              source={require('./../../assets/img/app-icons/app-icon.png')}
             />
-            <HelperText
-              type="error"
-              visible={
-                formik.touched.email && (formik.errors.email ? true : false)
-              }>
-              {formik.errors.email}
-            </HelperText>
-            <TextInput
-              mode="outlined"
-              label="Password"
-              value={formik.values.password}
-              onChangeText={formik.handleChange('password')}
-              onBlur={() => formik.setFieldTouched('password')}
-              autoCapitalize="none"
-              secureTextEntry={true}
-            />
-            <HelperText
-              type="error"
-              visible={
-                formik.touched.password &&
-                (formik.errors.password ? true : false)
-              }>
-              {formik.errors.password}
-            </HelperText>
-            {!isLogin && (
-              <>
-                <TextInput
-                  mode="outlined"
-                  label="Enter Password Again"
-                  value={passwordAgain}
-                  onChangeText={onReenterPassword}
-                  autoCapitalize="none"
-                  secureTextEntry={true}
-                />
-                <HelperText type="error" visible={passwordError}>
-                  {passwordError}
-                </HelperText>
-              </>
-            )}
-            <View style={styles.buttonView}>
-              <Button
-                mode="contained"
-                icon="login"
-                disabled={!formik.isValid}
-                onPress={formik.handleSubmit}>
-                {isLogin ? 'Log In' : 'Sign In'}
-              </Button>
-              <Button
-                mode="contained"
-                icon="toggle-switch"
-                onPress={onSwitchMode}>
-                Switch to {isLogin ? 'Sign In' : 'Log In'}
-              </Button>
-            </View>
-          </ScrollView>
-        </Surface>
-      </KeyboardAvoidingView>
+            <Title style={styles.titleText}>Carto</Title>
+          </View>
+          <Surface style={styles.surfaceView}>
+            <ScrollView>
+              {!isLogin && (
+                <>
+                  <TextInput
+                    mode="outlined"
+                    label="Enter Your Name"
+                    value={registrationFormik.values.displayName}
+                    onChangeText={registrationFormik.handleChange(
+                      'displayName',
+                    )}
+                    autoCapitalize="none"
+                  />
+                  <HelperText
+                    type="error"
+                    visible={
+                      registrationFormik.touched.displayName &&
+                      (registrationFormik.errors.displayName ? true : false)
+                    }>
+                    {registrationFormik.errors.displayName}
+                  </HelperText>
+                </>
+              )}
+              <TextInput
+                mode="outlined"
+                label="Email Address"
+                value={
+                  isLogin
+                    ? loginFormik.values.emailAddress
+                    : registrationFormik.values.emailAddress
+                }
+                onChangeText={
+                  isLogin
+                    ? loginFormik.handleChange('emailAddress')
+                    : registrationFormik.handleChange('emailAddress')
+                }
+                onBlur={() =>
+                  isLogin
+                    ? loginFormik.setFieldTouched('emailAddress')
+                    : registrationFormik.setFieldTouched('emailAddress')
+                }
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+              <HelperText
+                type="error"
+                visible={
+                  isLogin
+                    ? loginFormik.touched.emailAddress &&
+                      (loginFormik.errors.emailAddress ? true : false)
+                    : registrationFormik.touched.emailAddress &&
+                      (registrationFormik.errors.emailAddress ? true : false)
+                }>
+                {isLogin
+                  ? loginFormik.errors.emailAddress
+                  : registrationFormik.errors.emailAddress}
+              </HelperText>
+              <TextInput
+                mode="outlined"
+                label="Password"
+                value={
+                  isLogin
+                    ? loginFormik.values.password
+                    : registrationFormik.values.password
+                }
+                onChangeText={
+                  isLogin
+                    ? loginFormik.handleChange('password')
+                    : registrationFormik.handleChange('password')
+                }
+                onBlur={() =>
+                  isLogin
+                    ? loginFormik.setFieldTouched('password')
+                    : registrationFormik.setFieldTouched('password')
+                }
+                autoCapitalize="none"
+                secureTextEntry={true}
+              />
+              <HelperText
+                type="error"
+                visible={
+                  isLogin
+                    ? loginFormik.touched.password &&
+                      (loginFormik.errors.password ? true : false)
+                    : registrationFormik.touched.password &&
+                      (registrationFormik.errors.password ? true : false)
+                }>
+                {isLogin
+                  ? loginFormik.errors.password
+                  : registrationFormik.errors.password}
+              </HelperText>
+              {!isLogin && (
+                <>
+                  <TextInput
+                    mode="outlined"
+                    label="Enter Password Again"
+                    value={passwordAgain}
+                    onChangeText={onReenterPassword}
+                    autoCapitalize="none"
+                    secureTextEntry={true}
+                  />
+                  <HelperText type="error" visible={passwordError}>
+                    {passwordError}
+                  </HelperText>
+                </>
+              )}
+              <View style={styles.buttonView}>
+                <Button
+                  mode="contained"
+                  icon="login"
+                  disabled={
+                    isLogin ? !loginFormik.isValid : !registrationFormik.isValid
+                  }
+                  onPress={
+                    isLogin
+                      ? loginFormik.handleSubmit
+                      : registrationFormik.handleSubmit
+                  }>
+                  {isLogin ? 'Log In' : 'Sign In'}
+                </Button>
+                <Button
+                  mode="contained"
+                  icon="toggle-switch"
+                  onPress={onSwitchMode}>
+                  Switch to {isLogin ? 'Sign In' : 'Log In'}
+                </Button>
+              </View>
+            </ScrollView>
+          </Surface>
+        </KeyboardAvoidingView>
+      </ScrollView>
       <LoadingModalComponent
         visible={isLoading}
         message={isLogin ? 'Logging You In!' : 'Signing You In!'}
       />
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={2000}
+        action={{
+          label: 'OK',
+          onPress: () => setSnackbarVisible(false),
+        }}>
+        Account created! You may log in now!
+      </Snackbar>
     </React.Fragment>
   );
 };
@@ -195,19 +322,29 @@ const styles = StyleSheet.create({
   rootView: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
-    margin: 20,
+    marginBottom: Dimensions.get('screen').height * 0.1,
+  },
+  imageView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: Dimensions.get('screen').height * 0.03,
+  },
+  image: {
+    height: Dimensions.get('screen').height * 0.3,
+    resizeMode: 'contain',
   },
   titleText: {
-    fontSize: 20,
+    fontSize: Dimensions.get('screen').height * 0.03,
   },
   surfaceView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    width: 350,
+    padding: Dimensions.get('screen').height * 0.03,
+    width: Dimensions.get('screen').width * 0.9,
     elevation: 4,
   },
   scrollView: {
@@ -220,11 +357,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   buttonView: {
-    margin: 10,
-    padding: 10,
-    height: 150,
+    margin: Dimensions.get('screen').height * 0.01,
+    padding: Dimensions.get('screen').height * 0.01,
+    height: Dimensions.get('screen').height * 0.2,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
 });
