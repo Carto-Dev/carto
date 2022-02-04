@@ -4,7 +4,7 @@ import {ServerUserModel} from './../models/server-user.model';
 import {server} from './../utils/axios.util';
 import {CreateUserDto} from './../dtos/auth/create-user.dto';
 import axios from 'axios';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 
 const firebaseAuth = auth();
 
