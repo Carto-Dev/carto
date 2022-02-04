@@ -15,6 +15,8 @@ import {
   HelperText,
   Title,
   Snackbar,
+  useTheme,
+  Text,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
@@ -28,6 +30,9 @@ import {AuthError} from '../../enum/auth-error.enum';
  * Login and Registration Pages.
  */
 const AuthPage: React.FC = () => {
+  // Theme Object.
+  const theme = useTheme();
+
   // Loading and error message states.
   const [isLoading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -35,6 +40,7 @@ const AuthPage: React.FC = () => {
   // Login or registration state.
   const [isLogin, setLogin] = useState(false);
 
+  // Set snackbar visible or not.
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   // Password Again and Error states.
@@ -57,7 +63,7 @@ const AuthPage: React.FC = () => {
   }, [errorMessage]);
 
   /**
-   * Firebase registration/login function.
+   * Firebase Login Method
    * @param values Form values
    */
   const onLoginWithEmailAddressAndPassword = async (values: {
@@ -70,11 +76,14 @@ const AuthPage: React.FC = () => {
     // Set an empty password error state.
     setPasswordError(null);
     try {
+      // Create a new DTO object using form values.
       const loginUserDto = new LoginUserDto();
       loginUserDto.fromJson(values);
 
+      // Login with the given DTO.
       await authService.loginWithEmailAddressAndPassword(loginUserDto);
     } catch (error) {
+      // Handle errors gracefully
       if (error.message === AuthError.USER_NOT_FOUND.toString()) {
         setErrorMessage('Account with this email address does not exist.');
       } else if (error.message === AuthError.WRONG_PASSWORD.toString()) {
@@ -90,7 +99,7 @@ const AuthPage: React.FC = () => {
   };
 
   /**
-   * Firebase registration/login function.
+   * Server user registration method.
    * @param values Form values
    */
   const onRegisterWithEmailAddressAndPassword = async (values: {
@@ -104,16 +113,23 @@ const AuthPage: React.FC = () => {
     // Set an empty password error state.
     setPasswordError(null);
     try {
+      // Create a new DTO object using form values.
       const createUserDto = new CreateUserDto();
       createUserDto.fromJson(values);
 
+      // Register a new account with the given DTO.
       await authService.registerWithEmailAddressAndPassword(createUserDto);
 
+      // Set login form email address values after successfull account creation.
       loginFormik.values.emailAddress = values.emailAddress;
+
+      // Switch form mode.
       onSwitchMode();
 
+      // Set Snackbar as visible.
       setSnackbarVisible(true);
     } catch (error) {
+      // Handle errors gracefully
       if (error.message === AuthError.ACCOUNT_ALREADY_EXISTS.toString()) {
         setErrorMessage('Account with this email address already exists.');
       } else {
@@ -125,7 +141,7 @@ const AuthPage: React.FC = () => {
     setLoading(false);
   };
 
-  // Formik hook with initial values,
+  // Login Formik hook with initial values,
   // submit function and validation schema.
   const loginFormik = useFormik({
     initialValues: {
@@ -139,6 +155,8 @@ const AuthPage: React.FC = () => {
     }),
   });
 
+  // Registration Formik hook with initial values,
+  // submit function and validation schema.
   const registrationFormik = useFormik({
     initialValues: {
       displayName: '',
@@ -308,12 +326,15 @@ const AuthPage: React.FC = () => {
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
-        duration={2000}
+        style={{
+          backgroundColor: theme.colors.surface,
+        }}
         action={{
+          color: theme.colors.primary,
           label: 'OK',
           onPress: () => setSnackbarVisible(false),
         }}>
-        Account created! You may log in now!
+        <Text>Account created! You may log in now!</Text>
       </Snackbar>
     </React.Fragment>
   );
