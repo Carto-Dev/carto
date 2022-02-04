@@ -1,3 +1,4 @@
+import {LoginUserDto} from './../dtos/auth/login-user.dto';
 import {AuthError} from './../enum/auth-error.enum';
 import {ServerUserModel} from './../models/server-user.model';
 import {server} from './../utils/axios.util';
@@ -38,12 +39,14 @@ export const registerWithEmailAddressAndPassword = async (
 };
 
 export const loginWithEmailAddressAndPassword = async (
-  email: string,
-  password: string,
+  loginUserDto: LoginUserDto,
 ): Promise<void> => {
   // TO BE TESTED
   try {
-    await firebaseAuth.signInWithEmailAndPassword(email, password);
+    await firebaseAuth.signInWithEmailAndPassword(
+      loginUserDto.emailAddress,
+      loginUserDto.password,
+    );
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
       throw new Error(AuthError.USER_NOT_FOUND);
