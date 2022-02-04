@@ -8,27 +8,39 @@ import auth from '@react-native-firebase/auth';
 
 const firebaseAuth = auth();
 
+/**
+ * Method to create new user on server and firebase.
+ * @param createUserDto DTO For creating a new user
+ * @returns ServerUserModel details for server user.
+ */
 export const registerWithEmailAddressAndPassword = async (
   createUserDto: CreateUserDto,
 ): Promise<ServerUserModel> => {
-  // TO BE TESTED
   try {
+    // Prepare request body.
     const body = createUserDto.toJson();
+
+    // Prepare request headers.
     const headers = {
       'content-type': 'application/json',
     };
 
+    // Send request to the server.
     const response = await server.post('v1/auth/register', body, {
       headers,
     });
 
+    // Get response data from request.
     const responseJson = response.data;
 
+    // Convert response data to Server User Model.
     const serverUser = new ServerUserModel();
     serverUser.fromJson(responseJson);
 
+    // Return Server User Model.
     return serverUser;
   } catch (error: unknown) {
+    // Handle Axios errors
     if (axios.isAxiosError(error)) {
       console.log('Axios Error');
       const data = error.response.data;
@@ -39,26 +51,30 @@ export const registerWithEmailAddressAndPassword = async (
         throw new Error(AuthError.INTERNAL_SERVER_ERROR);
       }
     } else {
-      throw error;
+      console.log(error);
+      throw new Error(AuthError.INTERNAL_SERVER_ERROR);
     }
   }
 };
 
+/**
+ * Method to handle firebase login.
+ * @param loginUserDto DTO Object for logging in a new user.
+ */
 export const loginWithEmailAddressAndPassword = async (
   loginUserDto: LoginUserDto,
 ): Promise<void> => {
-  // TO BE TESTED
   try {
+    // Attempt to login with provided credentials.
     await firebaseAuth.signInWithEmailAndPassword(
       loginUserDto.emailAddress,
       loginUserDto.password,
     );
   } catch (error) {
+    // Handle firebase errors.
     if (error.code === 'auth/user-not-found') {
       throw new Error(AuthError.USER_NOT_FOUND);
-    }
-
-    if (error.code === 'auth/wrong-password') {
+    } else if (error.code === 'auth/wrong-password') {
       throw new Error(AuthError.WRONG_PASSWORD);
     } else {
       console.log(error);
