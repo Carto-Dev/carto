@@ -1,5 +1,5 @@
 import React from 'react';
-import * as AuthUtils from '../../utils/auth';
+import * as authService from './../../services/auth.service';
 import {List} from 'react-native-paper';
 
 /**
@@ -9,7 +9,7 @@ import {List} from 'react-native-paper';
  */
 const AccountDrawerSectionComponent: React.FC = () => {
   // Fetching the current logged in user details.
-  const user = AuthUtils.currentUser();
+  const user = authService.currentUser();
 
   return (
     <List.Accordion
@@ -21,7 +21,7 @@ const AccountDrawerSectionComponent: React.FC = () => {
       />
       <List.Item
         title="Log Out"
-        onPress={async () => await AuthUtils.logout()}
+        onPress={async () => await authService.logout()}
         right={(props) => <List.Icon {...props} icon="account-minus" />}
       />
       <List.Item
