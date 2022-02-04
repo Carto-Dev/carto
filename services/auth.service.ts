@@ -4,7 +4,7 @@ import {ServerUserModel} from './../models/server-user.model';
 import {server} from './../utils/axios.util';
 import {CreateUserDto} from './../dtos/auth/create-user.dto';
 import axios from 'axios';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const firebaseAuth = auth();
 
@@ -88,4 +88,12 @@ export const loginWithEmailAddressAndPassword = async (
  */
 export const logout = async (): Promise<void> => {
   await firebaseAuth.signOut();
+};
+
+/**
+ * Method to fetch Firebase Logged In User.
+ * @returns Firebase User object
+ */
+export const currentUser = (): FirebaseAuthTypes.User => {
+  return firebaseAuth.currentUser;
 };
