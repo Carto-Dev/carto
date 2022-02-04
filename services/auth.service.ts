@@ -82,3 +82,10 @@ export const loginWithEmailAddressAndPassword = async (
     }
   }
 };
+
+/**
+ * Method to handle logging out
+ */
+export const logout = async (): Promise<void> => {
+  await firebaseAuth.signOut();
+};
