@@ -37,7 +37,7 @@ export const registerWithEmailAddressAndPassword = async (
   }
 };
 
-export const emailAndPasswordLogin = async (
+export const loginWithEmailAddressAndPassword = async (
   email: string,
   password: string,
 ): Promise<void> => {
