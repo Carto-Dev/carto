@@ -31,7 +31,13 @@ export const registerWithEmailAddressAndPassword = async (
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.log('Axios Error');
-      console.log(error);
+      const data = error.response.data;
+      if (data['message'] === 'EMAIL_ALREADY_EXISTS') {
+        throw new Error(AuthError.ACCOUNT_ALREADY_EXISTS);
+      } else {
+        console.log(data['message']);
+        throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+      }
     } else {
       throw error;
     }
