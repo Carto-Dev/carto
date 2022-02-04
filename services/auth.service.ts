@@ -51,6 +51,9 @@ export const loginWithEmailAddressAndPassword = async (
 
     if (error.code === 'auth/wrong-password') {
       throw new Error(AuthError.WRONG_PASSWORD);
+    } else {
+      console.log(error);
+      throw new Error(AuthError.INTERNAL_SERVER_ERROR);
     }
   }
 };
