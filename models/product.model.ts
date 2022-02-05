@@ -39,7 +39,7 @@ export class ProductModel {
     if (json.categories) {
       this.categories = json.categories.map((c) => {
         const category = new CategoryModel();
-        category.fromJson(category);
+        category.fromJson(c);
 
         return category;
       });
