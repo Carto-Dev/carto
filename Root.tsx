@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   DarkTheme as PaperDarkTheme,
   Provider as PaperProvider,
   configureFonts,
 } from 'react-native-paper';
 import MainNavigator from './navigation/Main';
+import {initializeMMKVStorages} from './utils/mmkv.util';
 
 // const fontConfig = {
 //   android: {
@@ -32,6 +33,10 @@ const themeOptions = {
 };
 
 const Root: React.FC = () => {
+  useEffect(() => {
+    initializeMMKVStorages();
+  }, []);
+
   return (
     <PaperProvider theme={themeOptions}>
       <MainNavigator />

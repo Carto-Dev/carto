@@ -25,6 +25,7 @@ import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
 import {CreateUserDto} from '../../dtos/auth/create-user.dto';
 import {LoginUserDto} from '../../dtos/auth/login-user.dto';
 import {AuthError} from '../../enum/auth-error.enum';
+import {Connectivity} from './../../enum/connectivity-error.enum';
 
 /**
  * Login and Registration Pages.
@@ -90,6 +91,8 @@ const AuthPage: React.FC = () => {
         setErrorMessage('Account with this email address does not exist.');
       } else if (error.message === AuthError.INTERNAL_SERVER_ERROR.toString()) {
         setErrorMessage('Something went wrong please try again later.');
+      } else if (error.message === Connectivity.OFFLINE.toString()) {
+        setErrorMessage('You are offline.');
       } else {
         setErrorMessage('Something went wrong please try again later.');
       }
@@ -132,6 +135,8 @@ const AuthPage: React.FC = () => {
       // Handle errors gracefully
       if (error.message === AuthError.ACCOUNT_ALREADY_EXISTS.toString()) {
         setErrorMessage('Account with this email address already exists.');
+      } else if (error.message === Connectivity.OFFLINE.toString()) {
+        setErrorMessage('You are offline.');
       } else {
         setErrorMessage('Something went wrong please try again later.');
       }
