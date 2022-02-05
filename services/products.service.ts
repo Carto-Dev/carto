@@ -56,6 +56,57 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
 };
 
 /**
+ * Method to fetch categories.
+ * @returns CategoryModel[] categories array
+ */
+export const fetchProductsByCategory = async (
+  category: string,
+): Promise<ProductModel[]> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/product/category', {
+      params: {
+        category,
+      },
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to products array.
+    const products: ProductModel[] = responseJson.map((productJson) => {
+      const product = new ProductModel();
+      product.fromJson(productJson);
+
+      return product;
+    });
+
+    // Return products.
+    return products;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
  * Method to create new products on server.
  * @param createProductDto DTO For creating a new product
  * @returns ProductModel details for new product
