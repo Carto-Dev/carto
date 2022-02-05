@@ -3,7 +3,7 @@ export class ProductImageModel {
   public image: string;
 
   fromJson(json: any): void {
-    this.id = json.id ?? '';
+    this.id = json.id ?? 0;
     this.image = json.image ?? '';
   }
 
