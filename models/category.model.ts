@@ -4,7 +4,7 @@ export class CategoryModel {
   public key: string;
   public img: string;
 
-  fromJson(json: any) {
+  fromJson(json: any): void {
     this.id = json.id ?? '';
     this.text = json.text ?? '';
     this.key = json.key ?? '';
