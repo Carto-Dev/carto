@@ -19,13 +19,13 @@ export class ReviewModel {
     this.user = user;
 
     if (json.images) {
-      json.images.forEach((img) => {
+      this.images = json.images.map((img) => {
         const image = new ReviewImageModel();
         image.fromJson(img);
+
+        return image;
       });
     }
-
-    this.images = images;
 
     this.id = json.id ?? 0;
     this.text = json.text ?? '';
