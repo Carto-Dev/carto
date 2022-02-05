@@ -57,7 +57,7 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
 
 /**
  * Method to fetch products by category.
- * @param category Category to fetch posts for.
+ * @param category Category to fetch products for.
  * @returns ProductModel[] products array
  */
 export const fetchProductsByCategory = async (
@@ -109,7 +109,7 @@ export const fetchProductsByCategory = async (
 
 /**
  * Method to fetch products by user.
- * @param userId User ID to fetch posts from.
+ * @param userId User ID to fetch products from.
  * @returns ProductModel[] products array
  */
 export const fetchProductsByUser = async (
@@ -199,6 +199,52 @@ export const fetchNewProducts = async (): Promise<ProductModel[]> => {
 
     // Return products.
     return products;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
+ * Method to fetch product by ID.
+ * @param id Product ID.
+ * @returns ProductModel product.
+ */
+export const fetchProductById = async (id: number): Promise<ProductModel> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/product', {
+      params: {
+        id,
+      },
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to product.
+    const product = new ProductModel();
+    product.fromJson(responseJson);
+
+    // Return product.
+    return product;
   } catch (error: unknown) {
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
