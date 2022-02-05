@@ -28,6 +28,7 @@
     "react-native": "0.67.1",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-image-crop-picker": "^0.37.2",
+    "react-native-mmkv-storage": "^0.6.12",
     "react-native-paper": "^4.11.2",
     "react-native-reanimated": "^2.3.1",
     "react-native-safe-area-context": "^3.3.2",
