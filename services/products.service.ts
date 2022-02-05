@@ -1,3 +1,4 @@
+import {CategoryModel} from './../models/category.model';
 import {UpdateProductDto} from './../dtos/products/update-product.dto';
 import NetInfo from '@react-native-community/netinfo';
 import {ProductModel} from './../models/product.model';
@@ -7,6 +8,52 @@ import {Connectivity} from '../enum/connectivity-error.enum';
 import {server} from '../utils/axios.util';
 import {AuthError} from '../enum/auth-error.enum';
 import {DeleteProductDto} from '../dtos/products/delete-product.dto';
+
+/**
+ * Method to fetch categories.
+ * @returns CategoryModel[] categories array
+ */
+export const fetchCategories = async (): Promise<CategoryModel[]> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/category', {
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to Categories array.
+    const categories: CategoryModel[] = responseJson.map((categoryJson) => {
+      const category = new CategoryModel();
+      category.fromJson(categoryJson);
+
+      return category;
+    });
+
+    // Return categories.
+    return categories;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
 
 /**
  * Method to create new products on server.
