@@ -2,11 +2,11 @@ import {ReviewImageModel} from './review-image.model';
 import {ServerUserModel} from './server-user.model';
 
 export class ReviewModel {
-  public id: number;
-  public text: string;
-  public stars: number;
-  public user: ServerUserModel;
-  public images: ReviewImageModel[];
+  public id: number = 0;
+  public text: string = '';
+  public stars: number = 0;
+  public user: ServerUserModel = new ServerUserModel();
+  public images: ReviewImageModel[] = [];
 
   fromJson(json: any): void {
     const user: ServerUserModel = new ServerUserModel();

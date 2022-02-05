@@ -1,8 +1,8 @@
 export class CategoryModel {
-  public id: number;
-  public text: string;
-  public key: string;
-  public img: string;
+  public id: number = 0;
+  public text: string = '';
+  public key: string = '';
+  public img: string = '';
 
   fromJson(json: any): void {
     this.id = json.id ?? 0;

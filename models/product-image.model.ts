@@ -1,6 +1,6 @@
 export class ProductImageModel {
-  public id: number;
-  public image: string;
+  public id: number = 0;
+  public image: string = '';
 
   fromJson(json: any): void {
     this.id = json.id ?? 0;
