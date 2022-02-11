@@ -23,11 +23,16 @@ const CategoriesComponent: React.FC = () => {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
 
   useEffect(() => {
+    let mounted = true;
     productService
       .fetchCategories()
-      .then((categories) => setCategories(categories))
+      .then((categories) => (mounted ? setCategories(categories) : null))
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => (mounted ? setLoading(false) : null));
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const loadingCategories = () => (
