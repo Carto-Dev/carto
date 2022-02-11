@@ -1,12 +1,13 @@
 import React, {ReactNode} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {Dimensions, FlatList, StyleSheet} from 'react-native';
 import {Title} from 'react-native-paper';
+import {ReviewModel} from '../../models/review.model';
 import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import ReviewCardComponent from './ReviewCard';
 
 type Props = {
-  reviews: any[];
-  productId: string;
+  reviews: ReviewModel[];
+  productId: number;
   headerComponent: ReactNode;
 };
 
@@ -35,7 +36,7 @@ const ReviewDisplayComponent: React.FC<Props> = ({
     }
     centerContent={true}
     data={reviews}
-    keyExtractor={(review) => review.id}
+    keyExtractor={(review) => review.id.toString()}
     renderItem={(review) => (
       <ReviewCardComponent productId={productId} review={review.item} />
     )}
@@ -44,7 +45,7 @@ const ReviewDisplayComponent: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   titleView: {
-    margin: 20,
+    margin: Dimensions.get('screen').height * 0.03,
   },
 });
 

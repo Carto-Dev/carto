@@ -12,27 +12,20 @@ import {
   Title,
   useTheme,
 } from 'react-native-paper';
-import categories from '../../constants/categories';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ExpandableTextComponent from '../Utility/ExpandableText';
-import * as ProductUtils from '../../utils/products';
-import * as CartUtils from '../../utils/cart';
+import {ProductModel} from '../../models/product.model';
+import * as productService from './../../services/products.service';
 
 type Props = {
-  id: string;
+  product: ProductModel;
 };
 
 /**
  * Display Specific Product Details.
  * @param id Product ID
  */
-const ProductWrapperComponent: React.FC<Props> = ({id}) => {
-  // Loading State
-  const [loading, setLoading] = useState(true);
-
-  // Product State.
-  const [product, setProduct] = useState<any>({});
-
+const ProductWrapperComponent: React.FC<Props> = ({product}) => {
   // Destructuring theme hook for colours.
   const {colors} = useTheme();
 
@@ -55,75 +48,54 @@ const ProductWrapperComponent: React.FC<Props> = ({id}) => {
    * Add to cart function.
    */
   const addToCart = async () => {
-    await CartUtils.addProductToCart(product.id, Number(quantity));
-    setVisible(false);
-    setSnackBarVisible(true);
+    // await CartUtils.addProductToCart(product.id, Number(quantity));
+    // setVisible(false);
+    // setSnackBarVisible(true);
   };
-
-  // Listening to product changes and reflecting the same.
-  useEffect(
-    () =>
-      ProductUtils.fetchProduct(id).onSnapshot(
-        (data) => {
-          setProduct(data.data());
-          setLoading(false);
-        },
-        (error) => console.log(error),
-      ),
-    [],
-  );
 
   return (
     <React.Fragment>
-      {!loading ? (
-        <View style={styles.mainView}>
-          <FlatList
-            pagingEnabled={true}
-            horizontal={true}
-            centerContent={true}
-            data={product.imgLinks}
-            keyExtractor={(imgLink) => imgLink}
-            renderItem={(imgLink) => (
-              <Image
-                style={{height: 250, width: width}}
-                source={{uri: imgLink.item}}
-              />
-            )}
-          />
-          <View style={styles.titleTextView}>
-            <Title>{product.title}</Title>
-            <Title
-              style={{
-                color: colors.primary,
-                ...styles.titleText,
-                borderColor: colors.primary,
-              }}>
-              ${product.cost}
-            </Title>
-          </View>
-          <View style={styles.chipView}>
-            {product.categories
-              .map((p) => categories.find((c) => c.key === p))
-              .map((p) => (
-                <Chip key={p.key} style={styles.chipStyle} mode="outlined">
-                  {p.text}
-                </Chip>
-              ))}
-          </View>
-          <Headline>Description:</Headline>
-          <ExpandableTextComponent>
-            {product.description}
-          </ExpandableTextComponent>
-          <Button
-            style={styles.addToCartButtonStyle}
-            mode="contained"
-            onPress={() => setVisible(true)}>
-            Add To Cart
-          </Button>
+      <View style={styles.mainView}>
+        <FlatList
+          pagingEnabled={true}
+          horizontal={true}
+          centerContent={true}
+          data={product.images}
+          keyExtractor={(image) => image.id.toString()}
+          renderItem={(image) => (
+            <Image
+              style={{height: 250, width: width}}
+              source={{uri: image.item.image}}
+            />
+          )}
+        />
+        <View style={styles.titleTextView}>
+          <Title>{product.title}</Title>
+          <Title
+            style={{
+              color: colors.primary,
+              ...styles.titleText,
+              borderColor: colors.primary,
+            }}>
+            ${product.cost}
+          </Title>
         </View>
-      ) : (
-        <LoadingAnimation message="Fetching Product Details For You!" />
-      )}
+        <View style={styles.chipView}>
+          {product.categories.map((p) => (
+            <Chip key={p.key} style={styles.chipStyle} mode="outlined">
+              {p.text}
+            </Chip>
+          ))}
+        </View>
+        <Headline>Description:</Headline>
+        <ExpandableTextComponent>{product.description}</ExpandableTextComponent>
+        <Button
+          style={styles.addToCartButtonStyle}
+          mode="contained"
+          onPress={() => setVisible(true)}>
+          Add To Cart
+        </Button>
+      </View>
       <Portal>
         <Modal
           visible={visible}
@@ -169,20 +141,20 @@ const ProductWrapperComponent: React.FC<Props> = ({id}) => {
 
 const styles = StyleSheet.create({
   mainView: {
-    margin: 20,
+    margin: Dimensions.get('screen').height * 0.03,
   },
   categoryTitle: {
-    marginTop: 20,
+    marginTop: Dimensions.get('screen').height * 0.03,
   },
   chipView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   chipStyle: {
-    margin: 5,
+    margin: Dimensions.get('screen').height * 0.01,
   },
   titleText: {
-    padding: 10,
+    padding: Dimensions.get('screen').height * 0.01,
     borderWidth: 2,
     fontWeight: 'bold',
   },
@@ -190,20 +162,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: Dimensions.get('screen').height * 0.01,
   },
   addToCartButtonStyle: {
-    marginVertical: 20,
+    marginVertical: Dimensions.get('screen').height * 0.04,
   },
   modalView: {
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
   modalContainer: {
-    margin: 20,
+    margin: Dimensions.get('screen').height * 0.01,
     borderRadius: 20,
   },
   mainModalView: {
-    padding: 20,
+    padding: Dimensions.get('screen').height * 0.04,
   },
 });
 

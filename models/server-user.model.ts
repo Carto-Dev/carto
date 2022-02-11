@@ -1,17 +1,17 @@
 export class ServerUserModel {
-  public id: string = '';
+  public id: number = 0;
   public firebaseId: string = '';
   public displayName: string = '';
 
   constructor() {}
 
   fromJson(json: any) {
-    this.id = json.id ?? '';
+    this.id = json.id ?? 0;
     this.firebaseId = json.firebaseId ?? '';
     this.displayName = json.displayName ?? '';
   }
 
-  toJson(): {id: string; firebaseId: string; displayName: string} {
+  toJson(): {id: number; firebaseId: string; displayName: string} {
     return {
       id: this.id,
       firebaseId: this.firebaseId,

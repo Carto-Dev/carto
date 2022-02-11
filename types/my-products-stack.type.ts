@@ -1,12 +1,8 @@
+import {ProductModel} from './../models/product.model';
 export type MyProductsStackParamsList = {
   MyProductsOverview: undefined;
   ProductForm: {
-    id: string;
-    title: string;
-    description: string;
-    cost: number;
-    categories: string[];
-    imageUris: string[];
+    product: ProductModel;
     edit: boolean;
   };
 };

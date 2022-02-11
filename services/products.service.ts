@@ -1,3 +1,5 @@
+import storage from '@react-native-firebase/storage';
+import uuid from 'uuid-random';
 import {CategoryModel} from './../models/category.model';
 import {UpdateProductDto} from './../dtos/products/update-product.dto';
 import NetInfo from '@react-native-community/netinfo';
@@ -8,6 +10,8 @@ import {Connectivity} from '../enum/connectivity-error.enum';
 import {server} from '../utils/axios.util';
 import {AuthError} from '../enum/auth-error.enum';
 import {DeleteProductDto} from '../dtos/products/delete-product.dto';
+
+const firebaseStorage = storage();
 
 /**
  * Method to fetch categories.
@@ -252,6 +256,17 @@ export const fetchProductById = async (id: number): Promise<ProductModel> => {
 };
 
 /**
+ * Method fetch products by logged in user.
+ * @returns ProductModel[] user products array.
+ */
+export const fetchProductsByLoggedInUser = async (): Promise<
+  ProductModel[]
+> => {
+  const serverUserModel = await authService.fetchServerUserDetails();
+  return await fetchProductsByUser(serverUserModel.id);
+};
+
+/**
  * Method to create new products on server.
  * @param createProductDto DTO For creating a new product
  * @returns ProductModel details for new product
@@ -383,4 +398,24 @@ export const deleteProduct = async (
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
   }
+};
+
+/**
+ * Upload the image to firebase storage.
+ * @param localImgLink Local image link
+ * @returns Firebase Image link
+ */
+export const uploadProductImage = async (
+  localImgLink: string,
+): Promise<string> => {
+  // Generate UUID for the image and the path
+  const uuid_ = uuid();
+  const path = `products/${uuid_}`;
+
+  // Upload the image to firebase storage and generate a URL.
+  await firebaseStorage.ref(path).putFile(localImgLink.substring(7));
+  const imgLink = await storage().ref(path).getDownloadURL();
+
+  // Return the firebase URL
+  return imgLink;
 };

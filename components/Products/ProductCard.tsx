@@ -1,16 +1,14 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {
   CompositeNavigationProp,
-  CompositeScreenProps,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {Card, Paragraph, Title, Button, Chip} from 'react-native-paper';
-import categories from '../../constants/categories';
-import routes from '../../constants/routes';
+import {ProductModel} from '../../models/product.model';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 
@@ -20,8 +18,8 @@ type ProductCardNavigatorType = CompositeNavigationProp<
 >;
 
 type Props = {
-  product: any;
-  openCartModal: any;
+  product: ProductModel;
+  openCartModal: (id: number) => void;
 };
 
 /**
@@ -44,18 +42,16 @@ const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
 
   return (
     <Card onPress={navigateToProductPage} style={styles.cardView}>
-      <Card.Cover source={{uri: product.imgLinks[0]}} />
+      <Card.Cover source={{uri: product.images[0].image}} />
       <Card.Content>
         <Title>{product.title}</Title>
         <Paragraph>{product.description.substring(0, 45)}...</Paragraph>
         <View style={styles.chipView}>
-          {product.categories
-            .map((p) => categories.find((c) => c.key === p))
-            .map((p) => (
-              <Chip key={p.key} style={styles.chipStyle} mode="outlined">
-                {p.text}
-              </Chip>
-            ))}
+          {product.categories.map((p) => (
+            <Chip key={p.key} style={styles.chipStyle} mode="outlined">
+              {p.text}
+            </Chip>
+          ))}
         </View>
         <View style={styles.pricingTextView}>
           <Title>Pricing: </Title>
@@ -81,18 +77,19 @@ const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
 
 const styles = StyleSheet.create({
   cardView: {
-    margin: 20,
+    margin: Dimensions.get('screen').width * 0.04,
   },
 
   buttonView: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    width: Dimensions.get('screen').width * 0.9,
   },
 
   pricingText: {
-    padding: 10,
+    padding: Dimensions.get('screen').width * 0.03,
     borderWidth: 2,
   },
 
@@ -105,11 +102,11 @@ const styles = StyleSheet.create({
   chipView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginVertical: 5,
+    marginVertical: Dimensions.get('screen').height * 0.01,
   },
 
   chipStyle: {
-    margin: 2,
+    margin: Dimensions.get('screen').height * 0.003,
   },
 });
 

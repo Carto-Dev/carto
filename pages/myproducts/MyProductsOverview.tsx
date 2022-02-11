@@ -1,32 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import MyProductComponent from '../../components/Products/MyProduct';
-import * as ProductUtils from '../../utils/products';
-import * as AuthUtils from '../../utils/auth';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
+import {ProductModel} from '../../models/product.model';
+import * as productService from './../../services/products.service';
 
 const MyProductsOverviewPage: React.FC = () => {
   // Theme Hook.
   const theme = useTheme();
 
   // Products Array State.
-  const [userProducts, setUserProducts] = useState([]);
+  const [userProducts, setUserProducts] = useState<ProductModel[]>([]);
 
   // Loading state.
   const [loading, setLoading] = useState(true);
 
+  const loadUserProducts = (mounted) => {
+    setLoading(true);
+    productService
+      .fetchProductsByLoggedInUser()
+      .then((products) => (mounted ? setUserProducts(products) : null))
+      .catch((error) => console.log(error))
+      .finally(() => (mounted ? setLoading(false) : null));
+  };
+
   // Fetch the products from firebase and save those products in state.
   useEffect(() => {
-    const user = AuthUtils.currentUser();
-    return ProductUtils.fetchUserProducts(user.uid).onSnapshot(
-      (querySnapshot) => {
-        setUserProducts(ProductUtils.convertToProducts(querySnapshot));
-        setLoading(false);
-      },
-      (error) => console.log(error),
-    );
+    let mounted = true;
+
+    loadUserProducts(mounted);
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return !loading ? (
@@ -34,7 +42,7 @@ const MyProductsOverviewPage: React.FC = () => {
       style={{backgroundColor: theme.colors.surface}}
       centerContent={true}
       data={userProducts}
-      keyExtractor={(product) => product.id}
+      keyExtractor={(product) => product.id.toString()}
       ListEmptyComponent={
         <EmptyDataAnimation
           message={'No Products Available. Add Some Products To Sell Today!'}
@@ -43,17 +51,14 @@ const MyProductsOverviewPage: React.FC = () => {
       renderItem={(c) => {
         const product = c.item;
 
-        return (
-          <MyProductComponent
-            id={product.id}
-            title={product.title}
-            description={product.description}
-            cost={product.cost}
-            categories={product.categories}
-            imgLinks={product.imgLinks}
-          />
-        );
+        return <MyProductComponent product={c.item} />;
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={() => loadUserProducts(true)}
+        />
+      }
     />
   ) : (
     <View style={styles.centerView}>
