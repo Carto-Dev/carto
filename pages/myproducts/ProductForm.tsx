@@ -21,6 +21,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MyProductsStackParamsList} from '../../types/my-products-stack.type';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import CategoriesSelector from '../../components/Products/CategoriesSelector';
+import {CategoryModel} from '../../models/category.model';
+import * as productService from './../../services/products.service';
+import {CreateProductDto} from '../../dtos/products/create-product.dto';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MyProductsStackParamsList, 'ProductForm'>,
@@ -37,7 +41,9 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   // Categories state and edit mode state.
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState<CategoryModel[]>(
+    [],
+  );
 
   // Prefilling the form when editing products.
   let title = '';
@@ -74,7 +80,11 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
    * Function to handle form submit.
    * @param values Form values
    */
-  const submitForm = async (values) => {
+  const submitForm = async (values: {
+    title: string;
+    description: string;
+    cost: string;
+  }) => {
     // Set loading state as true.
     setLoading(true);
     try {
@@ -88,40 +98,36 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
       }
       // Submit data to firebase
       else {
-        // Create the product object.
-        const user = AuthUtils.currentUser();
-        const product = {
-          userId: user.uid,
-          title: values.title,
-          description: values.description,
-          cost: values.cost,
-          localImgLinks: imageUris,
-          categories: selectedCategories.map((c) => c.key),
-          timestamp: new Date().toUTCString(),
-        };
-
         // CASE 1: To submit a new product.
         if (!route.params.edit) {
-          await ProductUtils.addProduct(
-            product.userId,
-            product.title,
-            product.description,
-            product.cost,
-            product.localImgLinks,
-            product.categories,
-            product.timestamp,
+          const firebaseImages = await Promise.all(
+            imageUris.map(
+              async (imageUri) =>
+                await productService.uploadProductImage(imageUri),
+            ),
           );
+
+          const createProductDto = new CreateProductDto();
+          createProductDto.title = values.title;
+          createProductDto.description = values.description;
+          createProductDto.cost = Number(values.cost);
+          createProductDto.imgLinks = firebaseImages;
+          createProductDto.categories = selectedCategories.map(
+            (category) => category.key,
+          );
+
+          await productService.createProduct(createProductDto);
         }
         // CASE 1: To update an existing product.
         else {
-          await ProductUtils.updateProduct(
-            id,
-            product.title,
-            product.description,
-            product.cost,
-            product.categories,
-            product.localImgLinks,
-          );
+          // await ProductUtils.updateProduct(
+          //   id,
+          //   product.title,
+          //   product.description,
+          //   product.cost,
+          //   product.categories,
+          //   product.localImgLinks,
+          // );
         }
 
         // Route back to your products page.
@@ -216,26 +222,18 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   };
 
   /**
-   * Add categories to the category state.
+   * Add or remove selected categories.
+   * @param category CategoryModel
    */
-  const addCategory = (category: {text: string; key: string; img: any}) => {
+  const selectACategory = (category: CategoryModel) => {
     if (selectedCategories.indexOf(category) !== -1) {
-      return;
+      setSelectedCategories(
+        selectedCategories.filter(
+          (selectedCategory) => selectedCategory.id !== category.id,
+        ),
+      );
     } else {
       setSelectedCategories([...selectedCategories, category]);
-    }
-  };
-
-  /**
-   * Remove categories from the category state.
-   */
-  const removeCategory = (category: {text: string; key: string; img: any}) => {
-    if (selectedCategories.indexOf(category) === -1) {
-      return;
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((cat) => cat !== category),
-      );
     }
   };
 
@@ -298,38 +296,12 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
               }>
               {formik.errors.cost}
             </HelperText>
-            <List.Accordion
-              title="Select Categories"
-              left={(props) => (
-                <List.Icon {...props} icon="format-list-checks" />
-              )}>
-              {categories.map((category, index) => (
-                <List.Item
-                  key={index}
-                  title={category.text}
-                  onPress={() => addCategory(category)}
-                />
-              ))}
-            </List.Accordion>
 
             <Subheading>Selected Categories</Subheading>
-            <View style={styles.categoryView}>
-              {selectedCategories.length > 0 ? (
-                selectedCategories.map((category, index) => (
-                  <Chip
-                    style={styles.category}
-                    mode="outlined"
-                    key={index}
-                    onPress={() => removeCategory(category)}>
-                    {category.text}
-                  </Chip>
-                ))
-              ) : (
-                <Chip style={styles.category} mode="outlined">
-                  No Categories Selected
-                </Chip>
-              )}
-            </View>
+            <CategoriesSelector
+              selectedCategories={selectedCategories}
+              selectCategory={selectACategory}
+            />
 
             <View style={styles.buttonView}>
               <Button

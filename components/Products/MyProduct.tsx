@@ -11,6 +11,8 @@ import {
 } from 'react-native-paper';
 import {MyProductsNavigatorType} from '../../types/my-products-navigator.type';
 import {ProductModel} from '../../models/product.model';
+import * as productService from './../../services/products.service';
+import {DeleteProductDto} from '../../dtos/products/delete-product.dto';
 
 type Props = {
   product: ProductModel;
@@ -94,7 +96,11 @@ const MyProductComponent: React.FC<Props> = ({product}) => {
           <Dialog.Actions>
             <Button
               onPress={async () => {
-                // await ProductUtils.deleteProduct(id);
+                const deleteProductDto = new DeleteProductDto();
+                deleteProductDto.id = product.id;
+
+                await productService.deleteProduct(deleteProductDto);
+                setVisible(false);
               }}>
               Yes
             </Button>

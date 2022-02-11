@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import MyProductComponent from '../../components/Products/MyProduct';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
@@ -17,15 +17,20 @@ const MyProductsOverviewPage: React.FC = () => {
   // Loading state.
   const [loading, setLoading] = useState(true);
 
-  // Fetch the products from firebase and save those products in state.
-  useEffect(() => {
-    let mounted = true;
-
+  const loadUserProducts = (mounted) => {
+    setLoading(true);
     productService
       .fetchProductsByLoggedInUser()
       .then((products) => (mounted ? setUserProducts(products) : null))
       .catch((error) => console.log(error))
       .finally(() => (mounted ? setLoading(false) : null));
+  };
+
+  // Fetch the products from firebase and save those products in state.
+  useEffect(() => {
+    let mounted = true;
+
+    loadUserProducts(mounted);
 
     return () => {
       mounted = false;
@@ -48,6 +53,12 @@ const MyProductsOverviewPage: React.FC = () => {
 
         return <MyProductComponent product={c.item} />;
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={() => loadUserProducts(true)}
+        />
+      }
     />
   ) : (
     <View style={styles.centerView}>
