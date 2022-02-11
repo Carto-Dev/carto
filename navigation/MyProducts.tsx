@@ -5,6 +5,7 @@ import ProductFormPage from '../pages/myproducts/ProductForm';
 import {useNavigation} from '@react-navigation/native';
 import {MyProductsStackParamsList} from '../types/my-products-stack.type';
 import {MyProductsNavigatorType} from '../types/my-products-navigator.type';
+import {ProductModel} from '../models/product.model';
 
 // My Products Stack Navigator.
 const MyProductsStack = createNativeStackNavigator<MyProductsStackParamsList>();
@@ -26,12 +27,7 @@ const MyProductsNavigator: React.FC = () => {
         name={'ProductForm'}
         component={ProductFormPage}
         initialParams={{
-          id: '',
-          title: '',
-          description: '',
-          cost: 0,
-          categories: [],
-          imageUris: [],
+          product: new ProductModel(),
           edit: false,
         }}
         options={{

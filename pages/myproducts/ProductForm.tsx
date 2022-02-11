@@ -50,10 +50,10 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
     const receievedData = route.params;
 
     // Getting data from params.
-    id = receievedData.id;
-    title = receievedData.title;
-    description = receievedData.description;
-    cost = receievedData.cost.toString();
+    // id = receievedData.id;
+    // title = receievedData.title;
+    // description = receievedData.description;
+    // cost = receievedData.cost.toString();
   }
 
   // Listen to route params to extract categories and images.
@@ -61,12 +61,12 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
     if (route.params != null) {
       const receievedData = route.params;
 
-      const categoriesMapped = receievedData.categories.map((category) =>
-        categories.find((c) => c.key === category),
-      );
+      // const categoriesMapped = receievedData.categories.map((category) =>
+      //   categories.find((c) => c.key === category),
+      // );
 
-      setImageUris(receievedData.imageUris);
-      setSelectedCategories(categoriesMapped);
+      // setImageUris(receievedData.imageUris);
+      // setSelectedCategories(categoriesMapped);
     }
   }, [route.params]);
 
