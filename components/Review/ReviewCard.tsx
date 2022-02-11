@@ -8,18 +8,18 @@ import {
   Title,
 } from 'react-native-paper';
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
-import * as AuthUtils from '../../utils/auth';
+import * as authService from './../../services/auth.service';
 import * as ReviewUtils from '../../utils/reviews';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import routes from '../../constants/routes';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {ReviewModel} from '../../models/review.model';
 
 type Props = {
-  review: any;
-  productId: string;
+  review: ReviewModel;
+  productId: number;
 };
 
 type ReviewCardNavigationType = CompositeNavigationProp<
@@ -55,7 +55,7 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
       isEdit: true,
       review: review,
       starsGiven: review.stars,
-      text: review.review,
+      text: review.text,
       imageLinks: review.images,
     });
   };
@@ -69,7 +69,7 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
         <Card.Content>
           <View style={styles.reviewView}>
             <Headline style={styles.reviewNameText}>
-              {review.reviewerName}'s Review
+              {review.user.displayName}'s Review
             </Headline>
             <Button mode="outlined" icon="star">
               {review.stars}
@@ -84,10 +84,10 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
                 data={review.images}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(image) => image}
+                keyExtractor={(image) => image.id.toString()}
                 renderItem={(image) => (
                   <Image
-                    source={{uri: image.item}}
+                    source={{uri: image.item.image}}
                     style={{...styles.reviewImageStyles, width: width}}
                   />
                 )}
@@ -95,14 +95,11 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
             </React.Fragment>
           )}
           <Paragraph>
-            {review.review.length > 0 ? review.review : 'No Review'}
+            {review.text.length > 0 ? review.text : 'No Review'}
           </Paragraph>
-          <Caption>
-            Have they bought the product?{' '}
-            {review.hasBoughtProduct ? 'Yes' : 'No'}
-          </Caption>
+          <Caption>Have they bought the product? No</Caption>
         </Card.Content>
-        {AuthUtils.currentUser().uid === review.reviewerId && (
+        {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
               <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
@@ -117,10 +114,10 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
 
 const styles = StyleSheet.create({
   mainView: {
-    margin: 20,
+    margin: Dimensions.get('screen').height * 0.03,
   },
   starsText: {
-    padding: 10,
+    padding: Dimensions.get('screen').height * 0.03,
     borderWidth: 2,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -131,15 +128,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewNameText: {maxWidth: 200},
+  reviewNameText: {maxWidth: Dimensions.get('screen').width * 0.9},
   buttonView: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: 'center',
+    width: Dimensions.get('screen').width * 0.9,
   },
   reviewImageStyles: {
-    height: 300,
+    height: Dimensions.get('screen').height * 0.5,
   },
 });
 

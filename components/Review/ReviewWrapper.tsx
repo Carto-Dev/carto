@@ -7,9 +7,11 @@ import * as ReviewUtils from '../../utils/reviews';
 import ReviewDisplayComponent from './ReviewDisplay';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ReviewTotalComponent from './ReviewTotal';
+import {ReviewModel} from '../../models/review.model';
 
 type Props = {
-  id: string;
+  productId: number;
+  reviews: ReviewModel[];
   headerComponent: ReactNode;
 };
 
@@ -17,49 +19,66 @@ type Props = {
  * Wrapper component for displaying reviews.
  * @param id ID of the product.
  */
-const ReviewWrapperComponent: React.FC<Props> = ({id, headerComponent}) => {
-  // State hook for saving review data.
-  const [reviewData, setReviewData] = useState<any>({});
-
-  // State hook for setting loading status
-  const [loading, setLoading] = useState(true);
+const ReviewWrapperComponent: React.FC<Props> = ({
+  productId,
+  reviews,
+  headerComponent,
+}) => {
+  const [reviewBreakdown, setReviewBreakdown] = useState<{
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
+  }>({
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  });
 
   // Subscribing to Firestore changes and fetching
   // reviews.
-  useEffect(
-    () =>
-      ReviewUtils.getReviewData(id).onSnapshot(
-        (data) => {
-          setReviewData(data.data());
-          setLoading(false);
-        },
-        (error) => console.log(error),
-      ),
-    [id],
-  );
+  useEffect(() => {
+    const initialReviewBreakdown = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+    };
 
-  return !loading ? (
+    reviews.forEach((review) => (initialReviewBreakdown[review.stars] += 1));
+
+    setReviewBreakdown(initialReviewBreakdown);
+  }, [reviews]);
+
+  return (
     <ReviewDisplayComponent
-      reviews={reviewData.reviews}
-      productId={id}
+      reviews={reviews}
+      productId={productId}
       headerComponent={
         <React.Fragment>
           {headerComponent}
           <ReviewTotalComponent
-            totalReviews={reviewData.noOfReviews}
-            totalStars={reviewData.totalStars}
+            totalReviews={reviews.length}
+            totalStars={
+              reviews.length > 0
+                ? reviews
+                    .map((review) => review.stars)
+                    .reduce(
+                      (previousValue, currentValue) =>
+                        previousValue + currentValue,
+                    )
+                : 0
+            }
           />
-          <ReviewBarChartComponent
-            reviewBreakdown={reviewData.reviewBreakdown}
-          />
-          <ReviewFormComponent id={id} />
+          <ReviewBarChartComponent reviewBreakdown={reviewBreakdown} />
+          <ReviewFormComponent id={productId} />
         </React.Fragment>
       }
     />
-  ) : (
-    <View style={styles.loadingView}>
-      <LoadingAnimation message="Fetching Products Details For You!" />
-    </View>
   );
 };
 

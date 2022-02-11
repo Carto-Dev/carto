@@ -6,18 +6,17 @@ import {
 } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState, useEffect} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
 import {Review} from '../../models/review';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
-import {MyProductsStackParamsList} from '../../types/my-products-stack.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 import * as ReviewUtils from '../../utils/reviews';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
 
 type Props = {
-  id: string;
+  id: number;
   isEdit?: boolean;
   review?: any;
   starsGiven?: number;
@@ -221,7 +220,7 @@ const ReviewFormComponent: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   rootView: {
-    margin: 20,
+    margin: Dimensions.get('screen').height * 0.03,
   },
 
   contentView: {
@@ -230,11 +229,11 @@ const styles = StyleSheet.create({
   },
 
   buttonLayout: {
-    marginTop: 10,
+    marginTop: Dimensions.get('screen').height * 0.01,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    height: 100,
+    height: Dimensions.get('screen').height * 0.15,
   },
 });
 
