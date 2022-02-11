@@ -11,6 +11,7 @@ import {StyleSheet, View} from 'react-native';
 import {Card, Paragraph, Title, Button, Chip} from 'react-native-paper';
 import categories from '../../constants/categories';
 import routes from '../../constants/routes';
+import {ProductModel} from '../../models/product.model';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 
@@ -20,8 +21,8 @@ type ProductCardNavigatorType = CompositeNavigationProp<
 >;
 
 type Props = {
-  product: any;
-  openCartModal: any;
+  product: ProductModel;
+  openCartModal: (id: number) => void;
 };
 
 /**
@@ -44,18 +45,16 @@ const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
 
   return (
     <Card onPress={navigateToProductPage} style={styles.cardView}>
-      <Card.Cover source={{uri: product.imgLinks[0]}} />
+      <Card.Cover source={{uri: product.images[0].image}} />
       <Card.Content>
         <Title>{product.title}</Title>
         <Paragraph>{product.description.substring(0, 45)}...</Paragraph>
         <View style={styles.chipView}>
-          {product.categories
-            .map((p) => categories.find((c) => c.key === p))
-            .map((p) => (
-              <Chip key={p.key} style={styles.chipStyle} mode="outlined">
-                {p.text}
-              </Chip>
-            ))}
+          {product.categories.map((p) => (
+            <Chip key={p.key} style={styles.chipStyle} mode="outlined">
+              {p.text}
+            </Chip>
+          ))}
         </View>
         <View style={styles.pricingTextView}>
           <Title>Pricing: </Title>
