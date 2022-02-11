@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, Dimensions} from 'react-native';
 import {
   Button,
   Modal,
@@ -10,13 +10,13 @@ import {
   Title,
   useTheme,
 } from 'react-native-paper';
-import * as ProductUtils from '../../utils/products';
-import * as CartUtils from '../../utils/cart';
+import * as productService from './../../services/products.service';
 import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import CategoriesComponent from './Categories';
 import ProductCardComponent from './ProductCard';
 import SearchbarComponent from './Searchbar';
+import {ProductModel} from '../../models/product.model';
 
 /**
  * Generates a list of the top 5 new added products
@@ -24,7 +24,7 @@ import SearchbarComponent from './Searchbar';
  */
 const ProductsViewComponent: React.FC = () => {
   // State hook to store the products.
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductModel[]>([]);
 
   // Loading state.
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ const ProductsViewComponent: React.FC = () => {
   const [snackBarVisible, setSnackBarVisible] = useState(false);
 
   // Product ID State
-  const [productId, setProductId] = useState('');
+  const [productId, setProductId] = useState<number>(0);
 
   // Quantity state.
   const [quantity, setQuantity] = useState('1');
@@ -48,7 +48,7 @@ const ProductsViewComponent: React.FC = () => {
    * Open up the modal to enter quantity.
    * @param id Product ID
    */
-  const openCartModal = (id) => {
+  const openCartModal = (id: number) => {
     setProductId(id);
     setVisible(true);
   };
@@ -57,7 +57,7 @@ const ProductsViewComponent: React.FC = () => {
    * Add to cart function.
    */
   const addToCart = async () => {
-    await CartUtils.addProductToCart(productId, Number(quantity));
+    // await CartUtils.addProductToCart(productId, Number(quantity));
     setVisible(false);
     setSnackBarVisible(true);
   };
@@ -65,13 +65,16 @@ const ProductsViewComponent: React.FC = () => {
   // UseEffect to listen to Firestore document changes and
   // save them to state for displaying.
   useEffect(() => {
-    return ProductUtils.fetchProducts().onSnapshot(
-      (querySnapshot) => {
-        setProducts(ProductUtils.convertToProducts(querySnapshot));
-        setLoading(false);
-      },
-      (error) => console.log(error),
-    );
+    let mounted = true;
+    productService
+      .fetchNewProducts()
+      .then((products) => (mounted ? setProducts(products) : null))
+      .catch((error) => console.log(error))
+      .finally(() => (mounted ? setLoading(false) : null));
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -95,8 +98,8 @@ const ProductsViewComponent: React.FC = () => {
             />
           }
           centerContent={true}
-          data={!loading ? products : ['Loading']}
-          keyExtractor={(item) => (loading ? item : item.id)}
+          data={!loading ? products : []}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={(c) =>
             !loading ? (
               <ProductCardComponent
@@ -162,27 +165,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   marginView: {
-    padding: 20,
-  },
-  imageView: {
-    height: 150,
-    width: 150,
+    padding: Dimensions.get('screen').width * 0.04,
   },
   titleView: {
-    margin: 20,
+    margin: Dimensions.get('screen').width * 0.04,
   },
   modalView: {
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
   modalContainer: {
-    margin: 20,
-    borderRadius: 20,
+    margin: Dimensions.get('screen').width * 0.04,
+    borderRadius: Dimensions.get('screen').width * 0.04,
   },
   mainModalView: {
-    padding: 20,
+    padding: Dimensions.get('screen').width * 0.04,
   },
   addToCartButtonStyle: {
-    marginVertical: 20,
+    marginVertical: Dimensions.get('screen').width * 0.04,
   },
 });
 
