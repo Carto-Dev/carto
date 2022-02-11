@@ -252,6 +252,17 @@ export const fetchProductById = async (id: number): Promise<ProductModel> => {
 };
 
 /**
+ * Method fetch products by logged in user.
+ * @returns ProductModel[] user products array.
+ */
+export const fetchProductsByLoggedInUser = async (): Promise<
+  ProductModel[]
+> => {
+  const serverUserModel = await authService.fetchServerUserDetails();
+  return await fetchProductsByUser(serverUserModel.id);
+};
+
+/**
  * Method to create new products on server.
  * @param createProductDto DTO For creating a new product
  * @returns ProductModel details for new product
