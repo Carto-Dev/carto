@@ -11,6 +11,48 @@ import NetInfo from '@react-native-community/netinfo';
 const firebaseAuth = auth();
 
 /**
+ * Method to fetch Server User details.
+ * @returns ServerUserModel server user details.
+ */
+export const fetchServerUserDetails = async (): Promise<ServerUserModel> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await firebaseAuth.currentUser.getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/auth/identity', {
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to server user model.
+    const serverUserModel = new ServerUserModel();
+    serverUserModel.fromJson(responseJson);
+
+    // Return server user details.
+    return serverUserModel;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
  * Method to create new user on server and firebase.
  * @param createUserDto DTO For creating a new user
  * @returns ServerUserModel details for server user.
