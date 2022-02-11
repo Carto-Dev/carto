@@ -23,8 +23,6 @@ const CategoriesComponent: React.FC = () => {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-
     productService
       .fetchCategories()
       .then((categories) => setCategories(categories))
