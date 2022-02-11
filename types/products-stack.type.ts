@@ -2,7 +2,7 @@ import {Review} from './../models/review';
 export type ProductsStackParamList = {
   ProductsOverview: undefined;
   Product: {
-    id: string;
+    id: number;
   };
   Cart: undefined;
   Reviews: {
