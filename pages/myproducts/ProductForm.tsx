@@ -5,17 +5,12 @@ import {
   TextInput,
   Button,
   Title,
-  List,
   Subheading,
-  Chip,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
 import {ImageModalComponent} from '../../components/Utility/ImageModal';
 import {LoadingModalComponent} from '../../components/Utility/LoadingModal';
-import categories from '../../constants/categories';
-import * as ProductUtils from '../../utils/products';
-import * as AuthUtils from '../../utils/auth';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MyProductsStackParamsList} from '../../types/my-products-stack.type';
@@ -25,6 +20,7 @@ import CategoriesSelector from '../../components/Products/CategoriesSelector';
 import {CategoryModel} from '../../models/category.model';
 import * as productService from './../../services/products.service';
 import {CreateProductDto} from '../../dtos/products/create-product.dto';
+import {UpdateProductDto} from '../../dtos/products/update-product.dto';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MyProductsStackParamsList, 'ProductForm'>,
@@ -33,12 +29,12 @@ type Props = CompositeScreenProps<
 
 const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   // Loading and error message states.
-  const [isLoading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   // Image State and Modal Visibility state.
-  const [imageUris, setImageUris] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [imageUris, setImageUris] = useState<string[]>([]);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
 
   // Categories state and edit mode state.
   const [selectedCategories, setSelectedCategories] = useState<CategoryModel[]>(
@@ -49,31 +45,33 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   let title = '';
   let description = '';
   let cost = '';
-  let id = '';
+  let id = 0;
 
   // If the page recieves some route params for editing products.
   if (route.params != null) {
     const receievedData = route.params;
 
     // Getting data from params.
-    // id = receievedData.id;
-    // title = receievedData.title;
-    // description = receievedData.description;
-    // cost = receievedData.cost.toString();
+    id = receievedData.product.id;
+    title = receievedData.product.title;
+    description = receievedData.product.description;
+    cost = receievedData.product.cost.toString();
   }
 
   // Listen to route params to extract categories and images.
   useEffect(() => {
-    if (route.params != null) {
+    let mounted = true;
+    if (route.params != null && mounted) {
       const receievedData = route.params;
 
-      // const categoriesMapped = receievedData.categories.map((category) =>
-      //   categories.find((c) => c.key === category),
-      // );
+      setSelectedCategories(receievedData.product.categories);
 
-      // setImageUris(receievedData.imageUris);
-      // setSelectedCategories(categoriesMapped);
+      setImageUris(receievedData.product.images.map((image) => image.image));
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [route.params]);
 
   /**
@@ -118,16 +116,27 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
 
           await productService.createProduct(createProductDto);
         }
-        // CASE 1: To update an existing product.
+        // CASE 2: To update an existing product.
         else {
-          // await ProductUtils.updateProduct(
-          //   id,
-          //   product.title,
-          //   product.description,
-          //   product.cost,
-          //   product.categories,
-          //   product.localImgLinks,
-          // );
+          const firebaseImages = await Promise.all(
+            imageUris.map(async (imageUri) =>
+              imageUri.startsWith('https://')
+                ? imageUri
+                : await productService.uploadProductImage(imageUri),
+            ),
+          );
+
+          const updateProductDto = new UpdateProductDto();
+          updateProductDto.id = id;
+          updateProductDto.title = values.title;
+          updateProductDto.description = values.description;
+          updateProductDto.cost = Number(values.cost);
+          updateProductDto.imgLinks = firebaseImages;
+          updateProductDto.categories = selectedCategories.map(
+            (category) => category.key,
+          );
+
+          await productService.updateProduct(updateProductDto);
         }
 
         // Route back to your products page.
