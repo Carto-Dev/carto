@@ -58,6 +58,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
 
   return (
     <ReviewDisplayComponent
+      refreshProduct={refreshProduct}
       reviews={reviews}
       productId={productId}
       headerComponent={
