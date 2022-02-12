@@ -1,16 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
-  Caption,
   Card,
+  Dialog,
   Headline,
   Paragraph,
+  Portal,
   Title,
 } from 'react-native-paper';
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as authService from './../../services/auth.service';
 import * as reviewService from './../../services/reviews.service';
-import * as ReviewUtils from '../../utils/reviews';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProductsStackParamList} from '../../types/products-stack.type';
@@ -39,12 +39,16 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
   // Navigation hook.
   const navigation = useNavigation<ReviewCardNavigationType>();
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   /**
    * Function to delete the review object from database.
    */
   const deleteReview = async () => {
     await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
   };
+
+  const onDeleteReview = () => {};
 
   /**
    * Routes the user to the update review page
@@ -98,17 +102,31 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
           <Paragraph>
             {review.text.length > 0 ? review.text : 'No Review'}
           </Paragraph>
-          <Caption>Have they bought the product? No</Caption>
         </Card.Content>
         {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
               <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
-              <Button onPress={deleteReview}>Delete Review</Button>
+              <Button onPress={() => setVisible(true)}>Delete Review</Button>
             </View>
           </Card.Actions>
         )}
       </Card>
+      <Portal>
+        <Dialog
+          visible={visible}
+          dismissable
+          onDismiss={() => setVisible(false)}>
+          <Dialog.Title>Delete Confirmation</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure you want to delete your review?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteReview}>Yes</Button>
+            <Button onPress={() => setVisible(false)}>No</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </React.Fragment>
   );
 };
