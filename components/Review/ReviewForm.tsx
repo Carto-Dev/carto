@@ -8,10 +8,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState, useEffect} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
+import {CreateReviewDto} from '../../dtos/reviews/create-review.dto';
 import {Review} from '../../models/review';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 import * as ReviewUtils from '../../utils/reviews';
+import * as reviewService from './../../services/reviews.service';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
 
@@ -94,8 +96,25 @@ const ReviewFormComponent: React.FC<Props> = ({
     try {
       // CASE 1: If the user is submitting a new review.
       if (!isEdit) {
-        // Function to save the review called.
-        await ReviewUtils.submitReview(id, noOfStars, reviewText, imageUris);
+        if (reviewText.length < 5) {
+          setErrorMessage('Your review should be at least 5 characters long.');
+          return;
+        }
+
+        const firebaseImages = await Promise.all(
+          imageUris.map(async (localImageUri) =>
+            reviewService.uploadReviewImage(localImageUri),
+          ),
+        );
+
+        const createReviewDto = CreateReviewDto.newDto(
+          id,
+          reviewText,
+          noOfStars,
+          firebaseImages,
+        );
+
+        await reviewService.createReview(createReviewDto);
       }
       // CASE 2: If the user is updating their review.
       else {

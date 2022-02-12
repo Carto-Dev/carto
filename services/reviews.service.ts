@@ -1,3 +1,5 @@
+import storage from '@react-native-firebase/storage';
+import uuid from 'uuid-random';
 import {DeleteReviewDto} from './../dtos/reviews/delete-review.dto';
 import {UpdateReviewDto} from './../dtos/reviews/update-review.dto';
 import NetInfo from '@react-native-community/netinfo';
@@ -6,6 +8,8 @@ import {Connectivity} from '../enum/connectivity-error.enum';
 import {server} from '../utils/axios.util';
 import {CreateReviewDto} from './../dtos/reviews/create-review.dto';
 import * as authService from './auth.service';
+
+const firebaseStorage = storage();
 
 /**
  * Method to create new reviews on server.
@@ -117,4 +121,24 @@ export const deleteReview = async (
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
   }
+};
+
+/**
+ * Upload the image to firebase storage.
+ * @param localImgLink Local image link
+ * @returns Firebase Image link
+ */
+export const uploadReviewImage = async (
+  localImgLink: string,
+): Promise<string> => {
+  // Generate UUID for the image and the path
+  const uuid_ = uuid();
+  const path = `reviews/${uuid_}`;
+
+  // Upload the image to firebase storage and generate a URL.
+  await firebaseStorage.ref(path).putFile(localImgLink.substring(7));
+  const imgLink = await storage().ref(path).getDownloadURL();
+
+  // Return the firebase URL
+  return imgLink;
 };
