@@ -9,6 +9,7 @@ import {
 } from 'react-native-paper';
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as authService from './../../services/auth.service';
+import * as reviewService from './../../services/reviews.service';
 import * as ReviewUtils from '../../utils/reviews';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -16,6 +17,7 @@ import {ProductsStackParamList} from '../../types/products-stack.type';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ReviewModel} from '../../models/review.model';
+import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
 
 type Props = {
   review: ReviewModel;
@@ -41,8 +43,7 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
    * Function to delete the review object from database.
    */
   const deleteReview = async () => {
-    // Deletes the review object from firestore.
-    await ReviewUtils.deleteReview(review, productId);
+    await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
   };
 
   /**
