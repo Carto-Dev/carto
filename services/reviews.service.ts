@@ -1,3 +1,4 @@
+import {UserReview} from './../models/user-review.model';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
 import {DeleteReviewDto} from './../dtos/reviews/delete-review.dto';
@@ -10,6 +11,49 @@ import {CreateReviewDto} from './../dtos/reviews/create-review.dto';
 import * as authService from './auth.service';
 
 const firebaseStorage = storage();
+
+/**
+ * Method to fetch reviews by user.
+ * @returns UserReview[] user reviews array
+ */
+export const fetchReviewsByUser = async (): Promise<UserReview[]> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/review', {
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to reviews array.
+    const reviews: UserReview[] = responseJson.map((reviewJson) =>
+      UserReview.fromJson(reviewJson),
+    );
+
+    // Return reviews.
+    return reviews;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
 
 /**
  * Method to create new reviews on server.
