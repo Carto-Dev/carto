@@ -22,6 +22,7 @@ import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
 type Props = {
   review: ReviewModel;
   productId: number;
+  refreshProduct: () => void;
 };
 
 type ReviewCardNavigationType = CompositeNavigationProp<
@@ -35,7 +36,11 @@ type ReviewCardNavigationType = CompositeNavigationProp<
  * @param review The actual review object
  * @param param0 ID of the product
  */
-const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
+const ReviewCardComponent: React.FC<Props> = ({
+  review,
+  productId,
+  refreshProduct,
+}) => {
   // Navigation hook.
   const navigation = useNavigation<ReviewCardNavigationType>();
 
@@ -46,9 +51,9 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
    */
   const deleteReview = async () => {
     await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
-  };
 
-  const onDeleteReview = () => {};
+    refreshProduct();
+  };
 
   /**
    * Routes the user to the update review page

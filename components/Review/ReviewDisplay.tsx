@@ -45,7 +45,11 @@ const ReviewDisplayComponent: React.FC<Props> = ({
       data={reviews}
       keyExtractor={(review) => review.id.toString()}
       renderItem={(review) => (
-        <ReviewCardComponent productId={productId} review={review.item} />
+        <ReviewCardComponent
+          productId={productId}
+          review={review.item}
+          refreshProduct={refreshProduct}
+        />
       )}
       refreshControl={
         <RefreshControl
