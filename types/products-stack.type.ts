@@ -13,7 +13,7 @@ export type ProductsStackParamList = {
     review: ReviewModel;
     starsGiven: number;
     text: string;
-    imageLinks: ReviewImageModel[];
+    imageLinks: string[];
   };
   MyReviews: undefined;
 };

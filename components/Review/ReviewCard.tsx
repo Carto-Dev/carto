@@ -56,7 +56,7 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
       review: review,
       starsGiven: review.stars,
       text: review.text,
-      imageLinks: review.images,
+      imageLinks: review.images.map((image) => image.image),
     });
   };
 

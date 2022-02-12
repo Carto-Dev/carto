@@ -16,11 +16,13 @@ import * as ReviewUtils from '../../utils/reviews';
 import * as reviewService from './../../services/reviews.service';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
+import {UpdateReviewDto} from '../../dtos/reviews/update-review.dto';
+import {ReviewModel} from '../../models/review.model';
 
 type Props = {
   id: number;
   isEdit?: boolean;
-  review?: any;
+  review?: ReviewModel;
   starsGiven?: number;
   text?: string;
   imageLinks?: string[];
@@ -44,7 +46,7 @@ type ReviewNavigatorType = CompositeNavigationProp<
 const ReviewFormComponent: React.FC<Props> = ({
   id,
   isEdit = false,
-  review = new Review('', '', '', '', false, 1, []),
+  review = new ReviewModel(),
   starsGiven = 1,
   text = '',
   imageLinks = [],
@@ -93,14 +95,14 @@ const ReviewFormComponent: React.FC<Props> = ({
     // Setting loading state to true.
     setLoading(true);
 
+    if (reviewText.length < 5) {
+      setErrorMessage('Your review should be at least 5 characters long.');
+      return;
+    }
+
     try {
       // CASE 1: If the user is submitting a new review.
       if (!isEdit) {
-        if (reviewText.length < 5) {
-          setErrorMessage('Your review should be at least 5 characters long.');
-          return;
-        }
-
         const firebaseImages = await Promise.all(
           imageUris.map(async (localImageUri) =>
             reviewService.uploadReviewImage(localImageUri),
@@ -118,14 +120,22 @@ const ReviewFormComponent: React.FC<Props> = ({
       }
       // CASE 2: If the user is updating their review.
       else {
-        // Function to update the review called.
-        await ReviewUtils.updateReview(
+        const firebaseImages = await Promise.all(
+          imageUris.map(async (imageUri) =>
+            imageUri.startsWith('https://')
+              ? imageUri
+              : reviewService.uploadReviewImage(imageUri),
+          ),
+        );
+
+        const updateReviewDto = UpdateReviewDto.newDto(
+          review.id,
           reviewText,
           noOfStars,
-          review,
-          id,
-          imageUris,
+          firebaseImages,
         );
+
+        await reviewService.updateReview(updateReviewDto);
 
         // Go back to the previous screen.
         navigation.goBack();
