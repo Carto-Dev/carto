@@ -1,25 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
-  Caption,
   Card,
+  Dialog,
   Headline,
   Paragraph,
+  Portal,
   Title,
 } from 'react-native-paper';
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as authService from './../../services/auth.service';
-import * as ReviewUtils from '../../utils/reviews';
+import * as reviewService from './../../services/reviews.service';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ReviewModel} from '../../models/review.model';
+import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
 
 type Props = {
   review: ReviewModel;
   productId: number;
+  refreshProduct: () => void;
 };
 
 type ReviewCardNavigationType = CompositeNavigationProp<
@@ -33,16 +36,23 @@ type ReviewCardNavigationType = CompositeNavigationProp<
  * @param review The actual review object
  * @param param0 ID of the product
  */
-const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
+const ReviewCardComponent: React.FC<Props> = ({
+  review,
+  productId,
+  refreshProduct,
+}) => {
   // Navigation hook.
   const navigation = useNavigation<ReviewCardNavigationType>();
+
+  const [visible, setVisible] = useState<boolean>(false);
 
   /**
    * Function to delete the review object from database.
    */
   const deleteReview = async () => {
-    // Deletes the review object from firestore.
-    await ReviewUtils.deleteReview(review, productId);
+    await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
+
+    refreshProduct();
   };
 
   /**
@@ -50,13 +60,13 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
    */
   const routeToUpdateReviewPage = () => {
     // Pushing the review form on stack.
-    navigation.navigate('Reviews', {
+    navigation.push('Reviews', {
       id: productId,
       isEdit: true,
       review: review,
       starsGiven: review.stars,
       text: review.text,
-      imageLinks: review.images,
+      imageLinks: review.images.map((image) => image.image),
     });
   };
 
@@ -97,17 +107,31 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
           <Paragraph>
             {review.text.length > 0 ? review.text : 'No Review'}
           </Paragraph>
-          <Caption>Have they bought the product? No</Caption>
         </Card.Content>
         {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
               <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
-              <Button onPress={deleteReview}>Delete Review</Button>
+              <Button onPress={() => setVisible(true)}>Delete Review</Button>
             </View>
           </Card.Actions>
         )}
       </Card>
+      <Portal>
+        <Dialog
+          visible={visible}
+          dismissable
+          onDismiss={() => setVisible(false)}>
+          <Dialog.Title>Delete Confirmation</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure you want to delete your review?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteReview}>Yes</Button>
+            <Button onPress={() => setVisible(false)}>No</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </React.Fragment>
   );
 };

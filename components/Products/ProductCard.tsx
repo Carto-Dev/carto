@@ -38,7 +38,7 @@ const ProductCardComponent: React.FC<Props> = ({product, openCartModal}) => {
    * On Click function to route the user to the product page.
    */
   const navigateToProductPage = () =>
-    navigation.navigate('Product', {id: product.id});
+    navigation.push('Product', {id: product.id});
 
   return (
     <Card onPress={navigateToProductPage} style={styles.cardView}>

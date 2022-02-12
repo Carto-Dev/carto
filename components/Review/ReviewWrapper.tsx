@@ -13,6 +13,7 @@ type Props = {
   productId: number;
   reviews: ReviewModel[];
   headerComponent: ReactNode;
+  refreshProduct: () => void;
 };
 
 /**
@@ -23,6 +24,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
   productId,
   reviews,
   headerComponent,
+  refreshProduct,
 }) => {
   const [reviewBreakdown, setReviewBreakdown] = useState<{
     1: number;
@@ -56,6 +58,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
 
   return (
     <ReviewDisplayComponent
+      refreshProduct={refreshProduct}
       reviews={reviews}
       productId={productId}
       headerComponent={
@@ -75,7 +78,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
             }
           />
           <ReviewBarChartComponent reviewBreakdown={reviewBreakdown} />
-          <ReviewFormComponent id={productId} />
+          <ReviewFormComponent id={productId} refreshProduct={refreshProduct} />
         </React.Fragment>
       }
     />

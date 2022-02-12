@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   Card,
@@ -8,19 +8,22 @@ import {
   Portal,
   Title,
 } from 'react-native-paper';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
-import * as AuthUtils from '../../utils/auth';
-import * as ReviewUtils from '../../utils/reviews';
+import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
+import * as authService from '../../services/auth.service';
+import * as reviewService from '../../services/reviews.service';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import routes from '../../constants/routes';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ProductsStackParamList} from '../../types/products-stack.type';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {UserReview} from '../../models/user-review.model';
+import {ReviewModel} from '../../models/review.model';
+import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
 
 type Props = {
-  review: any;
-  productId: string;
+  review: UserReview;
+  productId: number;
+  refreshReviews: () => void;
 };
 
 type UserReviewCardNavigationType = CompositeNavigationProp<
@@ -34,30 +37,44 @@ type UserReviewCardNavigationType = CompositeNavigationProp<
  * @param review The actual review object
  * @param productId ID of the product
  */
-const UserReviewCardComponent: React.FC<Props> = ({review, productId}) => {
+const UserReviewCardComponent: React.FC<Props> = ({
+  review,
+  productId,
+  refreshReviews,
+}) => {
   // Navigation hook.
   const navigation = useNavigation<UserReviewCardNavigationType>();
+
+  const [visible, setVisible] = useState<boolean>(false);
 
   /**
    * Function to delete the review object from database.
    */
   const deleteReview = async () => {
-    // Deletes the review object from firestore.
-    await ReviewUtils.deleteReview(review, productId);
+    await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
+    refreshReviews();
+    setVisible(false);
   };
 
   /**
    * Routes the user to the update review page
    */
   const routeToUpdateReviewPage = () => {
+    const reviewModel = new ReviewModel();
+    reviewModel.id = review.id;
+    reviewModel.text = review.text;
+    reviewModel.stars = review.stars;
+    reviewModel.user = review.user;
+    reviewModel.images = review.images;
+
     // Pushing the review form on stack.
-    navigation.navigate('Reviews', {
+    navigation.push('Reviews', {
       id: productId,
       isEdit: true,
-      review: review,
+      review: reviewModel,
       starsGiven: review.stars,
-      text: review.review,
-      imageLinks: review.images,
+      text: review.text,
+      imageLinks: review.images.map((image) => image.image),
     });
   };
 
@@ -67,7 +84,7 @@ const UserReviewCardComponent: React.FC<Props> = ({review, productId}) => {
         <Card.Content>
           <View style={styles.reviewView}>
             <Headline style={styles.reviewNameText}>
-              Your Review of {review.productData.title}
+              Your Review of {review.product.title}
             </Headline>
             <Button mode="outlined" icon="star">
               {review.stars}
@@ -81,10 +98,10 @@ const UserReviewCardComponent: React.FC<Props> = ({review, productId}) => {
                 data={review.images}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(image) => image}
+                keyExtractor={(image) => image.id.toString()}
                 renderItem={(image) => (
                   <Image
-                    source={{uri: image.item}}
+                    source={{uri: image.item.image}}
                     style={styles.reviewImageStyles}
                   />
                 )}
@@ -92,49 +109,57 @@ const UserReviewCardComponent: React.FC<Props> = ({review, productId}) => {
             </React.Fragment>
           )}
           <Paragraph>
-            {review.review.length > 0 ? review.review : 'No Review'}
+            {review.text.length > 0 ? review.text : 'No Review'}
           </Paragraph>
         </Card.Content>
-        {AuthUtils.currentUser().uid === review.reviewerId && (
+        {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
               <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
-              <Button onPress={deleteReview}>Delete Review</Button>
+              <Button onPress={() => setVisible(true)}>Delete Review</Button>
             </View>
           </Card.Actions>
         )}
       </Card>
+      <Portal>
+        <Dialog
+          visible={visible}
+          dismissable
+          onDismiss={() => setVisible(false)}>
+          <Dialog.Title>Delete Confirmation</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure you want to delete your review?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteReview}>Yes</Button>
+            <Button onPress={() => setVisible(false)}>No</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </React.Fragment>
   );
 };
 
 const styles = StyleSheet.create({
   mainView: {
-    margin: 20,
-  },
-  starsText: {
-    padding: 10,
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'baseline',
+    margin: Dimensions.get('screen').width * 0.05,
   },
   reviewView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewNameText: {maxWidth: 200},
+  reviewNameText: {maxWidth: Dimensions.get('screen').width * 0.6},
   buttonView: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: 'center',
+    width: Dimensions.get('screen').width * 0.87,
   },
   reviewImageStyles: {
-    width: 400,
-    height: 300,
-    margin: 5,
+    width: Dimensions.get('screen').width * 0.95,
+    height: Dimensions.get('screen').height * 0.5,
+    margin: Dimensions.get('screen').width * 0.01,
   },
 });
 

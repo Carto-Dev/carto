@@ -8,20 +8,23 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState, useEffect} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
-import {Review} from '../../models/review';
+import {CreateReviewDto} from '../../dtos/reviews/create-review.dto';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
-import * as ReviewUtils from '../../utils/reviews';
+import * as reviewService from './../../services/reviews.service';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
+import {UpdateReviewDto} from '../../dtos/reviews/update-review.dto';
+import {ReviewModel} from '../../models/review.model';
 
 type Props = {
   id: number;
   isEdit?: boolean;
-  review?: any;
+  review?: ReviewModel;
   starsGiven?: number;
   text?: string;
   imageLinks?: string[];
+  refreshProduct: () => void;
 };
 
 /**
@@ -42,10 +45,11 @@ type ReviewNavigatorType = CompositeNavigationProp<
 const ReviewFormComponent: React.FC<Props> = ({
   id,
   isEdit = false,
-  review = new Review('', '', '', '', false, 1, []),
+  review = new ReviewModel(),
   starsGiven = 1,
   text = '',
   imageLinks = [],
+  refreshProduct,
 }) => {
   // State hook for stars and review text
   const [noOfStars, setNoOfStars] = useState(starsGiven);
@@ -91,22 +95,55 @@ const ReviewFormComponent: React.FC<Props> = ({
     // Setting loading state to true.
     setLoading(true);
 
+    if (reviewText.length < 5) {
+      setErrorMessage('Your review should be at least 5 characters long.');
+      return;
+    }
+
     try {
       // CASE 1: If the user is submitting a new review.
       if (!isEdit) {
-        // Function to save the review called.
-        await ReviewUtils.submitReview(id, noOfStars, reviewText, imageUris);
+        const firebaseImages = await Promise.all(
+          imageUris.map(async (localImageUri) =>
+            reviewService.uploadReviewImage(localImageUri),
+          ),
+        );
+
+        const createReviewDto = CreateReviewDto.newDto(
+          id,
+          reviewText,
+          noOfStars,
+          firebaseImages,
+        );
+
+        await reviewService.createReview(createReviewDto);
+
+        refreshProduct();
+
+        // Set loading state as false.
+        setLoading(false);
       }
       // CASE 2: If the user is updating their review.
       else {
-        // Function to update the review called.
-        await ReviewUtils.updateReview(
+        const firebaseImages = await Promise.all(
+          imageUris.map(async (imageUri) =>
+            imageUri.startsWith('https://')
+              ? imageUri
+              : reviewService.uploadReviewImage(imageUri),
+          ),
+        );
+
+        const updateReviewDto = UpdateReviewDto.newDto(
+          review.id,
           reviewText,
           noOfStars,
-          review,
-          id,
-          imageUris,
+          firebaseImages,
         );
+
+        await reviewService.updateReview(updateReviewDto);
+
+        // Set loading state as false.
+        setLoading(false);
 
         // Go back to the previous screen.
         navigation.goBack();
@@ -115,9 +152,6 @@ const ReviewFormComponent: React.FC<Props> = ({
       // Set error state in case of any errors
       setErrorMessage(error.message);
     }
-
-    // Set loading state as false.
-    setLoading(false);
   };
 
   /**

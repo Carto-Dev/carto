@@ -30,6 +30,7 @@ const ReviewPage: React.FC<Props> = ({route}) => {
         starsGiven={route.params.starsGiven}
         text={route.params.text}
         imageLinks={route.params.imageLinks}
+        refreshProduct={() => {}}
       />
     </React.Fragment>
   );
