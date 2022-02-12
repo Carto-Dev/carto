@@ -78,7 +78,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
             }
           />
           <ReviewBarChartComponent reviewBreakdown={reviewBreakdown} />
-          <ReviewFormComponent id={productId} />
+          <ReviewFormComponent id={productId} refreshProduct={refreshProduct} />
         </React.Fragment>
       }
     />

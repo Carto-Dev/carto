@@ -9,10 +9,8 @@ import React, {useState, useEffect} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {Button, Card, IconButton, TextInput} from 'react-native-paper';
 import {CreateReviewDto} from '../../dtos/reviews/create-review.dto';
-import {Review} from '../../models/review';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
-import * as ReviewUtils from '../../utils/reviews';
 import * as reviewService from './../../services/reviews.service';
 import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
@@ -26,6 +24,7 @@ type Props = {
   starsGiven?: number;
   text?: string;
   imageLinks?: string[];
+  refreshProduct: () => void;
 };
 
 /**
@@ -50,6 +49,7 @@ const ReviewFormComponent: React.FC<Props> = ({
   starsGiven = 1,
   text = '',
   imageLinks = [],
+  refreshProduct,
 }) => {
   // State hook for stars and review text
   const [noOfStars, setNoOfStars] = useState(starsGiven);
@@ -117,6 +117,11 @@ const ReviewFormComponent: React.FC<Props> = ({
         );
 
         await reviewService.createReview(createReviewDto);
+
+        refreshProduct();
+
+        // Set loading state as false.
+        setLoading(false);
       }
       // CASE 2: If the user is updating their review.
       else {
@@ -137,6 +142,9 @@ const ReviewFormComponent: React.FC<Props> = ({
 
         await reviewService.updateReview(updateReviewDto);
 
+        // Set loading state as false.
+        setLoading(false);
+
         // Go back to the previous screen.
         navigation.goBack();
       }
@@ -144,9 +152,6 @@ const ReviewFormComponent: React.FC<Props> = ({
       // Set error state in case of any errors
       setErrorMessage(error.message);
     }
-
-    // Set loading state as false.
-    setLoading(false);
   };
 
   /**
