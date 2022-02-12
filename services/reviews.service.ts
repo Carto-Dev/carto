@@ -1,3 +1,4 @@
+import {UpdateReviewDto} from './../dtos/reviews/update-review.dto';
 import NetInfo from '@react-native-community/netinfo';
 import {AuthError} from '../enum/auth-error.enum';
 import {Connectivity} from '../enum/connectivity-error.enum';
@@ -34,6 +35,43 @@ export const createReview = async (
 
     // Send request to the server.
     const response = await server.post('v1/review', body, {
+      headers,
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
+ * Method to update reviews on server.
+ * @param updateReviewDto DTO For updating a review
+ */
+export const updateReview = async (
+  updateReviewDto: UpdateReviewDto,
+): Promise<void> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Prepare request body.
+    const body = updateReviewDto.toJson();
+
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.put('v1/review', body, {
       headers,
     });
   } catch (error: unknown) {
