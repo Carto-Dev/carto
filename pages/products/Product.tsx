@@ -27,15 +27,18 @@ const ProductPage: React.FC<Props> = ({route}) => {
   // Product State.
   const [product, setProduct] = useState<ProductModel>(new ProductModel());
 
-  // Listening to product changes and reflecting the same.
-  useEffect(() => {
-    let mounted = true;
-
+  const loadProduct = (mounted: boolean) =>
     productService
       .fetchProductById(route.params.id)
       .then((fetchedProduct) => (mounted ? setProduct(fetchedProduct) : null))
       .catch((error) => console.log(error))
       .finally(() => (mounted ? setLoading(false) : null));
+
+  // Listening to product changes and reflecting the same.
+  useEffect(() => {
+    let mounted = true;
+
+    loadProduct(mounted);
 
     return () => {
       mounted = false;
@@ -50,6 +53,7 @@ const ProductPage: React.FC<Props> = ({route}) => {
         headerComponent={<ProductWrapperComponent product={product} />}
         productId={route.params.id}
         reviews={product.reviews}
+        refreshProduct={() => loadProduct(true)}
       />
     </View>
   );

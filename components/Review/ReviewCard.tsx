@@ -51,7 +51,7 @@ const ReviewCardComponent: React.FC<Props> = ({review, productId}) => {
    */
   const routeToUpdateReviewPage = () => {
     // Pushing the review form on stack.
-    navigation.navigate('Reviews', {
+    navigation.push('Reviews', {
       id: productId,
       isEdit: true,
       review: review,

@@ -13,6 +13,7 @@ type Props = {
   productId: number;
   reviews: ReviewModel[];
   headerComponent: ReactNode;
+  refreshProduct: () => void;
 };
 
 /**
@@ -23,6 +24,7 @@ const ReviewWrapperComponent: React.FC<Props> = ({
   productId,
   reviews,
   headerComponent,
+  refreshProduct,
 }) => {
   const [reviewBreakdown, setReviewBreakdown] = useState<{
     1: number;
