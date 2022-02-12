@@ -1,3 +1,4 @@
+import {DeleteReviewDto} from './../dtos/reviews/delete-review.dto';
 import {UpdateReviewDto} from './../dtos/reviews/update-review.dto';
 import NetInfo from '@react-native-community/netinfo';
 import {AuthError} from '../enum/auth-error.enum';
@@ -73,6 +74,44 @@ export const updateReview = async (
     // Send request to the server.
     const response = await server.put('v1/review', body, {
       headers,
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
+ * Method to delete reviews on server.
+ * @param deleteReviewDto DTO For deleting a review
+ */
+export const deleteReview = async (
+  deleteReviewDto: DeleteReviewDto,
+): Promise<void> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    // Prepare request body.
+    const body = deleteReviewDto.toJson();
+
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.delete('v1/review', {
+      headers,
+      data: body,
     });
   } catch (error: unknown) {
     console.log(error);
