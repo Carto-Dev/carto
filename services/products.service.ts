@@ -1,3 +1,7 @@
+import {
+  productsMMKVStorage,
+  singleProductMMKVStorage,
+} from './../utils/mmkv.util';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
 import {CategoryModel} from './../models/category.model';
@@ -10,6 +14,7 @@ import {Connectivity} from '../enum/connectivity-error.enum';
 import {server} from '../utils/axios.util';
 import {AuthError} from '../enum/auth-error.enum';
 import {DeleteProductDto} from '../dtos/products/delete-product.dto';
+import {categoriesMMKVStorage} from '../utils/mmkv.util';
 
 const firebaseStorage = storage();
 
@@ -22,7 +27,7 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchCategoriesFromStorage();
   }
 
   try {
@@ -51,6 +56,8 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
       return category;
     });
 
+    await saveCategoriesToDevice(categories);
+
     // Return categories.
     return categories;
   } catch (error: unknown) {
@@ -71,7 +78,7 @@ export const fetchProductsByCategory = async (
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchProductsByCategoryFromStorage(category);
   }
 
   try {
@@ -103,6 +110,8 @@ export const fetchProductsByCategory = async (
       return product;
     });
 
+    await saveProductsByCategoryToDevice(products, category);
+
     // Return products.
     return products;
   } catch (error: unknown) {
@@ -123,7 +132,7 @@ export const fetchProductsByUser = async (
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchProductsByUserFromStorage(userId);
   }
 
   try {
@@ -155,6 +164,8 @@ export const fetchProductsByUser = async (
       return product;
     });
 
+    await saveProductsByUserToDevice(products, userId);
+
     // Return products.
     return products;
   } catch (error: unknown) {
@@ -172,7 +183,7 @@ export const fetchNewProducts = async (): Promise<ProductModel[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchNewProductsFromStorage();
   }
 
   try {
@@ -201,6 +212,8 @@ export const fetchNewProducts = async (): Promise<ProductModel[]> => {
       return product;
     });
 
+    await saveNewProductsToDevice(products);
+
     // Return products.
     return products;
   } catch (error: unknown) {
@@ -219,7 +232,7 @@ export const fetchProductById = async (id: number): Promise<ProductModel> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchProductFromStorage(id);
   }
 
   try {
@@ -246,6 +259,8 @@ export const fetchProductById = async (id: number): Promise<ProductModel> => {
     // Convert response data to product.
     const product = new ProductModel();
     product.fromJson(responseJson);
+
+    await saveProductToDevice(product);
 
     // Return product.
     return product;
@@ -418,4 +433,136 @@ export const uploadProductImage = async (
 
   // Return the firebase URL
   return imgLink;
+};
+
+const saveCategoriesToDevice = async (
+  categories: CategoryModel[],
+): Promise<void> => {
+  const rawCategories = categories.map((category) => category.toJson());
+  console.log('Saving Categories to Storage');
+
+  await categoriesMMKVStorage.setArrayAsync('categories', rawCategories);
+};
+
+const fetchCategoriesFromStorage = async (): Promise<CategoryModel[]> => {
+  console.log('Fetching categories from device storage');
+
+  const rawCategories = await categoriesMMKVStorage.getArrayAsync('categories');
+
+  if (rawCategories) {
+    return rawCategories.map((rawCategory) => {
+      const category = new CategoryModel();
+      category.fromJson(rawCategory);
+
+      return category;
+    });
+  } else {
+    return [];
+  }
+};
+
+const saveProductsByCategoryToDevice = async (
+  products: ProductModel[],
+  category: string,
+): Promise<void> => {
+  const rawProducts = products.map((product) => product.toJson());
+  console.log(`Saving ${category} products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync(category, rawProducts);
+};
+
+const fetchProductsByCategoryFromStorage = async (
+  category: string,
+): Promise<ProductModel[]> => {
+  console.log(`Fetching ${category} products from device storage`);
+
+  const rawProducts = await productsMMKVStorage.getArrayAsync(category);
+
+  if (rawProducts) {
+    return rawProducts.map((rawProduct) => {
+      const product = new ProductModel();
+      product.fromJson(rawProduct);
+
+      return product;
+    });
+  } else {
+    return [];
+  }
+};
+
+const saveProductsByUserToDevice = async (
+  products: ProductModel[],
+  userId: number,
+): Promise<void> => {
+  const rawProducts = products.map((product) => product.toJson());
+  console.log(`Saving ${userId} products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync(userId.toString(), rawProducts);
+};
+
+const fetchProductsByUserFromStorage = async (
+  userId: number,
+): Promise<ProductModel[]> => {
+  console.log(`Fetching ${userId} products from device storage`);
+
+  const rawProducts = await productsMMKVStorage.getArrayAsync(
+    userId.toString(),
+  );
+
+  if (rawProducts) {
+    return rawProducts.map((rawProduct) => {
+      const product = new ProductModel();
+      product.fromJson(rawProduct);
+
+      return product;
+    });
+  } else {
+    return [];
+  }
+};
+
+const saveNewProductsToDevice = async (
+  products: ProductModel[],
+): Promise<void> => {
+  const rawProducts = products.map((product) => product.toJson());
+  console.log(`Saving NEW products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync('NEW', rawProducts);
+};
+
+const fetchNewProductsFromStorage = async (): Promise<ProductModel[]> => {
+  console.log(`Fetching NEW products from device storage`);
+
+  const rawProducts = await productsMMKVStorage.getArrayAsync('NEW');
+
+  if (rawProducts) {
+    return rawProducts.map((rawProduct) => {
+      const product = new ProductModel();
+      product.fromJson(rawProduct);
+
+      return product;
+    });
+  } else {
+    return [];
+  }
+};
+
+const saveProductToDevice = async (product: ProductModel): Promise<void> => {
+  const rawProduct = product.toJson();
+  console.log(`Saving product with ID ${product.id} to Storage`);
+
+  await singleProductMMKVStorage.setMapAsync(product.id.toString(), rawProduct);
+};
+
+const fetchProductFromStorage = async (id: number): Promise<ProductModel> => {
+  console.log(`Fetching product with ID ${id} from device storage`);
+  const product = new ProductModel();
+
+  const rawProduct = await singleProductMMKVStorage.getMapAsync(id.toString());
+
+  if (rawProduct) {
+    product.fromJson(rawProduct);
+  }
+
+  return product;
 };
