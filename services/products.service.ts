@@ -10,6 +10,7 @@ import {Connectivity} from '../enum/connectivity-error.enum';
 import {server} from '../utils/axios.util';
 import {AuthError} from '../enum/auth-error.enum';
 import {DeleteProductDto} from '../dtos/products/delete-product.dto';
+import {categoriesMMKVStorage} from '../utils/mmkv.util';
 
 const firebaseStorage = storage();
 
@@ -50,6 +51,8 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
 
       return category;
     });
+
+    await saveCategoriesToDevice(categories);
 
     // Return categories.
     return categories;
@@ -418,4 +421,13 @@ export const uploadProductImage = async (
 
   // Return the firebase URL
   return imgLink;
+};
+
+const saveCategoriesToDevice = async (
+  categories: CategoryModel[],
+): Promise<void> => {
+  const rawCategories = categories.map((category) => category.toJson());
+  console.log('Saving Categories to Storage');
+
+  await categoriesMMKVStorage.setArrayAsync('categories', rawCategories);
 };
