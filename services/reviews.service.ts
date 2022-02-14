@@ -1,3 +1,5 @@
+import {reviewsMMKVStorage} from './../utils/mmkv.util';
+import {ReviewModel} from './../models/review.model';
 import {UserReview} from './../models/user-review.model';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
@@ -46,6 +48,8 @@ export const fetchReviewsByUser = async (): Promise<UserReview[]> => {
     const reviews: UserReview[] = responseJson.map((reviewJson) =>
       UserReview.fromJson(reviewJson),
     );
+
+    await saveReviewsByUserToDevice(reviews);
 
     // Return reviews.
     return reviews;
@@ -185,4 +189,13 @@ export const uploadReviewImage = async (
 
   // Return the firebase URL
   return imgLink;
+};
+
+const saveReviewsByUserToDevice = async (
+  reviews: UserReview[],
+): Promise<void> => {
+  const rawReviews = reviews.map((review) => review.toJson());
+  console.log(`Saving reviews to Storage`);
+
+  await reviewsMMKVStorage.setArrayAsync('reviews', rawReviews);
 };
