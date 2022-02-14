@@ -127,7 +127,7 @@ export const fetchProductsByUser = async (
 ): Promise<ProductModel[]> => {
   const connection = await NetInfo.fetch();
 
-  if (connection.isConnected) {
+  if (!connection.isConnected) {
     console.log('Not connected to the internet');
     return await fetchProductsByUserFromStorage(userId);
   }
@@ -208,6 +208,8 @@ export const fetchNewProducts = async (): Promise<ProductModel[]> => {
 
       return product;
     });
+
+    await saveNewProductsToDevice(products);
 
     // Return products.
     return products;
@@ -512,4 +514,13 @@ const fetchProductsByUserFromStorage = async (
   } else {
     return [];
   }
+};
+
+const saveNewProductsToDevice = async (
+  products: ProductModel[],
+): Promise<void> => {
+  const rawProducts = products.map((product) => product.toJson());
+  console.log(`Saving NEW products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync('NEW', rawProducts);
 };
