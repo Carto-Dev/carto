@@ -180,7 +180,7 @@ export const fetchNewProducts = async (): Promise<ProductModel[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchNewProductsFromStorage();
   }
 
   try {
@@ -523,4 +523,21 @@ const saveNewProductsToDevice = async (
   console.log(`Saving NEW products to Storage`);
 
   await productsMMKVStorage.setArrayAsync('NEW', rawProducts);
+};
+
+const fetchNewProductsFromStorage = async (): Promise<ProductModel[]> => {
+  console.log(`Fetching NEW products from device storage`);
+
+  const rawProducts = await productsMMKVStorage.getArrayAsync('NEW');
+
+  if (rawProducts) {
+    return rawProducts.map((rawProduct) => {
+      const product = new ProductModel();
+      product.fromJson(rawProduct);
+
+      return product;
+    });
+  } else {
+    return [];
+  }
 };
