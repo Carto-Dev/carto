@@ -23,7 +23,7 @@ export const fetchReviewsByUser = async (): Promise<UserReview[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchReviewsByUserFromStorage();
   }
 
   try {
@@ -198,4 +198,20 @@ const saveReviewsByUserToDevice = async (
   console.log(`Saving reviews to Storage`);
 
   await reviewsMMKVStorage.setArrayAsync('reviews', rawReviews);
+};
+
+const fetchReviewsByUserFromStorage = async (): Promise<UserReview[]> => {
+  console.log(`Fetching reviews from device storage`);
+
+  const rawReviews = await reviewsMMKVStorage.getArrayAsync('reviews');
+
+  if (rawReviews) {
+    return rawReviews.map((rawReview) => {
+      const userReview = UserReview.fromJson(rawReview);
+
+      return userReview;
+    });
+  } else {
+    return [];
+  }
 };
