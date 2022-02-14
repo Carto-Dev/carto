@@ -6,6 +6,7 @@ import {
 } from 'react-native-paper';
 import MainNavigator from './navigation/Main';
 import {initializeMMKVStorages} from './utils/mmkv.util';
+import {LogBox} from 'react-native';
 
 // const fontConfig = {
 //   android: {
@@ -27,6 +28,10 @@ import {initializeMMKVStorages} from './utils/mmkv.util';
 //     },
 //   },
 // };
+
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+]);
 
 const themeOptions = {
   ...PaperDarkTheme,
