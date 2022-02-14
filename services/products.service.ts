@@ -161,6 +161,8 @@ export const fetchProductsByUser = async (
       return product;
     });
 
+    await saveProductsByUserToDevice(products, userId);
+
     // Return products.
     return products;
   } catch (error: unknown) {
@@ -479,4 +481,14 @@ const fetchProductsByCategoryFromStorage = async (
   } else {
     return [];
   }
+};
+
+const saveProductsByUserToDevice = async (
+  products: ProductModel[],
+  userId: number,
+): Promise<void> => {
+  const rawProducts = products.map((product) => product.toJson());
+  console.log(`Saving ${userId} products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync(userId.toString(), rawProducts);
 };
