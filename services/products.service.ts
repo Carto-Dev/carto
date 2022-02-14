@@ -23,7 +23,7 @@ export const fetchCategories = async (): Promise<CategoryModel[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchCategoriesFromStorage();
   }
 
   try {
@@ -430,4 +430,21 @@ const saveCategoriesToDevice = async (
   console.log('Saving Categories to Storage');
 
   await categoriesMMKVStorage.setArrayAsync('categories', rawCategories);
+};
+
+const fetchCategoriesFromStorage = async (): Promise<CategoryModel[]> => {
+  console.log('Fetching categories from device storage');
+
+  const rawCategories = await categoriesMMKVStorage.getArrayAsync('categories');
+
+  if (rawCategories) {
+    return rawCategories.map((rawCategory) => {
+      const category = new CategoryModel();
+      category.fromJson(rawCategory);
+
+      return category;
+    });
+  } else {
+    return [];
+  }
 };
