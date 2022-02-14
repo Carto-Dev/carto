@@ -46,6 +46,7 @@
 		8E86BBA65C14473BB93C62EE /* PETS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1899913887634280A19ED8AD /* PETS.jpg */; };
 		5BCF1E2A78A14B4A808A5171 /* SHOES.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3C54F37F97D04384B3B1B314 /* SHOES.jpg */; };
 		AAF6B57721F14E77B64E6A94 /* SPORTS.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */; };
+		F31604F4516D4348B56AAE50 /* app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D490A0F879A34959B42D093D /* app-icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,7 @@
 		1899913887634280A19ED8AD /* PETS.jpg */ = {isa = PBXFileReference; name = "PETS.jpg"; path = "../assets/img/categories/PETS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3C54F37F97D04384B3B1B314 /* SHOES.jpg */ = {isa = PBXFileReference; name = "SHOES.jpg"; path = "../assets/img/categories/SHOES.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */ = {isa = PBXFileReference; name = "SPORTS.jpg"; path = "../assets/img/categories/SPORTS.jpg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D490A0F879A34959B42D093D /* app-icon.png */ = {isa = PBXFileReference; name = "app-icon.png"; path = "../assets/img/app-icons/app-icon.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +253,7 @@
 				1899913887634280A19ED8AD /* PETS.jpg */,
 				3C54F37F97D04384B3B1B314 /* SHOES.jpg */,
 				EF17C1C4D3F74360A599BEF2 /* SPORTS.jpg */,
+				D490A0F879A34959B42D093D /* app-icon.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				8E86BBA65C14473BB93C62EE /* PETS.jpg in Resources */,
 				5BCF1E2A78A14B4A808A5171 /* SHOES.jpg in Resources */,
 				AAF6B57721F14E77B64E6A94 /* SPORTS.jpg in Resources */,
+				F31604F4516D4348B56AAE50 /* app-icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
