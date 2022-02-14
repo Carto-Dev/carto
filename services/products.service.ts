@@ -1,3 +1,4 @@
+import {productsMMKVStorage} from './../utils/mmkv.util';
 import storage from '@react-native-firebase/storage';
 import uuid from 'uuid-random';
 import {CategoryModel} from './../models/category.model';
@@ -105,6 +106,8 @@ export const fetchProductsByCategory = async (
 
       return product;
     });
+
+    await saveProductsByCategoryToDevice(products, category);
 
     // Return products.
     return products;
@@ -447,4 +450,14 @@ const fetchCategoriesFromStorage = async (): Promise<CategoryModel[]> => {
   } else {
     return [];
   }
+};
+
+const saveProductsByCategoryToDevice = async (
+  products: ProductModel[],
+  category: string,
+): Promise<void> => {
+  const rawProducts = products.map((category) => category.toJson());
+  console.log(`Saving ${category} products to Storage`);
+
+  await productsMMKVStorage.setArrayAsync(category, rawProducts);
 };
