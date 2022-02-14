@@ -232,7 +232,7 @@ export const fetchProductById = async (id: number): Promise<ProductModel> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    throw new Error(Connectivity.OFFLINE);
+    return await fetchProductFromStorage(id);
   }
 
   try {
@@ -552,4 +552,17 @@ const saveProductToDevice = async (product: ProductModel): Promise<void> => {
   console.log(`Saving product with ID ${product.id} to Storage`);
 
   await singleProductMMKVStorage.setMapAsync(product.id.toString(), rawProduct);
+};
+
+const fetchProductFromStorage = async (id: number): Promise<ProductModel> => {
+  console.log(`Fetching product with ID ${id} from device storage`);
+  const product = new ProductModel();
+
+  const rawProduct = await singleProductMMKVStorage.getMapAsync(id.toString());
+
+  if (rawProduct) {
+    product.fromJson(rawProduct);
+  }
+
+  return product;
 };
