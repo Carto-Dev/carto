@@ -13,6 +13,7 @@ import {MyProductsNavigatorType} from '../../types/my-products-navigator.type';
 import {ProductModel} from '../../models/product.model';
 import * as productService from './../../services/products.service';
 import {DeleteProductDto} from '../../dtos/products/delete-product.dto';
+import {useIsConnected} from 'react-native-offline';
 
 type Props = {
   product: ProductModel;
@@ -24,6 +25,7 @@ type Props = {
  * @param product Product model with data.
  */
 const MyProductComponent: React.FC<Props> = ({product}) => {
+  const isConnected = useIsConnected();
   // Navigation Hook
   const navigation = useNavigation<MyProductsNavigatorType>();
 
@@ -59,14 +61,18 @@ const MyProductComponent: React.FC<Props> = ({product}) => {
           left={(props) => (
             <List.Icon {...props} color={theme.colors.primary} icon="pen" />
           )}
-          onPress={() => {
-            // Navigate to the Product Form page with values filled in
-            // for this specific product.
-            navigation.navigate('ProductForm', {
-              product: product,
-              edit: true,
-            });
-          }}
+          onPress={
+            isConnected
+              ? () => {
+                  // Navigate to the Product Form page with values filled in
+                  // for this specific product.
+                  navigation.navigate('ProductForm', {
+                    product: product,
+                    edit: true,
+                  });
+                }
+              : () => {}
+          }
         />
         <List.Item
           titleStyle={{color: theme.colors.primary}}
@@ -78,7 +84,7 @@ const MyProductComponent: React.FC<Props> = ({product}) => {
               icon="trash-can"
             />
           )}
-          onPress={() => setVisible(true)}
+          onPress={isConnected ? () => setVisible(true) : () => {}}
         />
       </List.Accordion>
       <Portal>
