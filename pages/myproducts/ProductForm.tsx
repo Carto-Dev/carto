@@ -21,6 +21,7 @@ import {CategoryModel} from '../../models/category.model';
 import * as productService from './../../services/products.service';
 import {CreateProductDto} from '../../dtos/products/create-product.dto';
 import {UpdateProductDto} from '../../dtos/products/update-product.dto';
+import {useIsConnected} from 'react-native-offline';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MyProductsStackParamsList, 'ProductForm'>,
@@ -31,6 +32,8 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   // Loading and error message states.
   const [isLoading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+
+  const isConnected = useIsConnected();
 
   // Image State and Modal Visibility state.
   const [imageUris, setImageUris] = useState<string[]>([]);
@@ -314,6 +317,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
 
             <View style={styles.buttonView}>
               <Button
+                disabled={!isConnected}
                 mode="contained"
                 icon="file-image"
                 onPress={openImageModal}>
@@ -322,7 +326,7 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
               <Button
                 mode="contained"
                 icon={route.params.edit ? 'content-save' : 'plus'}
-                disabled={!formik.isValid}
+                disabled={isConnected ? !formik.isValid : true}
                 onPress={formik.handleSubmit}>
                 {route.params.edit ? 'Save Changes' : 'Add New Product'}
               </Button>
