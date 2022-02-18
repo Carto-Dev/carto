@@ -26,6 +26,7 @@ import {CreateUserDto} from '../../dtos/auth/create-user.dto';
 import {LoginUserDto} from '../../dtos/auth/login-user.dto';
 import {AuthError} from '../../enum/auth-error.enum';
 import {Connectivity} from './../../enum/connectivity-error.enum';
+import {useIsConnected} from 'react-native-offline';
 
 /**
  * Login and Registration Pages.
@@ -47,6 +48,8 @@ const AuthPage: React.FC = () => {
   // Password Again and Error states.
   const [passwordAgain, setPasswordAgain] = useState('');
   const [passwordError, setPasswordError] = useState(null);
+
+  const isConnected = useIsConnected();
 
   // Listen to the error message state and display errors if any.
   useEffect(() => {
@@ -304,7 +307,11 @@ const AuthPage: React.FC = () => {
                   mode="contained"
                   icon="login"
                   disabled={
-                    isLogin ? !loginFormik.isValid : !registrationFormik.isValid
+                    isConnected
+                      ? isLogin
+                        ? !loginFormik.isValid
+                        : !registrationFormik.isValid
+                      : false
                   }
                   onPress={
                     isLogin
