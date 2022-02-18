@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, FlatList, Image, Dimensions} from 'react-native';
 import {
   Button,
@@ -12,10 +12,9 @@ import {
   Title,
   useTheme,
 } from 'react-native-paper';
-import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ExpandableTextComponent from '../Utility/ExpandableText';
 import {ProductModel} from '../../models/product.model';
-import * as productService from './../../services/products.service';
+import {useIsConnected} from 'react-native-offline';
 
 type Props = {
   product: ProductModel;
@@ -28,6 +27,8 @@ type Props = {
 const ProductWrapperComponent: React.FC<Props> = ({product}) => {
   // Destructuring theme hook for colours.
   const {colors} = useTheme();
+
+  const isConnected = useIsConnected();
 
   // Width Dimension
   const width = Dimensions.get('screen').width * 0.9;
@@ -92,7 +93,7 @@ const ProductWrapperComponent: React.FC<Props> = ({product}) => {
         <Button
           style={styles.addToCartButtonStyle}
           mode="contained"
-          onPress={() => setVisible(true)}>
+          onPress={isConnected ? () => setVisible(true) : () => {}}>
           Add To Cart
         </Button>
       </View>
