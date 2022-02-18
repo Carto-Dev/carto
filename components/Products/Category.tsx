@@ -1,6 +1,6 @@
 import {Dimensions, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Text, Title} from 'react-native-paper';
+import {Title} from 'react-native-paper';
 import {CategoryModel} from '../../models/category.model';
 import React from 'react';
 
@@ -17,7 +17,7 @@ const Category: React.FC<Props> = ({category}) => {
           uri: category.img,
           priority: FastImage.priority.normal,
         }}
-        resizeMode={FastImage.resizeMode.contain}
+        resizeMode={FastImage.resizeMode.cover}
       />
       <View style={styles.imageTextView}>
         <Title style={styles.text}>{category.text}</Title>
