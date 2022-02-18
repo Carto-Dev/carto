@@ -16,6 +16,7 @@ import {ImageModalComponent} from '../Utility/ImageModal';
 import {LoadingModalComponent} from '../Utility/LoadingModal';
 import {UpdateReviewDto} from '../../dtos/reviews/update-review.dto';
 import {ReviewModel} from '../../models/review.model';
+import {useIsConnected} from 'react-native-offline';
 
 type Props = {
   id: number;
@@ -54,6 +55,8 @@ const ReviewFormComponent: React.FC<Props> = ({
   // State hook for stars and review text
   const [noOfStars, setNoOfStars] = useState(starsGiven);
   const [reviewText, setReviewText] = useState(text);
+
+  const isConnected = useIsConnected();
 
   // State hooks for loading and error message states
   const [isLoading, setLoading] = useState(false);
@@ -225,11 +228,19 @@ const ReviewFormComponent: React.FC<Props> = ({
             keyboardType="default"
           />
           <View style={styles.buttonLayout}>
-            <Button mode="contained" icon="file-image" onPress={openImageModal}>
+            <Button
+              disabled={!isConnected}
+              mode="contained"
+              icon="file-image"
+              onPress={openImageModal}>
               Upload Images
             </Button>
 
-            <Button mode="contained" icon="plus" onPress={handleReviewSubmit}>
+            <Button
+              disabled={!isConnected}
+              mode="contained"
+              icon="plus"
+              onPress={handleReviewSubmit}>
               Submit Review
             </Button>
           </View>

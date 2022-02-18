@@ -18,6 +18,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ReviewModel} from '../../models/review.model';
 import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
+import {useIsConnected} from 'react-native-offline';
 
 type Props = {
   review: ReviewModel;
@@ -45,6 +46,8 @@ const ReviewCardComponent: React.FC<Props> = ({
   const navigation = useNavigation<ReviewCardNavigationType>();
 
   const [visible, setVisible] = useState<boolean>(false);
+
+  const isConnected = useIsConnected();
 
   /**
    * Function to delete the review object from database.
@@ -111,8 +114,12 @@ const ReviewCardComponent: React.FC<Props> = ({
         {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
-              <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
-              <Button onPress={() => setVisible(true)}>Delete Review</Button>
+              <Button disabled={!isConnected} onPress={routeToUpdateReviewPage}>
+                Update Review
+              </Button>
+              <Button disabled={!isConnected} onPress={() => setVisible(true)}>
+                Delete Review
+              </Button>
             </View>
           </Card.Actions>
         )}
