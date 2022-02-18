@@ -20,6 +20,10 @@ buildscript {
     }
 }
 
+project.ext {
+    excludeAppGlideModule = true
+}
+
 allprojects {
     repositories {
         mavenLocal()

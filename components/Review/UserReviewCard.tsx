@@ -19,6 +19,8 @@ import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {UserReview} from '../../models/user-review.model';
 import {ReviewModel} from '../../models/review.model';
 import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
+import {useIsConnected} from 'react-native-offline';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   review: UserReview;
@@ -44,6 +46,8 @@ const UserReviewCardComponent: React.FC<Props> = ({
 }) => {
   // Navigation hook.
   const navigation = useNavigation<UserReviewCardNavigationType>();
+
+  const isConnected = useIsConnected();
 
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -100,9 +104,13 @@ const UserReviewCardComponent: React.FC<Props> = ({
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(image) => image.id.toString()}
                 renderItem={(image) => (
-                  <Image
-                    source={{uri: image.item.image}}
+                  <FastImage
+                    source={{
+                      uri: image.item.image,
+                      priority: FastImage.priority.normal,
+                    }}
                     style={styles.reviewImageStyles}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
                 )}
               />
@@ -115,8 +123,12 @@ const UserReviewCardComponent: React.FC<Props> = ({
         {authService.currentUser().uid === review.user.firebaseId && (
           <Card.Actions>
             <View style={styles.buttonView}>
-              <Button onPress={routeToUpdateReviewPage}>Update Review</Button>
-              <Button onPress={() => setVisible(true)}>Delete Review</Button>
+              <Button disabled={!isConnected} onPress={routeToUpdateReviewPage}>
+                Update Review
+              </Button>
+              <Button disabled={!isConnected} onPress={() => setVisible(true)}>
+                Delete Review
+              </Button>
             </View>
           </Card.Actions>
         )}
@@ -159,7 +171,7 @@ const styles = StyleSheet.create({
   reviewImageStyles: {
     width: Dimensions.get('screen').width * 0.95,
     height: Dimensions.get('screen').height * 0.5,
-    margin: Dimensions.get('screen').width * 0.01,
+    margin: Dimensions.get('screen').width * 0.001,
   },
 });
 

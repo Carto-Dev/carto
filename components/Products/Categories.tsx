@@ -10,6 +10,7 @@ import {
 import {Title, useTheme} from 'react-native-paper';
 import {CategoryModel} from '../../models/category.model';
 import * as productService from './../../services/products.service';
+import Category from './Category';
 
 /**
  * Component for displaying all the possible categories for the products.
@@ -61,18 +62,7 @@ const CategoriesComponent: React.FC = () => {
           keyExtractor={(category) => category.id.toString()}
           horizontal={true}
           renderItem={(c) => {
-            return (
-              <View style={styles.imageView}>
-                <ImageBackground
-                  imageStyle={styles.images}
-                  style={styles.image}
-                  source={{uri: c.item.img}}>
-                  <View style={styles.imageTextView}>
-                    <Title style={styles.text}>{c.item.text}</Title>
-                  </View>
-                </ImageBackground>
-              </View>
-            );
+            return <Category category={c.item} />;
           }}
         />
       </View>

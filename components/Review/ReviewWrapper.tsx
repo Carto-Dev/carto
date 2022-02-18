@@ -1,11 +1,9 @@
 import React, {ReactNode} from 'react';
 import {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import ReviewFormComponent from './ReviewForm';
 import ReviewBarChartComponent from './ReviewBarChart';
-import * as ReviewUtils from '../../utils/reviews';
 import ReviewDisplayComponent from './ReviewDisplay';
-import LoadingAnimation from '../Lottie/LoadingAnimation';
 import ReviewTotalComponent from './ReviewTotal';
 import {ReviewModel} from '../../models/review.model';
 

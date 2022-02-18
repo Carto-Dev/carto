@@ -17,7 +17,7 @@ const MyProductsOverviewPage: React.FC = () => {
   // Loading state.
   const [loading, setLoading] = useState(true);
 
-  const loadUserProducts = (mounted) => {
+  const loadUserProducts = (mounted: boolean) => {
     setLoading(true);
     productService
       .fetchProductsByLoggedInUser()
