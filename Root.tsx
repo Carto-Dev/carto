@@ -7,27 +7,7 @@ import {
 import MainNavigator from './navigation/Main';
 import {initializeMMKVStorages} from './utils/mmkv.util';
 import {LogBox} from 'react-native';
-
-// const fontConfig = {
-//   android: {
-//     regular: {
-//       fontFamily: 'Raleway-Regular',
-//       fontWeight: 'normal',
-//     },
-//     medium: {
-//       fontFamily: 'Raleway-SemiBold',
-//       fontWeight: 'normal',
-//     },
-//     light: {
-//       fontFamily: 'Raleway-Light',
-//       fontWeight: 'normal',
-//     },
-//     thin: {
-//       fontFamily: 'Raleway-Thin',
-//       fontWeight: 'normal',
-//     },
-//   },
-// };
+import {NetworkProvider} from 'react-native-offline';
 
 const fontConfig = {
   web: {
@@ -101,9 +81,11 @@ const Root: React.FC = () => {
   }, []);
 
   return (
-    <PaperProvider theme={themeOptions}>
-      <MainNavigator />
-    </PaperProvider>
+    <NetworkProvider>
+      <PaperProvider theme={themeOptions}>
+        <MainNavigator />
+      </PaperProvider>
+    </NetworkProvider>
   );
 };
 
