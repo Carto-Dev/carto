@@ -15,6 +15,7 @@ import {
 import ExpandableTextComponent from '../Utility/ExpandableText';
 import {ProductModel} from '../../models/product.model';
 import {useIsConnected} from 'react-native-offline';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   product: ProductModel;
@@ -64,9 +65,13 @@ const ProductWrapperComponent: React.FC<Props> = ({product}) => {
           data={product.images}
           keyExtractor={(image) => image.id.toString()}
           renderItem={(image) => (
-            <Image
-              style={{height: 250, width: width}}
-              source={{uri: image.item.image}}
+            <FastImage
+              style={styles.image}
+              source={{
+                uri: image.item.image,
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
             />
           )}
         />
@@ -141,6 +146,10 @@ const ProductWrapperComponent: React.FC<Props> = ({product}) => {
 };
 
 const styles = StyleSheet.create({
+  image: {
+    height: Dimensions.get('screen').height * 0.4,
+    width: Dimensions.get('screen').width * 0.9,
+  },
   mainView: {
     margin: Dimensions.get('screen').height * 0.03,
   },
