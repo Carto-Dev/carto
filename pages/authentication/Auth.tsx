@@ -311,7 +311,7 @@ const AuthPage: React.FC = () => {
                       ? isLogin
                         ? !loginFormik.isValid
                         : !registrationFormik.isValid
-                      : false
+                      : true
                   }
                   onPress={
                     isLogin
