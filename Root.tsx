@@ -81,11 +81,11 @@ const Root: React.FC = () => {
   }, []);
 
   return (
-    <NetworkProvider>
-      <PaperProvider theme={themeOptions}>
+    <PaperProvider theme={themeOptions}>
+      <NetworkProvider>
         <MainNavigator />
-      </PaperProvider>
-    </NetworkProvider>
+      </NetworkProvider>
+    </PaperProvider>
   );
 };
 
