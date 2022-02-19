@@ -1,28 +1,47 @@
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Title} from 'react-native-paper';
 import {CategoryModel} from '../../models/category.model';
 import React from 'react';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {ProductsStackParamList} from '../../types/products-stack.type';
+import {HomeDrawerParamList} from '../../types/home-drawer.type';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
 export type Props = {
   category: CategoryModel;
 };
 
+export type CategoryNavigatorType = CompositeNavigationProp<
+  StackNavigationProp<ProductsStackParamList, 'ProductsOverview'>,
+  DrawerNavigationProp<HomeDrawerParamList>
+>;
+
 const Category: React.FC<Props> = ({category}) => {
+  const navigation = useNavigation<CategoryNavigatorType>();
+
   return (
-    <View style={styles.rootView}>
-      <FastImage
-        style={styles.imageView}
-        source={{
-          uri: category.img,
-          priority: FastImage.priority.normal,
-        }}
-        resizeMode={FastImage.resizeMode.cover}
-      />
-      <View style={styles.imageTextView}>
-        <Title style={styles.text}>{category.text}</Title>
+    <Pressable
+      onPress={() => {
+        navigation.push('ProductsByCategory', {
+          category: category.key,
+        });
+      }}>
+      <View style={styles.rootView}>
+        <FastImage
+          style={styles.imageView}
+          source={{
+            uri: category.img,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+        <View style={styles.imageTextView}>
+          <Title style={styles.text}>{category.text}</Title>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

@@ -16,4 +16,7 @@ export type ProductsStackParamList = {
     imageLinks: string[];
   };
   MyReviews: undefined;
+  ProductsByCategory: {
+    category: string;
+  };
 };
