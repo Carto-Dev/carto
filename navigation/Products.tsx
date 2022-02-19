@@ -7,7 +7,8 @@ import CartPage from '../pages/products/Cart';
 import ReviewPage from '../pages/products/Review';
 import MyReviewsPage from '../pages/products/MyReview';
 import {ProductsStackParamList} from '../types/products-stack.type';
-import {Review} from '../models/review';
+import ProductsByCategoryPage from '../pages/products/ProductsByCategory';
+import {ReviewModel} from '../models/review.model';
 
 // Products Stack Navigator.
 const ProductsStack = createNativeStackNavigator<ProductsStackParamList>();
@@ -28,7 +29,7 @@ const ProductsNavigator: React.FC = () => {
       <ProductsStack.Screen
         name="Product"
         initialParams={{
-          id: '',
+          id: 0,
         }}
         options={{
           headerShown: false,
@@ -45,10 +46,10 @@ const ProductsNavigator: React.FC = () => {
       <ProductsStack.Screen
         name={'Reviews'}
         initialParams={{
-          id: '',
+          id: 0,
           imageLinks: [],
           isEdit: false,
-          review: new Review('', '', '', '', false, 1, []),
+          review: new ReviewModel(),
           starsGiven: 1,
           text: '',
         }}
@@ -64,6 +65,14 @@ const ProductsNavigator: React.FC = () => {
           headerTitle: 'Your Reviews',
         }}
         component={MyReviewsPage}
+      />
+      <ProductsStack.Screen
+        name={'ProductsByCategory'}
+        options={{
+          headerShown: false,
+          headerTitle: 'Products',
+        }}
+        component={ProductsByCategoryPage}
       />
     </ProductsStack.Navigator>
   );
