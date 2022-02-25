@@ -14,3 +14,22 @@ export const fetchCartItems = async (): Promise<CartItemModel[]> => {
     return [];
   }
 };
+
+export const createNewCartItem = async (
+  cartItemModel: CartItemModel,
+): Promise<void> => {
+  console.log(`Saving new CART PRODUCT to device storage`);
+
+  const deviceCartItems = await fetchCartItems();
+  const updatedCartItems = deviceCartItems
+    .map((cartItem) => {
+      if (cartItem.product.id !== cartItemModel.product.id) {
+        return cartItem;
+      } else {
+        return cartItemModel;
+      }
+    })
+    .map((cartItem) => cartItem.toJson());
+
+  await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
+};
