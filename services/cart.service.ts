@@ -38,7 +38,7 @@ export const createNewCartItem = async (
 export const updateCartItem = async (
   updateCartItemDto: UpdateCartItemDto,
 ): Promise<void> => {
-  console.log(`Saving new CART PRODUCT to device storage`);
+  console.log(`Updating CART PRODUCT in device storage`);
 
   const deviceCartItems = await fetchCartItems();
   const updatedCartItems = deviceCartItems
