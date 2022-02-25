@@ -3,4 +3,5 @@ export enum MMKVStorageEnum {
   Categories = 'CATEGORIES',
   SingleProduct = 'SINGLE_PRODUCT',
   Reviews = 'REVIEWS',
+  Cart = 'CART',
 }
