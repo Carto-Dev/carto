@@ -1,3 +1,4 @@
+import {DeleteCartItemDto} from './../dtos/cart/delete-cart-tem.dto';
 import {UpdateCartItemDto} from './../dtos/cart/update-cart-item.dto';
 import {CartItemModel} from '../models/cart-item.model';
 import {cartMMKVStorage} from '../utils/mmkv.util';
@@ -50,6 +51,19 @@ export const updateCartItem = async (
         return cartItem;
       }
     })
+    .map((cartItem) => cartItem.toJson());
+
+  await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
+};
+
+export const deleteCartItem = async (
+  deleteCartItemDto: DeleteCartItemDto,
+): Promise<void> => {
+  console.log(`Deleting CART PRODUCT from device storage`);
+
+  const deviceCartItems = await fetchCartItems();
+  const updatedCartItems = deviceCartItems
+    .filter((cartItem) => cartItem.id !== deleteCartItemDto.id)
     .map((cartItem) => cartItem.toJson());
 
   await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
