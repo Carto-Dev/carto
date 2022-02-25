@@ -1,3 +1,4 @@
+import {UpdateCartItemDto} from './../dtos/cart/update-cart-item.dto';
 import {CartItemModel} from '../models/cart-item.model';
 import {cartMMKVStorage} from '../utils/mmkv.util';
 
@@ -27,6 +28,26 @@ export const createNewCartItem = async (
         return cartItem;
       } else {
         return cartItemModel;
+      }
+    })
+    .map((cartItem) => cartItem.toJson());
+
+  await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
+};
+
+export const updateCartItem = async (
+  updateCartItemDto: UpdateCartItemDto,
+): Promise<void> => {
+  console.log(`Saving new CART PRODUCT to device storage`);
+
+  const deviceCartItems = await fetchCartItems();
+  const updatedCartItems = deviceCartItems
+    .map((cartItem) => {
+      if (cartItem.id !== updateCartItemDto.id) {
+        return cartItem;
+      } else {
+        cartItem.quantity = updateCartItemDto.quantity;
+        return cartItem;
       }
     })
     .map((cartItem) => cartItem.toJson());
