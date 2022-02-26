@@ -8,6 +8,8 @@ export const fetchCartItems = async (): Promise<CartItemModel[]> => {
 
   const rawCartItems = await cartMMKVStorage.getArrayAsync('cart');
 
+  console.log(rawCartItems);
+
   if (rawCartItems) {
     return rawCartItems.map((rawCartItem) => {
       return CartItemModel.fromJson(rawCartItem);
@@ -23,17 +25,23 @@ export const createNewCartItem = async (
   console.log(`Saving new CART PRODUCT to device storage`);
 
   const deviceCartItems = await fetchCartItems();
-  const updatedCartItems = deviceCartItems
-    .map((cartItem) => {
-      if (cartItem.product.id !== cartItemModel.product.id) {
-        return cartItem;
-      } else {
-        return cartItemModel;
-      }
-    })
-    .map((cartItem) => cartItem.toJson());
 
-  await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
+  if (deviceCartItems.length === 0) {
+    deviceCartItems.push(cartItemModel);
+
+    await cartMMKVStorage.setArrayAsync('cart', deviceCartItems);
+  } else {
+    const updatedCartItems = deviceCartItems
+      .map((cartItem) => {
+        if (cartItem.product.id !== cartItemModel.product.id) {
+          return cartItem;
+        } else {
+          return cartItemModel;
+        }
+      })
+      .map((cartItem) => cartItem.toJson());
+    await cartMMKVStorage.setArrayAsync('cart', updatedCartItems);
+  }
 };
 
 export const updateCartItem = async (
