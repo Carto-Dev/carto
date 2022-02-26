@@ -3,6 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
+import {Snackbar, Text, useTheme} from 'react-native-paper';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import ProductWrapperComponent from '../../components/Product/ProductWrapperComponent';
 import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
@@ -23,6 +24,9 @@ type Props = CompositeScreenProps<
 const ProductPage: React.FC<Props> = ({route}) => {
   // Loading State
   const [loading, setLoading] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('');
+  const theme = useTheme();
 
   // Product State.
   const [product, setProduct] = useState<ProductModel>(new ProductModel());
@@ -45,16 +49,38 @@ const ProductPage: React.FC<Props> = ({route}) => {
     };
   }, []);
 
+  const openSnackBar = (messageString: string) => {
+    setMessage(messageString);
+    setVisible(true);
+  };
+
   return loading ? (
     <LoadingAnimation message="Fetching Product Details" />
   ) : (
     <View>
       <ReviewWrapperComponent
-        headerComponent={<ProductWrapperComponent product={product} />}
+        headerComponent={
+          <ProductWrapperComponent
+            product={product}
+            openSnackbar={openSnackBar}
+          />
+        }
         productId={route.params.id}
         reviews={product.reviews}
         refreshProduct={() => loadProduct(true)}
       />
+      <Snackbar
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        action={{
+          label: 'Close',
+          onPress: () => setVisible(false),
+        }}>
+        <Text>{message}</Text>
+      </Snackbar>
     </View>
   );
 };
