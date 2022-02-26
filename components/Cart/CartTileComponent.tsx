@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import {IconButton, List} from 'react-native-paper';
 import {CartItemModel} from '../../models/cart-item.model';
 import CartFormComponent from './CartFormComponent';
 import * as cartService from './../../services/cart.service';
 import {UpdateCartItemDto} from '../../dtos/cart/update-cart-item.dto';
+import {DeleteCartItemDto} from '../../dtos/cart/delete-cart-tem.dto';
 
 export interface CartTileComponentProps {
   cartItem: CartItemModel;
@@ -19,6 +20,30 @@ const CartTileComponent: React.FC<CartTileComponentProps> = ({
 }) => {
   // Modal Visibility
   const [visible, setVisible] = useState(false);
+
+  const deleteCartItem = async () => {
+    Alert.alert(
+      'Delete Confirmation',
+      'Are you sure you want to delete this product from your cart?',
+      [
+        {
+          text: 'OKAY',
+          onPress: async () => {
+            await cartService.deleteCartItem(
+              DeleteCartItemDto.newDto(cartItem.id),
+            );
+            refreshCart();
+            displaySnackbar('Cart Updated');
+          },
+        },
+        {
+          text: 'CANCEL',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ],
+    );
+  };
 
   const updateCartItem = async (quantity: number) => {
     await cartService.updateCartItem(
@@ -44,7 +69,7 @@ const CartTileComponent: React.FC<CartTileComponentProps> = ({
         right={(props) => (
           <View style={styles.buttonView}>
             <IconButton icon="pencil" onPress={() => setVisible(true)} />
-            <IconButton icon="trash-can" onPress={() => {}} />
+            <IconButton icon="trash-can" onPress={deleteCartItem} />
           </View>
         )}
       />
