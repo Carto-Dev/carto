@@ -8,8 +8,6 @@ export const fetchCartItems = async (): Promise<CartItemModel[]> => {
 
   const rawCartItems = await cartMMKVStorage.getArrayAsync('cart');
 
-  console.log(rawCartItems);
-
   if (rawCartItems) {
     return rawCartItems.map((rawCartItem) => {
       return CartItemModel.fromJson(rawCartItem);
