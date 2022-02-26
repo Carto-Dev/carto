@@ -1,22 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {View, FlatList, StyleSheet, Dimensions} from 'react-native';
-import {
-  Button,
-  Modal,
-  Portal,
-  Snackbar,
-  Text,
-  TextInput,
-  Title,
-  useTheme,
-} from 'react-native-paper';
+import {Snackbar, Text, Title, useTheme} from 'react-native-paper';
 import * as productService from './../../services/products.service';
+import * as cartService from './../../services/cart.service';
 import EmptyDataAnimation from '../Lottie/EmptyDataAnimation';
 import LoadingAnimation from '../Lottie/LoadingAnimation';
 import CategoriesComponent from './Categories';
 import ProductCardComponent from './ProductCard';
 import SearchbarComponent from './Searchbar';
 import {ProductModel} from '../../models/product.model';
+import {CartItemModel} from '../../models/cart-item.model';
+import CartFormComponent from '../Cart/CartFormComponent';
 
 /**
  * Generates a list of the top 5 new added products
@@ -35,14 +29,7 @@ const ProductsViewComponent: React.FC = () => {
   // Snackbar Visibility
   const [snackBarVisible, setSnackBarVisible] = useState(false);
 
-  // Product ID State
   const [productId, setProductId] = useState<number>(0);
-
-  // Quantity state.
-  const [quantity, setQuantity] = useState('1');
-
-  // Theme Hook.
-  const theme = useTheme();
 
   /**
    * Open up the modal to enter quantity.
@@ -53,11 +40,19 @@ const ProductsViewComponent: React.FC = () => {
     setVisible(true);
   };
 
+  // Theme Hook.
+  const theme = useTheme();
+
   /**
    * Add to cart function.
    */
-  const addToCart = async () => {
-    // await CartUtils.addProductToCart(productId, Number(quantity));
+  const addToCart = async (quantity: number) => {
+    await cartService.createNewCartItem(
+      CartItemModel.newCartItem(
+        products.filter((product) => product.id === productId)[0],
+        quantity,
+      ),
+    );
     setVisible(false);
     setSnackBarVisible(true);
   };
@@ -112,31 +107,12 @@ const ProductsViewComponent: React.FC = () => {
           }
         />
       </View>
-      <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          dismissable
-          style={styles.modalView}
-          contentContainerStyle={{
-            ...styles.modalContainer,
-            backgroundColor: theme.colors.background,
-          }}>
-          <View style={styles.mainModalView}>
-            <Title>Enter The Quantity Of Products To Add In Cart</Title>
-            <TextInput
-              label="Quantity"
-              keyboardType="numeric"
-              value={quantity}
-              mode="outlined"
-              onChangeText={(text) => setQuantity(text)}
-            />
-            <Button style={styles.addToCartButtonStyle} onPress={addToCart}>
-              Add To Cart
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
+      <CartFormComponent
+        isOpen={visible}
+        onClose={() => setVisible(false)}
+        quantity={1}
+        onSubmit={addToCart}
+      />
       <Snackbar
         style={{
           backgroundColor: theme.colors.background,
@@ -144,7 +120,7 @@ const ProductsViewComponent: React.FC = () => {
         visible={snackBarVisible}
         onDismiss={() => setSnackBarVisible(false)}
         action={{
-          label: 'Undo',
+          label: 'OKAY',
           onPress: () => {
             setSnackBarVisible(false);
           },
