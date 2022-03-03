@@ -1,5 +1,5 @@
 export class SearchDto {
-  public query: string = '';
+  public query: string = 'EMPTY';
   public sortBy: string = 'ASC';
   public categories: string[] = ['EMPTY'];
 
@@ -19,7 +19,7 @@ export class SearchDto {
 
   static fromJson(json: any): SearchDto {
     const searchDto = SearchDto.newDto(
-      json.query ?? '',
+      json.query ?? 'EMPTY',
       json.sortBy ?? 'ASC',
       json.categories ?? ['EMPTY'],
     );
