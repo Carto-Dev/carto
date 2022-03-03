@@ -9,6 +9,7 @@ import MyReviewsPage from '../pages/products/MyReview';
 import {ProductsStackParamList} from '../types/products-stack.type';
 import ProductsByCategoryPage from '../pages/products/ProductsByCategory';
 import {ReviewModel} from '../models/review.model';
+import Search from '../pages/Search/Search';
 
 // Products Stack Navigator.
 const ProductsStack = createNativeStackNavigator<ProductsStackParamList>();
@@ -73,6 +74,14 @@ const ProductsNavigator: React.FC = () => {
           headerTitle: 'Products',
         }}
         component={ProductsByCategoryPage}
+      />
+      <ProductsStack.Screen
+        name={'Search'}
+        options={{
+          headerShown: false,
+          headerTitle: 'Search for Products',
+        }}
+        component={Search}
       />
     </ProductsStack.Navigator>
   );
