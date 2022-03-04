@@ -18,7 +18,7 @@ export const fetchOrders = async (): Promise<OrderModel[]> => {
 
   if (!connection.isConnected) {
     console.log('Not connected to the internet');
-    // return await fetchCategoriesFromStorage();
+    return await fetchOrdersFromStorage();
   }
 
   try {
@@ -110,4 +110,16 @@ const saveOrdersToDevice = async (orders: OrderModel[]): Promise<void> => {
   console.log(`Saving orders to Storage`);
 
   await ordersMMKVStorage.setArrayAsync('orders', rawOrders);
+};
+
+const fetchOrdersFromStorage = async (): Promise<OrderModel[]> => {
+  console.log(`Fetching orders from device storage`);
+
+  const rawOrders = await ordersMMKVStorage.getArrayAsync('orders');
+
+  if (rawOrders) {
+    return rawOrders.map((rawOrder) => OrderModel.fromJson(rawOrder));
+  } else {
+    return [];
+  }
 };
