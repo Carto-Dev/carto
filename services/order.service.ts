@@ -1,3 +1,4 @@
+import {ordersMMKVStorage} from './../utils/mmkv.util';
 import {CreateOrderDto} from './../dtos/orders/create-order.dto';
 import {Connectivity} from './../enum/connectivity-error.enum';
 import NetInfo from '@react-native-community/netinfo';
@@ -43,7 +44,7 @@ export const fetchOrders = async (): Promise<OrderModel[]> => {
       OrderModel.fromJson(orderJson),
     );
 
-    // await saveCategoriesToDevice(categories);
+    await saveOrdersToDevice(orders);
 
     // Return categories.
     return orders;
@@ -102,4 +103,11 @@ export const createOrder = async (): Promise<OrderModel> => {
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
   }
+};
+
+const saveOrdersToDevice = async (orders: OrderModel[]): Promise<void> => {
+  const rawOrders = orders.map((order) => order.toJson());
+  console.log(`Saving orders to Storage`);
+
+  await ordersMMKVStorage.setArrayAsync('orders', rawOrders);
 };
