@@ -9,6 +9,51 @@ import {AuthError} from '../enum/auth-error.enum';
 import {CreateOrderItemDto} from '../dtos/orders/create-order-item.dto';
 
 /**
+ * Method to fetch orders.
+ * @returns OrderModel[] orders array
+ */
+export const fetchOrders = async (): Promise<OrderModel[]> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    // return await fetchCategoriesFromStorage();
+  }
+
+  try {
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.get('v1/order', {
+      headers,
+    });
+
+    // Get response data from request.
+    const responseJson = response.data;
+
+    // Convert response data to Orders array.
+    const orders: OrderModel[] = responseJson.map((orderJson: any) =>
+      OrderModel.fromJson(orderJson),
+    );
+
+    // await saveCategoriesToDevice(categories);
+
+    // Return categories.
+    return orders;
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+/**
  * Method to create new orders on server.
  * @returns OrderModel details for new order
  */
