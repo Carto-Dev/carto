@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, FlatList, Dimensions} from 'react-native';
-import {useTheme, Text, Snackbar, Title} from 'react-native-paper';
+import {useTheme, Text, Snackbar, Title, Button} from 'react-native-paper';
 import {CartItemModel} from '../../models/cart-item.model';
 import * as cartService from '../../services/cart.service';
+import * as orderService from '../../services/order.service';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import CartTileComponent from '../../components/Cart/CartTileComponent';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
@@ -29,6 +30,12 @@ const CartPage: React.FC = () => {
   const displaySnackbar = (message: string) => {
     setSnackBarMessage(message);
     setSnackBarVisible(true);
+  };
+
+  const confirmOrder = async () => {
+    await orderService.createOrder();
+
+    displaySnackbar('Order Successfully placed');
   };
 
   /**
@@ -64,21 +71,26 @@ const CartPage: React.FC = () => {
         }
         ListHeaderComponent={<Title style={styles.titleText}>Cart</Title>}
         ListFooterComponent={
-          <CartTotalComponent
-            total={
-              cartProducts.length > 0
-                ? cartProducts
-                    .map(
-                      (cartProduct) =>
-                        cartProduct.quantity * cartProduct.product.cost,
-                    )
-                    .reduce(
-                      (previousValue, currentValue) =>
-                        previousValue + currentValue,
-                    )
-                : 0
-            }
-          />
+          <React.Fragment>
+            <CartTotalComponent
+              total={
+                cartProducts.length > 0
+                  ? cartProducts
+                      .map(
+                        (cartProduct) =>
+                          cartProduct.quantity * cartProduct.product.cost,
+                      )
+                      .reduce(
+                        (previousValue, currentValue) =>
+                          previousValue + currentValue,
+                      )
+                  : 0
+              }
+            />
+            <Button mode="text" onPress={confirmOrder}>
+              Place Order
+            </Button>
+          </React.Fragment>
         }
       />
       <Snackbar

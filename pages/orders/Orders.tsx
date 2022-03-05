@@ -1,21 +1,8 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import OrderComponent from '../../components/Order/OrderComponent';
 
 const OrdersPage: React.FC = () => {
-  return (
-    <View style={styles.rootView}>
-      <Text>Hello From OrdersPage</Text>
-    </View>
-  );
+  return <OrderComponent />;
 };
-
-const styles = StyleSheet.create({
-  rootView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default OrdersPage;

@@ -6,6 +6,7 @@ export let categoriesMMKVStorage: MMKVStorage.API;
 export let singleProductMMKVStorage: MMKVStorage.API;
 export let reviewsMMKVStorage: MMKVStorage.API;
 export let cartMMKVStorage: MMKVStorage.API;
+export let ordersMMKVStorage: MMKVStorage.API;
 
 export const initializeMMKVStorages = () => {
   productsMMKVStorage = new MMKVStorage.Loader()
@@ -26,6 +27,10 @@ export const initializeMMKVStorages = () => {
 
   cartMMKVStorage = new MMKVStorage.Loader()
     .withInstanceID(MMKVStorageEnum.Cart)
+    .initialize();
+
+  ordersMMKVStorage = new MMKVStorage.Loader()
+    .withInstanceID(MMKVStorageEnum.Orders)
     .initialize();
 
   console.log('MMKV Storages Loaded');
