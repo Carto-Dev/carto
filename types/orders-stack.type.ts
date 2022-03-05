@@ -1,3 +1,3 @@
 export type OrdersStackParamsList = {
-  Orders: undefined;
+  OrdersPage: undefined;
 };
