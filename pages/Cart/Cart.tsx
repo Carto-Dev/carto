@@ -9,6 +9,7 @@ import CartTileComponent from '../../components/Cart/CartTileComponent';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 import CartTotalComponent from '../../components/Cart/CartTotalComponent';
 import {Connectivity} from '../../enum/connectivity-error.enum';
+import ErrorAnimation from '../../components/Lottie/ErrorAnimation';
 
 /**
  * Cart Page Implementation
@@ -21,11 +22,23 @@ const CartPage: React.FC = () => {
   const [snackbarMessage, setSnackBarMessage] = useState<string>('');
   const theme = useTheme();
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
   const loadCartProducts = (mounted: boolean) =>
     cartService
       .fetchCartItems()
       .then((cartItems) => (mounted ? setCartProducts(cartItems) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
 
   const displaySnackbar = (message: string) => {
@@ -59,6 +72,10 @@ const CartPage: React.FC = () => {
       mounted = false;
     };
   }, []);
+
+  if (error) {
+    return <ErrorAnimation message={errorMessage} />;
+  }
 
   return loading ? (
     <LoadingAnimation message="Loading Cart" />
