@@ -6,6 +6,8 @@ import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 import {ProductModel} from '../../models/product.model';
 import * as productService from './../../services/products.service';
+import {Connectivity} from '../../enum/connectivity-error.enum';
+import ErrorAnimation from '../../components/Lottie/ErrorAnimation';
 
 const MyProductsOverviewPage: React.FC = () => {
   // Theme Hook.
@@ -17,12 +19,24 @@ const MyProductsOverviewPage: React.FC = () => {
   // Loading state.
   const [loading, setLoading] = useState(true);
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
   const loadUserProducts = (mounted: boolean) => {
     setLoading(true);
     productService
       .fetchProductsByLoggedInUser()
       .then((products) => (mounted ? setUserProducts(products) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
   };
 
@@ -36,6 +50,10 @@ const MyProductsOverviewPage: React.FC = () => {
       mounted = false;
     };
   }, []);
+
+  if (error) {
+    return <ErrorAnimation message={errorMessage} />;
+  }
 
   return !loading ? (
     <FlatList
