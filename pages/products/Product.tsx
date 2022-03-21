@@ -4,9 +4,11 @@ import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {Snackbar, Text, useTheme} from 'react-native-paper';
+import ErrorAnimation from '../../components/Lottie/ErrorAnimation';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import ProductWrapperComponent from '../../components/Product/ProductWrapperComponent';
 import ReviewWrapperComponent from '../../components/Review/ReviewWrapper';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 import {ProductModel} from '../../models/product.model';
 import {HomeDrawerParamList} from '../../types/home-drawer.type';
 import {ProductsStackParamList} from '../../types/products-stack.type';
@@ -28,6 +30,9 @@ const ProductPage: React.FC<Props> = ({route}) => {
   const [message, setMessage] = useState<string>('');
   const theme = useTheme();
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
   // Product State.
   const [product, setProduct] = useState<ProductModel>(new ProductModel());
 
@@ -35,7 +40,16 @@ const ProductPage: React.FC<Props> = ({route}) => {
     productService
       .fetchProductById(route.params.id)
       .then((fetchedProduct) => (mounted ? setProduct(fetchedProduct) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
 
   // Listening to product changes and reflecting the same.
@@ -53,6 +67,10 @@ const ProductPage: React.FC<Props> = ({route}) => {
     setMessage(messageString);
     setVisible(true);
   };
+
+  if (error) {
+    return <ErrorAnimation message={errorMessage} />;
+  }
 
   return loading ? (
     <LoadingAnimation message="Fetching Product Details" />
