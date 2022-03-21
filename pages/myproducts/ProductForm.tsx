@@ -6,6 +6,9 @@ import {
   Button,
   Title,
   Subheading,
+  Snackbar,
+  Text,
+  useTheme,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {useFormik} from 'formik';
@@ -22,6 +25,7 @@ import * as productService from './../../services/products.service';
 import {CreateProductDto} from '../../dtos/products/create-product.dto';
 import {UpdateProductDto} from '../../dtos/products/update-product.dto';
 import {useIsConnected} from 'react-native-offline';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MyProductsStackParamsList, 'ProductForm'>,
@@ -31,9 +35,10 @@ type Props = CompositeScreenProps<
 const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
   // Loading and error message states.
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>();
 
   const isConnected = useIsConnected();
+
+  const theme = useTheme();
 
   // Image State and Modal Visibility state.
   const [imageUris, setImageUris] = useState<string[]>([]);
@@ -146,8 +151,12 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         navigation.navigate('MyProductsOverview');
       }
     } catch (error) {
-      // Set the error message state if there's any error.
-      setErrorMessage(error.message);
+      if (error.message === Connectivity.OFFLINE.toString()) {
+        displaySnackbar('You are offline.');
+      } else {
+        console.log(error);
+        displaySnackbar('Something went wrong, please try again later');
+      }
     }
 
     // Set loading state as false.
@@ -174,21 +183,6 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
         ),
     }),
   });
-
-  // Listening for error message state changes.
-  useEffect(() => {
-    if (errorMessage) {
-      Alert.alert('Something went wrong!', errorMessage, [
-        {
-          text: 'Okay',
-          onPress: () => {
-            setErrorMessage(null);
-            setLoading(false);
-          },
-        },
-      ]);
-    }
-  }, [errorMessage]);
 
   /**
    * Open the image modal
@@ -249,109 +243,135 @@ const ProductFormPage: React.FC<Props> = ({navigation, route}) => {
     }
   };
 
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
+  const [snackbarMessage, setSnackBarMessage] = useState<string>('');
+
+  const displaySnackbar = (message: string) => {
+    setSnackBarMessage(message);
+    setSnackBarVisible(true);
+  };
+
   return (
-    <View style={styles.rootView}>
-      <View style={styles.formView}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.mainView}>
-            <Title>
-              {route.params.edit ? 'Edit Product Details' : 'Add A New Product'}
-            </Title>
-            <TextInput
-              mode="outlined"
-              label="Title"
-              value={formik.values.title}
-              onChangeText={formik.handleChange('title')}
-              onBlur={() => formik.setFieldTouched('title')}
-              autoCapitalize="none"
-              keyboardType="default"
-            />
-            <HelperText
-              type="error"
-              visible={
-                formik.touched.title && (formik.errors.title ? true : false)
-              }>
-              {formik.errors.title}
-            </HelperText>
-            <TextInput
-              mode="outlined"
-              label="Description"
-              multiline={true}
-              numberOfLines={10}
-              value={formik.values.description}
-              onChangeText={formik.handleChange('description')}
-              onBlur={() => formik.setFieldTouched('description')}
-              autoCapitalize="none"
-              keyboardType="default"
-            />
-            <HelperText
-              type="error"
-              visible={
-                formik.touched.description &&
-                (formik.errors.description ? true : false)
-              }>
-              {formik.errors.description}
-            </HelperText>
-            <TextInput
-              mode="outlined"
-              label="Cost of the item"
-              value={formik.values.cost}
-              onChangeText={formik.handleChange('cost')}
-              onBlur={() => formik.setFieldTouched('cost')}
-              autoCapitalize="none"
-              keyboardType="numbers-and-punctuation"
-            />
-            <HelperText
-              type="error"
-              visible={
-                formik.touched.cost && (formik.errors.cost ? true : false)
-              }>
-              {formik.errors.cost}
-            </HelperText>
+    <React.Fragment>
+      <View style={styles.rootView}>
+        <View style={styles.formView}>
+          <ScrollView style={styles.scrollView}>
+            <View style={styles.mainView}>
+              <Title>
+                {route.params.edit
+                  ? 'Edit Product Details'
+                  : 'Add A New Product'}
+              </Title>
+              <TextInput
+                mode="outlined"
+                label="Title"
+                value={formik.values.title}
+                onChangeText={formik.handleChange('title')}
+                onBlur={() => formik.setFieldTouched('title')}
+                autoCapitalize="none"
+                keyboardType="default"
+              />
+              <HelperText
+                type="error"
+                visible={
+                  formik.touched.title && (formik.errors.title ? true : false)
+                }>
+                {formik.errors.title}
+              </HelperText>
+              <TextInput
+                mode="outlined"
+                label="Description"
+                multiline={true}
+                numberOfLines={10}
+                value={formik.values.description}
+                onChangeText={formik.handleChange('description')}
+                onBlur={() => formik.setFieldTouched('description')}
+                autoCapitalize="none"
+                keyboardType="default"
+              />
+              <HelperText
+                type="error"
+                visible={
+                  formik.touched.description &&
+                  (formik.errors.description ? true : false)
+                }>
+                {formik.errors.description}
+              </HelperText>
+              <TextInput
+                mode="outlined"
+                label="Cost of the item"
+                value={formik.values.cost}
+                onChangeText={formik.handleChange('cost')}
+                onBlur={() => formik.setFieldTouched('cost')}
+                autoCapitalize="none"
+                keyboardType="numbers-and-punctuation"
+              />
+              <HelperText
+                type="error"
+                visible={
+                  formik.touched.cost && (formik.errors.cost ? true : false)
+                }>
+                {formik.errors.cost}
+              </HelperText>
 
-            <Subheading>Selected Categories</Subheading>
-            <CategoriesSelector
-              selectedCategories={selectedCategories}
-              selectCategory={selectACategory}
-            />
+              <Subheading>Selected Categories</Subheading>
+              <CategoriesSelector
+                selectedCategories={selectedCategories}
+                selectCategory={selectACategory}
+              />
 
-            <View style={styles.buttonView}>
-              <Button
-                disabled={!isConnected}
-                mode="contained"
-                icon="file-image"
-                onPress={openImageModal}>
-                Pick Images
-              </Button>
-              <Button
-                mode="contained"
-                icon={route.params.edit ? 'content-save' : 'plus'}
-                disabled={isConnected ? !formik.isValid : true}
-                onPress={formik.handleSubmit}>
-                {route.params.edit ? 'Save Changes' : 'Add New Product'}
-              </Button>
+              <View style={styles.buttonView}>
+                <Button
+                  disabled={!isConnected}
+                  mode="contained"
+                  icon="file-image"
+                  onPress={openImageModal}>
+                  Pick Images
+                </Button>
+                <Button
+                  mode="contained"
+                  icon={route.params.edit ? 'content-save' : 'plus'}
+                  disabled={isConnected ? !formik.isValid : true}
+                  onPress={formik.handleSubmit}>
+                  {route.params.edit ? 'Save Changes' : 'Add New Product'}
+                </Button>
+              </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
+        <ImageModalComponent
+          visible={isModalVisible}
+          onDismiss={closeImageModal}
+          imageUris={imageUris}
+          addNewImage={addNewImage}
+          addImages={addImages}
+          deleteImage={deleteImage}
+          replaceImage={replaceImage}
+        />
+        <LoadingModalComponent
+          message={
+            route.params.edit
+              ? 'Updating Your Product Details!'
+              : 'Making Your Product Available To Buy!'
+          }
+          visible={isLoading}
+        />
       </View>
-      <ImageModalComponent
-        visible={isModalVisible}
-        onDismiss={closeImageModal}
-        imageUris={imageUris}
-        addNewImage={addNewImage}
-        addImages={addImages}
-        deleteImage={deleteImage}
-        replaceImage={replaceImage}
-      />
-      <LoadingModalComponent
-        message={
-          route.params.edit
-            ? 'Updating Your Product Details!'
-            : 'Making Your Product Available To Buy!'
-        }
-        visible={isLoading}
-      />
-    </View>
+      <Snackbar
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
+        visible={snackBarVisible}
+        onDismiss={() => setSnackBarVisible(false)}
+        action={{
+          label: 'OKAY',
+          onPress: () => {
+            setSnackBarVisible(false);
+          },
+        }}>
+        <Text>{snackbarMessage}</Text>
+      </Snackbar>
+    </React.Fragment>
   );
 };
 
