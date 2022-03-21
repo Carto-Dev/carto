@@ -8,6 +8,7 @@ import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import CartTileComponent from '../../components/Cart/CartTileComponent';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 import CartTotalComponent from '../../components/Cart/CartTotalComponent';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 
 /**
  * Cart Page Implementation
@@ -33,9 +34,17 @@ const CartPage: React.FC = () => {
   };
 
   const confirmOrder = async () => {
-    await orderService.createOrder();
-
-    displaySnackbar('Order Successfully placed');
+    try {
+      await orderService.createOrder();
+      displaySnackbar('Order Successfully placed');
+    } catch (error) {
+      if (error.message === Connectivity.OFFLINE.toString()) {
+        displaySnackbar('You are offline.');
+      } else {
+        console.log(error);
+        displaySnackbar('Something went wrong, please try again later');
+      }
+    }
   };
 
   /**
