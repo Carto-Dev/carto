@@ -6,6 +6,7 @@ import CartFormComponent from '../../components/Cart/CartFormComponent';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import ProductCardComponent from '../../components/Products/ProductCard';
 import SearchFiltersComponent from '../../components/Search/SearchFiltersComponent';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 import useSearch from '../../hooks/useSearch';
 import {CartItemModel} from '../../models/cart-item.model';
 import * as cartService from './../../services/cart.service';
@@ -24,8 +25,14 @@ const Search: React.FC = () => {
   const [productId, setProductId] = useState<number>(0);
   const [visible, setVisible] = useState(false);
   const [snackBarVisible, setSnackBarVisible] = useState(false);
+  const [snackbarMessage, setSnackBarMessage] = useState<string>('');
 
   const theme = useTheme();
+
+  const displaySnackbar = (message: string) => {
+    setSnackBarMessage(message);
+    setSnackBarVisible(true);
+  };
 
   const onChangeQuery = (query: string) => {
     if (query === '') {
@@ -58,14 +65,23 @@ const Search: React.FC = () => {
    * Add to cart function.
    */
   const addToCart = async (quantity: number) => {
-    await cartService.createNewCartItem(
-      CartItemModel.newCartItem(
-        products.filter((product) => product.id === productId)[0],
-        quantity,
-      ),
-    );
-    setVisible(false);
-    setSnackBarVisible(true);
+    try {
+      await cartService.createNewCartItem(
+        CartItemModel.newCartItem(
+          products.filter((product) => product.id === productId)[0],
+          quantity,
+        ),
+      );
+      setVisible(false);
+      displaySnackbar('Added To Cart');
+    } catch (error) {
+      if (error.message === Connectivity.OFFLINE.toString()) {
+        displaySnackbar('You are offline.');
+      } else {
+        console.log(error);
+        displaySnackbar('Something went wrong, please try again later');
+      }
+    }
   };
 
   return (

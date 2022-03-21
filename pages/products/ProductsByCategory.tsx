@@ -16,6 +16,8 @@ import CategoriesFilter from '../../components/Products/CategoriesFilter';
 import {CartItemModel} from '../../models/cart-item.model';
 import CartFormComponent from '../../components/Cart/CartFormComponent';
 import {Snackbar, Text, useTheme} from 'react-native-paper';
+import {Connectivity} from '../../enum/connectivity-error.enum';
+import ErrorAnimation from '../../components/Lottie/ErrorAnimation';
 
 type Props = CompositeScreenProps<
   StackScreenProps<ProductsStackParamList, 'ProductsByCategory'>,
@@ -36,12 +38,24 @@ const ProductsByCategoryPage: React.FC<Props> = ({route, navigation}) => {
   // Theme Hook.
   const theme = useTheme();
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
   const fetchProducts = (mounted: boolean, category: string) => {
     setCategoryKey(category);
     productsService
       .fetchProductsByCategory(category)
       .then((products) => (mounted ? setProducts(products) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
   };
 
@@ -80,6 +94,10 @@ const ProductsByCategoryPage: React.FC<Props> = ({route, navigation}) => {
   const switchCategory = async (cKey: string): Promise<void> => {
     fetchProducts(true, cKey);
   };
+
+  if (error) {
+    return <ErrorAnimation message={errorMessage} />;
+  }
 
   return loading ? (
     <LoadingAnimation message="Loading products for you" />

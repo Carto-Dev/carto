@@ -10,18 +10,32 @@ import {Title} from 'react-native-paper';
 import EmptyDataAnimation from '../../components/Lottie/EmptyDataAnimation';
 import LoadingAnimation from '../../components/Lottie/LoadingAnimation';
 import OrderItemComponent from '../../components/Order/OrderItemComponent';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 import {OrderModel} from '../../models/order. model';
+import ErrorAnimation from '../Lottie/ErrorAnimation';
 import * as orderService from './../../services/order.service';
 
 const OrderComponent: React.FC = () => {
   const [orders, setOrders] = useState<OrderModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+
   const loadOrders = (mounted: boolean) =>
     orderService
       .fetchOrders()
       .then((orders) => (mounted ? setOrders(orders) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
 
   useEffect(() => {
@@ -33,6 +47,10 @@ const OrderComponent: React.FC = () => {
       mounted = false;
     };
   }, []);
+
+  if (error) {
+    return <ErrorAnimation message={errorMessage} />;
+  }
 
   return (
     <View style={styles.rootView}>

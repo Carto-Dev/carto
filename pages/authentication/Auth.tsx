@@ -132,16 +132,15 @@ const AuthPage: React.FC = () => {
       // Switch form mode.
       onSwitchMode();
 
-      // Set Snackbar as visible.
-      setSnackbarVisible(true);
+      displaySnackbar('Accout created successfully');
     } catch (error) {
       // Handle errors gracefully
       if (error.message === AuthError.ACCOUNT_ALREADY_EXISTS.toString()) {
-        setErrorMessage('Account with this email address already exists.');
+        displaySnackbar('Account with this email address already exists.');
       } else if (error.message === Connectivity.OFFLINE.toString()) {
-        setErrorMessage('You are offline.');
+        displaySnackbar('You are offline.');
       } else {
-        setErrorMessage('Something went wrong please try again later.');
+        displaySnackbar('Something went wrong please try again later.');
       }
     }
 
@@ -184,6 +183,13 @@ const AuthPage: React.FC = () => {
 
   // Password Again state.
   const onReenterPassword = (text: string) => setPasswordAgain(text);
+
+  const [snackbarMessage, setSnackBarMessage] = useState<string>('');
+
+  const displaySnackbar = (message: string) => {
+    setSnackBarMessage(message);
+    setSnackbarVisible(true);
+  };
 
   return (
     <React.Fragment>
@@ -346,7 +352,7 @@ const AuthPage: React.FC = () => {
           label: 'OK',
           onPress: () => setSnackbarVisible(false),
         }}>
-        <Text>Account created! You may log in now!</Text>
+        <Text>{snackbarMessage}</Text>
       </Snackbar>
     </React.Fragment>
   );

@@ -11,6 +11,7 @@ import SearchbarComponent from './Searchbar';
 import {ProductModel} from '../../models/product.model';
 import {CartItemModel} from '../../models/cart-item.model';
 import CartFormComponent from '../Cart/CartFormComponent';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 
 /**
  * Generates a list of the top 5 new added products
@@ -30,6 +31,9 @@ const ProductsViewComponent: React.FC = () => {
   const [snackBarVisible, setSnackBarVisible] = useState(false);
 
   const [productId, setProductId] = useState<number>(0);
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
 
   /**
    * Open up the modal to enter quantity.
@@ -64,7 +68,16 @@ const ProductsViewComponent: React.FC = () => {
     productService
       .fetchNewProducts()
       .then((products) => (mounted ? setProducts(products) : null))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.message === Connectivity.OFFLINE.toString()) {
+          setErrorMessage('You are offline');
+        } else {
+          console.log(error);
+          setErrorMessage('Something went wrong, please try again later');
+        }
+
+        setError(true);
+      })
       .finally(() => (mounted ? setLoading(false) : null));
 
     return () => {
