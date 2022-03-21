@@ -6,7 +6,10 @@ import {
   Headline,
   Paragraph,
   Portal,
+  Snackbar,
+  Text,
   Title,
+  useTheme,
 } from 'react-native-paper';
 import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 import * as authService from '../../services/auth.service';
@@ -21,6 +24,7 @@ import {ReviewModel} from '../../models/review.model';
 import {DeleteReviewDto} from '../../dtos/reviews/delete-review.dto';
 import {useIsConnected} from 'react-native-offline';
 import FastImage from 'react-native-fast-image';
+import {Connectivity} from '../../enum/connectivity-error.enum';
 
 type Props = {
   review: UserReview;
@@ -50,14 +54,31 @@ const UserReviewCardComponent: React.FC<Props> = ({
   const isConnected = useIsConnected();
 
   const [visible, setVisible] = useState<boolean>(false);
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
+  const [snackbarMessage, setSnackBarMessage] = useState<string>('');
+  const theme = useTheme();
+  const displaySnackbar = (message: string) => {
+    setSnackBarMessage(message);
+    setSnackBarVisible(true);
+  };
 
   /**
    * Function to delete the review object from database.
    */
   const deleteReview = async () => {
-    await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
-    refreshReviews();
-    setVisible(false);
+    try {
+      await reviewService.deleteReview(DeleteReviewDto.newDto(review.id));
+      refreshReviews();
+      setVisible(false);
+      displaySnackbar('Deleted Review');
+    } catch (error) {
+      if (error.message === Connectivity.OFFLINE.toString()) {
+        displaySnackbar('You are offline.');
+      } else {
+        console.log(error);
+        displaySnackbar('Something went wrong, please try again later');
+      }
+    }
   };
 
   /**
@@ -148,6 +169,20 @@ const UserReviewCardComponent: React.FC<Props> = ({
           </Dialog.Actions>
         </Dialog>
       </Portal>
+      <Snackbar
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
+        visible={snackBarVisible}
+        onDismiss={() => setSnackBarVisible(false)}
+        action={{
+          label: 'OKAY',
+          onPress: () => {
+            setSnackBarVisible(false);
+          },
+        }}>
+        <Text>{snackbarMessage}</Text>
+      </Snackbar>
     </React.Fragment>
   );
 };
