@@ -55,9 +55,7 @@ export const updateEmailAddress = async (
   }
 
   try {
-    const reauthenticatedUser = await reauthenticateWithCredentials(
-      updateEmailAddressDto.password,
-    );
+    await reauthenticateWithCredentials(updateEmailAddressDto.password);
 
     const user = authService.currentUser();
 
