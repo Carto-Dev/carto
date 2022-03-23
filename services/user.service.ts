@@ -1,3 +1,4 @@
+import {UpdateEmailAddressDto} from './../dtos/user/update-email-address.dto';
 import {UpdateUserDto} from './../dtos/user/update-user.dto';
 import NetInfo from '@react-native-community/netinfo';
 import * as authService from './auth.service';
@@ -40,6 +41,36 @@ export const updateUser = async (
   } catch (error: unknown) {
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const updateEmailAddress = async (
+  updateEmailAddressDto: UpdateEmailAddressDto,
+): Promise<void> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    const reauthenticatedUser = await reauthenticateWithCredentials(
+      updateEmailAddressDto.password,
+    );
+
+    const user = authService.currentUser();
+
+    await user.updateEmail(updateEmailAddressDto.emailAddress);
+  } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error(AuthError.ACCOUNT_ALREADY_EXISTS);
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error(AuthError.WRONG_PASSWORD);
+    } else {
+      console.log(error);
+      throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+    }
   }
 };
 
