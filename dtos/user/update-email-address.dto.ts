@@ -10,7 +10,6 @@ export class UpdateEmailAddressDto {
 
     return updateEmailAddressDto;
   }
-  updateEmailAddressDto;
 
   static fromJson(json: any): UpdateEmailAddressDto {
     const updateEmailAddressDto = UpdateEmailAddressDto.newDto(
