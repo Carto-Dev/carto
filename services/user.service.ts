@@ -4,6 +4,7 @@ import * as authService from './auth.service';
 import {server} from '../utils/axios.util';
 import {Connectivity} from '../enum/connectivity-error.enum';
 import {AuthError} from '../enum/auth-error.enum';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 /**
  * Method to update user details on server.
@@ -39,5 +40,30 @@ export const updateUser = async (
   } catch (error: unknown) {
     console.log(error);
     throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+  }
+};
+
+const reauthenticateWithCredentials = async (
+  password: string,
+): Promise<FirebaseAuthTypes.UserCredential> => {
+  try {
+    const currentUser = authService.currentUser();
+
+    const credentials = auth.EmailAuthProvider.credential(
+      currentUser.email,
+      password,
+    );
+
+    return await currentUser.reauthenticateWithCredential(credentials);
+  } catch (error) {
+    // Handle firebase errors.
+    if (error.code === 'auth/user-not-found') {
+      throw new Error(AuthError.USER_NOT_FOUND);
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error(AuthError.WRONG_PASSWORD);
+    } else {
+      console.log(error);
+      throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+    }
   }
 };
