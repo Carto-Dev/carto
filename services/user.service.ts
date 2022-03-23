@@ -1,3 +1,4 @@
+import {UpdatePasswordDto} from './../dtos/user/update-password.dto';
 import {UpdateEmailAddressDto} from './../dtos/user/update-email-address.dto';
 import {UpdateUserDto} from './../dtos/user/update-user.dto';
 import NetInfo from '@react-native-community/netinfo';
@@ -64,6 +65,32 @@ export const updateEmailAddress = async (
     if (error.code === 'auth/email-already-in-use') {
       throw new Error(AuthError.ACCOUNT_ALREADY_EXISTS);
     } else if (error.code === 'auth/wrong-password') {
+      throw new Error(AuthError.WRONG_PASSWORD);
+    } else {
+      console.log(error);
+      throw new Error(AuthError.INTERNAL_SERVER_ERROR);
+    }
+  }
+};
+
+export const updatePassword = async (
+  updatePasswordDto: UpdatePasswordDto,
+): Promise<void> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    await reauthenticateWithCredentials(updatePasswordDto.oldPassword);
+
+    const user = authService.currentUser();
+
+    await user.updatePassword(updatePasswordDto.newPassword);
+  } catch (error) {
+    if (error.code === 'auth/wrong-password') {
       throw new Error(AuthError.WRONG_PASSWORD);
     } else {
       console.log(error);
