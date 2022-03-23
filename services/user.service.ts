@@ -1,3 +1,4 @@
+import {DeleteAccountDto} from './../dtos/user/delete-account.dto';
 import {UpdatePasswordDto} from './../dtos/user/update-password.dto';
 import {UpdateEmailAddressDto} from './../dtos/user/update-email-address.dto';
 import {UpdateUserDto} from './../dtos/user/update-user.dto';
@@ -96,6 +97,38 @@ export const updatePassword = async (
       console.log(error);
       throw new Error(AuthError.INTERNAL_SERVER_ERROR);
     }
+  }
+};
+
+export const deleteAccount = async (
+  deleteAccountDto: DeleteAccountDto,
+): Promise<void> => {
+  const connection = await NetInfo.fetch();
+
+  if (!connection.isConnected) {
+    console.log('Not connected to the internet');
+    throw new Error(Connectivity.OFFLINE);
+  }
+
+  try {
+    await reauthenticateWithCredentials(deleteAccountDto.password);
+
+    // Get Firebase Token
+    const firebaseToken = await authService.currentUser().getIdToken();
+
+    // Prepare request headers.
+    const headers = {
+      'content-type': 'application/json',
+      authorization: `Bearer ${firebaseToken}`,
+    };
+
+    // Send request to the server.
+    const response = await server.delete('v1/user', {
+      headers,
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    throw new Error(AuthError.INTERNAL_SERVER_ERROR);
   }
 };
 
