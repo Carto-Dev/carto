@@ -11,7 +11,7 @@ const DrawerComponent: React.FC<Props> = ({navigation}) => {
   return (
     <ScrollView>
       <HeaderDrawerSectionComponent />
-      <AccountDrawerSectionComponent />
+      <AccountDrawerSectionComponent navigation={navigation} />
       <NavDrawerSectionComponent navigation={navigation} />
     </ScrollView>
   );

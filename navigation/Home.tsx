@@ -14,6 +14,7 @@ import DrawerComponent from './Drawer';
 import {HomeDrawerParamList} from '../types/home-drawer.type';
 import {HomeNavigatorType} from '../types/home-navigator.type';
 import Icon from 'react-native-vector-icons/Ionicons';
+import UserNavigator from './User';
 
 // Drawer Navigation
 const HomeDrawer = createDrawerNavigator<HomeDrawerParamList>();
@@ -107,6 +108,21 @@ const HomeNavigator: React.FC = () => {
                 });
               }}>
               <Icon size={23} name="cart" color="white" />
+            </Button>
+          ),
+        }}
+      />
+      <HomeDrawer.Screen
+        name={'UserSettings'}
+        component={UserNavigator}
+        options={{
+          title: 'User Settings',
+          headerLeft: () => (
+            <Button
+              onPress={() => {
+                navigation.dispatch(DrawerActions.openDrawer());
+              }}>
+              <Icon size={23} name="md-menu" color="white" />
             </Button>
           ),
         }}
