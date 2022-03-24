@@ -56,9 +56,8 @@ export const updateEmailAddress = async (
     throw new Error(Connectivity.OFFLINE);
   }
 
+  await reauthenticateWithCredentials(updateEmailAddressDto.password);
   try {
-    await reauthenticateWithCredentials(updateEmailAddressDto.password);
-
     const user = authService.currentUser();
 
     await user.updateEmail(updateEmailAddressDto.emailAddress);
