@@ -83,9 +83,8 @@ export const updatePassword = async (
     throw new Error(Connectivity.OFFLINE);
   }
 
+  await reauthenticateWithCredentials(updatePasswordDto.oldPassword);
   try {
-    await reauthenticateWithCredentials(updatePasswordDto.oldPassword);
-
     const user = authService.currentUser();
 
     await user.updatePassword(updatePasswordDto.newPassword);
