@@ -108,9 +108,8 @@ export const deleteAccount = async (
     throw new Error(Connectivity.OFFLINE);
   }
 
+  await reauthenticateWithCredentials(deleteAccountDto.password);
   try {
-    await reauthenticateWithCredentials(deleteAccountDto.password);
-
     // Get Firebase Token
     const firebaseToken = await authService.currentUser().getIdToken();
 
