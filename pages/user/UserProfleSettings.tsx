@@ -10,6 +10,7 @@ import {
   Snackbar,
   Text,
   TextInput,
+  Title,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {UpdateUserDto} from '../../dtos/user/update-user.dto';
@@ -68,6 +69,7 @@ const UserProfileSettings: React.FC = () => {
       <View style={styles.rootView}>
         <ScrollView>
           <View style={styles.mainView}>
+            <Title>Update Profile</Title>
             <TextInput
               mode="outlined"
               label="Your Name"
