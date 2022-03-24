@@ -15,8 +15,8 @@ import {
 import * as yup from 'yup';
 import {UpdateUserDto} from '../../dtos/user/update-user.dto';
 import {Connectivity} from '../../enum/connectivity-error.enum';
-import * as authService from './../../services/auth.service';
-import * as userService from './../../services/user.service';
+import * as authService from '../../services/auth.service';
+import * as userService from '../../services/user.service';
 
 const UserProfileSettings: React.FC = () => {
   const user = authService.currentUser();
