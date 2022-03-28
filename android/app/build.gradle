@@ -100,7 +100,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -160,6 +160,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('CARTO_UPLOAD_STORE_FILE')) {
+                storeFile file(CARTO_UPLOAD_STORE_FILE)
+                storePassword CARTO_UPLOAD_STORE_PASSWORD
+                keyAlias CARTO_UPLOAD_KEY_ALIAS
+                keyPassword CARTO_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -168,9 +176,23 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+        }
+    }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            applicationId "com.necronizer.carto"
+        }
+
+        prod {
+            dimension "app"
+            applicationId "com.necronizer.carto_prod"
         }
     }
 
